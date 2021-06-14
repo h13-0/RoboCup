@@ -1,0 +1,5 @@
+MotorPorts.c:28:6:MotorInit	0	static
+MotorPorts.c:112:44:setChannel1Value	0	static
+MotorPorts.c:116:44:setChannel2Value	0	static
+MotorPorts.c:124:44:setChannel3Value	0	static
+MotorPorts.c:128:44:setChannel4Value	0	static

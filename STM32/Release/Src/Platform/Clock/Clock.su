@@ -1,0 +1,3 @@
+Clock.c:19:6:ClockInit	0	static
+Clock.c:28:13:DelayMS	0	static
+Clock.c:37:17:GetMS	0	static

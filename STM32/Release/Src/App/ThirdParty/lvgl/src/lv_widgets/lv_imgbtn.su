@@ -1,0 +1,9 @@
+lv_imgbtn.c:540:23:suggest_state	8	static
+lv_imgbtn.c:282:24:lv_imgbtn_design	168	static
+lv_imgbtn.c:500:13:refr_img	40	static
+lv_imgbtn.c:464:17:lv_imgbtn_signal	24	static
+lv_imgbtn.c:55:12:lv_imgbtn_create	24	static
+lv_imgbtn.c:121:6:lv_imgbtn_set_src	16	static
+lv_imgbtn.c:178:6:lv_imgbtn_set_state	8	static
+lv_imgbtn.c:188:6:lv_imgbtn_toggle	8	static
+lv_imgbtn.c:203:14:lv_imgbtn_get_src	16	static

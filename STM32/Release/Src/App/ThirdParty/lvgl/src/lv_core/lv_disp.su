@@ -1,0 +1,17 @@
+lv_disp.c:411:13:scr_anim_ready	16	static
+lv_disp.c:406:13:opa_scale_anim	0	static
+lv_disp.c:398:13:scr_load_anim_start	16	static
+lv_disp.c:49:12:lv_disp_get_scr_act	8	static
+lv_disp.c:66:12:lv_disp_get_scr_prev	8	static
+lv_disp.c:81:6:lv_disp_load_scr	8	static
+lv_disp.c:95:12:lv_disp_get_layer_top	8	static
+lv_disp.c:112:12:lv_disp_get_layer_sys	8	static
+lv_disp.c:128:6:lv_disp_assign_screen	16	static
+lv_disp.c:147:6:lv_disp_set_bg_color	32	static
+lv_disp.c:168:6:lv_disp_set_bg_image	32	static
+lv_disp.c:188:6:lv_disp_set_bg_opa	32	static
+lv_disp.c:213:6:lv_scr_load_anim	160	static
+lv_disp.c:329:10:lv_disp_get_inactive_time	16	static
+lv_disp.c:349:6:lv_disp_trig_activity	8	static
+lv_disp.c:364:6:lv_disp_clean_dcache	8	static
+lv_disp.c:382:13:_lv_disp_get_refr_task	8	static

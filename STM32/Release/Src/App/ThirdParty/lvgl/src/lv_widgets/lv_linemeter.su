@@ -1,0 +1,16 @@
+lv_linemeter.c:536:17:lv_linemeter_signal	24	static
+lv_linemeter.c:53:12:lv_linemeter_create	24	static
+lv_linemeter.c:117:6:lv_linemeter_set_value	24	static
+lv_linemeter.c:145:6:lv_linemeter_set_range	24	static
+lv_linemeter.c:171:6:lv_linemeter_set_scale	16	static
+lv_linemeter.c:189:6:lv_linemeter_set_angle_offset	16	static
+lv_linemeter.c:204:6:lv_linemeter_set_mirror	16	static
+lv_linemeter.c:223:9:lv_linemeter_get_value	8	static
+lv_linemeter.c:236:9:lv_linemeter_get_min_value	8	static
+lv_linemeter.c:249:9:lv_linemeter_get_max_value	8	static
+lv_linemeter.c:262:10:lv_linemeter_get_line_count	8	static
+lv_linemeter.c:275:10:lv_linemeter_get_scale_angle	8	static
+lv_linemeter.c:288:10:lv_linemeter_get_angle_offset	8	static
+lv_linemeter.c:300:6:lv_linemeter_get_mirror	8	static
+lv_linemeter.c:307:6:lv_linemeter_draw_scale	200	static
+lv_linemeter.c:508:24:lv_linemeter_design	104	static

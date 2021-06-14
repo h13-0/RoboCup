@@ -1,0 +1,17 @@
+lv_mem.c:152:8:lv_mem_alloc.part.0	12	static
+lv_mem.c:114:6:_lv_mem_init	0	static
+lv_mem.c:137:6:_lv_mem_deinit	0	static
+lv_mem.c:152:8:lv_mem_alloc	0	static
+lv_mem.c:335:6:lv_mem_defrag	12	static
+lv_mem.c:219:6:lv_mem_free	12	static
+lv_mem.c:376:10:lv_mem_test	8	static
+lv_mem.c:400:6:lv_mem_monitor	16	static
+lv_mem.c:444:10:_lv_mem_get_size	0	static
+lv_mem.c:529:6:_lv_mem_buf_release	0	static
+lv_mem.c:554:6:_lv_mem_buf_free_all	32	static
+lv_mem.c:578:30:_lv_memcpy	80	static
+lv_mem.c:278:8:lv_mem_realloc	24	static
+lv_mem.c:467:8:_lv_mem_buf_get	24	static
+lv_mem.c:640:28:_lv_memset	16	static
+lv_mem.c:683:28:_lv_memset_00	16	static
+lv_mem.c:721:28:_lv_memset_ff	16	static

@@ -1,0 +1,8 @@
+lv_checkbox.c:227:17:lv_checkbox_signal	32	static
+lv_checkbox.c:50:12:lv_checkbox_create	24	static
+lv_checkbox.c:113:6:lv_checkbox_set_text	16	static
+lv_checkbox.c:127:6:lv_checkbox_set_text_static	16	static
+lv_checkbox.c:140:6:lv_checkbox_set_checked	16	static
+lv_checkbox.c:167:6:lv_checkbox_set_disabled	16	static
+lv_checkbox.c:186:6:lv_checkbox_set_state	16	static
+lv_checkbox.c:208:14:lv_checkbox_get_text	8	static

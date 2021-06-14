@@ -1,0 +1,12 @@
+lv_spinner.c:284:6:lv_spinner_anim_cb	16	static
+lv_spinner.c:128:6:lv_spinner_set_arc_length	16	static
+lv_spinner.c:310:17:lv_spinner_signal	16	static
+lv_spinner.c:160:6:lv_spinner_set_type.part.0	96	static
+lv_spinner.c:65:12:lv_spinner_create	24	static
+lv_spinner.c:142:6:lv_spinner_set_spin_time	16	static
+lv_spinner.c:160:6:lv_spinner_set_type	16	static
+lv_spinner.c:218:6:lv_spinner_set_dir	16	static
+lv_spinner.c:236:17:lv_spinner_get_arc_length	8	static
+lv_spinner.c:248:10:lv_spinner_get_spin_time	8	static
+lv_spinner.c:261:19:lv_spinner_get_type	8	static
+lv_spinner.c:269:18:lv_spinner_get_dir	8	static

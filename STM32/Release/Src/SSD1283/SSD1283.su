@@ -1,0 +1,5 @@
+SSD1283.c:88:6:LCDInit	8	static
+SSD1283.c:137:6:LCDSetRegion	24	static
+SSD1283.c:201:6:LCDFlush	32	static
+SSD1283.c:266:6:FillScreen	24	static
+SSD1283.c:278:6:LCDClear	16	static

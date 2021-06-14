@@ -1,0 +1,3 @@
+MotionControl.c:42:6:MotionControlInit	0	static
+MotionControl.c:75:6:DirectionPIDCalculateHandler	16	static
+MotionControl.c:82:6:ForwardPIDCalculateHandler	0	static

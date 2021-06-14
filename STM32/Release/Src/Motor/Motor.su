@@ -1,0 +1,3 @@
+Motor.c:27:6:SetLeftMotorPWM	8	static
+Motor.c:56:6:SetRightMotorPWM	8	static
+Motor.c:85:6:Brake	8	static

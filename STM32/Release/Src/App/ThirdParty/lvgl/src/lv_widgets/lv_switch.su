@@ -1,0 +1,6 @@
+lv_switch.c:193:24:lv_switch_design	128	static
+lv_switch.c:264:17:lv_switch_signal	32	static
+lv_switch.c:61:12:lv_switch_create	16	static
+lv_switch.c:121:6:lv_switch_on	16	static
+lv_switch.c:139:6:lv_switch_off	16	static
+lv_switch.c:158:6:lv_switch_toggle	16	static

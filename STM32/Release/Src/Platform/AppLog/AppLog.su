@@ -1,0 +1,3 @@
+AppLog.c:16:13:LogInit	0	static
+AppLog.c:32:6:Log	0	static
+AppLog.c:71:44:LogJustFloat	0	static

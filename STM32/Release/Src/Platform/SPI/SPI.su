@@ -1,0 +1,8 @@
+SPI.c:57:6:SPIInit	0	static
+SPI.c:65:44:SPIWriteByte	0	static
+SPI.c:78:44:LCDSetRST	0	static
+SPI.c:83:44:LCDResetRST	0	static
+SPI.c:88:44:LCDSetCS	0	static
+SPI.c:93:44:LCDResetCS	0	static
+SPI.c:98:44:LCDSetDC	0	static
+SPI.c:103:44:LCDResetDC	0	static

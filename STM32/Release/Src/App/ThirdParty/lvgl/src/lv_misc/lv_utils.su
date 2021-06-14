@@ -1,0 +1,2 @@
+lv_utils.c:46:8:_lv_utils_num_to_str	12	static
+lv_utils.c:94:8:_lv_utils_bsearch	32	static

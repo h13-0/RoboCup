@@ -1,0 +1,15 @@
+lv_img_decoder.c:512:6:lv_img_decoder_built_in_close	16	static
+lv_img_decoder.c:270:10:lv_img_decoder_built_in_info	32	static
+lv_img_decoder.c:476:10:lv_img_decoder_built_in_read_line	72	static
+lv_img_decoder.c:326:10:lv_img_decoder_built_in_open	32	static
+lv_img_decoder.c:57:6:_lv_img_decoder_init	8	static
+lv_img_decoder.c:84:10:lv_img_decoder_get_info	24	static
+lv_img_decoder.c:112:10:lv_img_decoder_open	32	static
+lv_img_decoder.c:173:10:lv_img_decoder_read_line	24	static
+lv_img_decoder.c:185:6:lv_img_decoder_close	8	static
+lv_img_decoder.c:201:20:lv_img_decoder_create	8	static
+lv_img_decoder.c:217:6:lv_img_decoder_delete	8	static
+lv_img_decoder.c:228:6:lv_img_decoder_set_info_cb	0	static
+lv_img_decoder.c:238:6:lv_img_decoder_set_open_cb	0	static
+lv_img_decoder.c:248:6:lv_img_decoder_set_read_line_cb	0	static
+lv_img_decoder.c:258:6:lv_img_decoder_set_close_cb	0	static

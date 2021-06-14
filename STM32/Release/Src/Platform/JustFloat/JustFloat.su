@@ -1,0 +1,2 @@
+JustFloat.c:5:6:SetJustFloatSerialPort	0	static
+JustFloat.c:9:6:SendJustFloatFrame	4	static

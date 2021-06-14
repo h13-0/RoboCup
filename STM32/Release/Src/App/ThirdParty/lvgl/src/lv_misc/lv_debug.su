@@ -1,0 +1,4 @@
+lv_debug.c:46:6:lv_debug_check_null	0	static
+lv_debug.c:53:6:lv_debug_check_mem_integrity	8	static
+lv_debug.c:58:6:lv_debug_check_str	8	static
+lv_debug.c:90:6:lv_debug_log_error	264	static
