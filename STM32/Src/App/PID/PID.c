@@ -34,7 +34,7 @@ float BasicPID_Calc(BasicPID_t *PIDx, float currentPoint)
 	PIDx -> _error = error;
 
 	//Check the output.
-	if (isnormal(result))
+	if (!isnormal(result))
 	{
 		return 0;
 	} else {
@@ -113,8 +113,11 @@ float PosPID_Calc(PositionPID_t *PIDx, float currentPoint)
 		//differention * error'
 		PIDx -> differention * (error - PIDx -> _error);
 
+	//Update error.
+	PIDx -> _error = error;
+
 	//Check the output.
-	if (isnormal(result))
+	if (!isnormal(result))
 	{
 		return 0;
 	} else {
@@ -197,8 +200,11 @@ float PosPID_CalcWithCustDiff(PositionPID_t *PIDx, float currentPoint, float cur
 		//differention * error'
 		PIDx -> differention * currentDifferention;
 
+	//Update error.
+	PIDx -> _error = error;
+
 	//Check the output.
-	if (isnormal(result))
+	if (!isnormal(result))
 	{
 		return 0;
 	} else {
@@ -241,7 +247,7 @@ float IncPID_Calc(IncrementalPID_t *PIDx, float currentPoint)
 	PIDx -> _previousError = PIDx -> _lastError;
 	PIDx -> _lastError = error;
 
-	if(isnormal(result))
+	if(!isnormal(result))
 	{
 		return 0;
 	} else {

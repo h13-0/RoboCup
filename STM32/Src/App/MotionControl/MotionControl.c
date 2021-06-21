@@ -102,6 +102,7 @@ void MotionControlInit(void)
 	anglePID.setpoint = 0.0;
 	anglePID.maxAbsOutput = GetMaxValueOfPWM() * 0.4;
 
+	//Extend functions config.
 	anglePID.configs.autoResetIntegration = enable;
 	anglePID.configs.limitIntegration = enable;
 	anglePID.maximumAbsValueOfIntegrationOutput = 200.0;
@@ -187,7 +188,7 @@ void KeepAngle(uint16_t Angle)
 	enableDirectionPID();
 	while (1)
 	{
-		MPUGetData(&pitch, &roll, &yaw);
+		MPU_GetData(&pitch, &roll, &yaw);
 		SetLeftMotorPWM(pwmBaseOutput - pwmDifference);
 		SetRightMotorPWM(pwmBaseOutput + pwmDifference);
 		float data[] = { pitch, roll, yaw, anglePID.setpoint, pwmDifference };

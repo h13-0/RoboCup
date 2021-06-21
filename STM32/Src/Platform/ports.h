@@ -39,19 +39,19 @@
  * 		9-axis or 10-axis gyroscopes are recommended.
  * 		MPU9250 is used here, **If you use a different type of gyroscope, delete the MPU9250 folder.**
  */
-uint8_t MPUInit(void);
+uint8_t MPU_Init(void);
 
 /**
  * @brief:  Initialize the DMP(Digital Motion Processer) of the gyroscope.
  * @return: Error code, success is 0.
  */
-uint8_t DMPInit(void);
+uint8_t DMP_Init(void);
 
 /**
  * @brief:  Obtain the euler Angle of gyroscope.
  * @param:  Pointers of the euler Angle.
  * @return: Error code, success is 0.
  */
-uint8_t MPUGetData(float *pitch, float *roll, float *yaw);
+uint8_t MPU_GetData(float *pitch, float *roll, float *yaw);
 
 #endif /* APP_PORTS_H_ */

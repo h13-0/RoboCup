@@ -17,7 +17,7 @@ typedef enum
 	Warning,
 	Error,
 	Fatal
-}LogLevel_t;
+} LogLevel_t;
 
 /**
  * @brief: Init Log Method and Ports.

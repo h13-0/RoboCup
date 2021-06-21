@@ -19,7 +19,7 @@ extern I2C_HandleTypeDef hi2c1;
  * 		9-axis or 10-axis gyroscopes are recommended.
  * 		MPU9250 is used here, **If you use a different type of gyroscope, delete the MPU9250 folder.**
  */
-uint8_t MPUInit(void)
+uint8_t MPU_Init(void)
 {
 	return MPU9250_Init(&hi2c1);
 }
@@ -28,7 +28,7 @@ uint8_t MPUInit(void)
  * @brief:  Initialize the DMP(Digital Motion Processer) of the gyroscope.
  * @return: Error code, success is 0.
  */
-uint8_t DMPInit(void)
+uint8_t DMP_Init(void)
 {
 	return mpu_dmp_init();
 }
@@ -38,7 +38,7 @@ uint8_t DMPInit(void)
  * @param:  Pointers of the euler Angle.
  * @return: Error code, success is 0.
  */
-uint8_t MPUGetData(float *pitch, float *roll, float *yaw)
+uint8_t MPU_GetData(float *pitch, float *roll, float *yaw)
 {
 	return mpu_mpl_get_data(pitch, roll, yaw);
 }

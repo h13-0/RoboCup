@@ -26,27 +26,29 @@ int App(void) {
 	 //Init MPU and DMP.
 	 uint8_t ret = 0;
 	 //Init MPU
-	 ret = MPUInit();
+	 ret = MPU_Init();
 	 while (ret) {
 		 Log(Warning, "MPU Init Fail with ret: %d", ret);
 		 DelayMS(400);
-		 ret = MPUInit();
+		 ret = MPU_Init();
 	 }
 
 	 Log(Info, "MPU OK");
 
 	 //Init DMP
-	 ret = DMPInit();
+	 ret = DMP_Init();
 	 while (ret) {
 		 Log(Warning, "dmp Init Fail with ret: %d", ret);
 		 DelayMS(400);
-		 ret = DMPInit();
+		 ret = DMP_Init();
 	 }
 
 	 Log(Info, "dmp OK");
 
 	 MotorInit();
 	 MotionControlInit();
+
+	 KeepAngle(0);
 
 	 while(1);
 
@@ -71,31 +73,6 @@ int App(void) {
 	}
 */
 /*
-	uint8_t ret = 0;
-		 //Init MPU
-		 ret = MPUInit();
-		 while (ret) {
-		 char logMsg[32];
-		 sprintf(logMsg, "MPU Init Fail with ret: %d", ret);
-		 Log(Warning, logMsg);
-		 DelayMS(400);
-		 ret = MPUInit();
-		 }
-
-		 Log(Info, "MPU OK");
-
-		 //Init DMP
-		 ret = DMPInit();
-		 while (ret) {
-		 char logMsg[32];
-		 sprintf(logMsg, "dmp Init Fail with ret: %d", ret);
-		 Log(Warning, logMsg);
-		 DelayMS(400);
-		 ret = DMPInit();
-		 }
-
-		 Log(Info, "dmp OK");
-
 	SPIInit();
 	lv_init();
 	lv_port_disp_init();
@@ -112,40 +89,4 @@ int App(void) {
 		LogJustFloat(data, 3);
 	}
 */
-
-	/*
-	 uint8_t ret = 0;
-	 //Init MPU
-	 ret = MPUInit();
-	 while (ret) {
-	 char logMsg[32];
-	 sprintf(logMsg, "MPU Init Fail with ret: %d", ret);
-	 Log(Warning, logMsg);
-	 DelayMS(400);
-	 ret = MPUInit();
-	 }
-
-	 Log(Info, "MPU OK");
-
-	 //Init DMP
-	 ret = DMPInit();
-	 while (ret) {
-	 char logMsg[32];
-	 sprintf(logMsg, "dmp Init Fail with ret: %d", ret);
-	 Log(Warning, logMsg);
-	 DelayMS(400);
-	 ret = DMPInit();
-	 }
-
-	 Log(Info, "dmp OK");
-
-	 while(1)
-	 {
-	 float pitch, roll, yaw;
-	 MPUGetData(&pitch, &roll, &yaw);
-	 float data[]={pitch, roll, yaw};
-	 LogJustFloat(data, 3);
-	 }
-	 */
-
 }
