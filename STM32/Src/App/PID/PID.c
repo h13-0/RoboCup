@@ -1,61 +1,258 @@
+/*
+ * PID.c
+ *
+ *  Created on: 2021, 6, 21.
+ *      Author: h13
+ */
+
 #include "PID.h"
 #include <math.h>
 
-float PosPIDCalc(PositionPID_t *PID_t, float currentPoint) {
-	volatile float error = PID_t->setpoint - currentPoint;
+/**
+ * @brief:  Basic PIC Calculate.
+ * @param:
+ * 		BasicPID_t *PIDx:   PositionPID struct.
+ * 		float currentPoint: Current system status.
+ * @return:
+ * 		Calculation result.
+ */
+float BasicPID_Calc(BasicPID_t *PIDx, float currentPoint)
+{
+	float error = PIDx->setpoint - currentPoint;
+	float result;
 
-	volatile float result;
-
-	PID_t->_sum_error = PID_t->_sum_error + error;
+	PIDx -> _sumError += error;
 
 	result =
+		//proportion * error +
+		PIDx -> proportion * (error) +
+		//integration * sumerror +
+		PIDx -> integration * PIDx -> _sumError +
+		//differention * error'
+		PIDx -> differention * (error - PIDx -> _error);
 
-			PID_t->proportion * (error) +                //P 比例运算
+	PIDx -> _error = error;
 
-			PID_t->integral * PID_t->_sum_error +           //I 积分运算
-
-			PID_t->derivative * (error - PID_t->_error);    //D 微分运算
-
-	PID_t->_error = error;
-
-	//简单校验输出
-	if (isnan(result))
+	//Check the output.
+	if (isnormal(result))
+	{
 		return 0;
-	else if (isinf(result) == 1)
-		return 0;
-	else if (isinf(result) == -1)
-		return 0;
+	} else {
+		if(result > (PIDx -> maxAbsOutput))
+		{
+			return PIDx -> maxAbsOutput;
+		} else if(result < - PIDx -> maxAbsOutput)
+		{
+			return - PIDx -> maxAbsOutput;
+		}
+	}
 
 	return result;
 }
 
-float IncPIDCalc(IncrementalPID_t *PID_t, float currentPoint) {
-	volatile float error = PID_t->setpoint - currentPoint;
+/**
+ * @brief: Position PID calculate with expand functions.
+ * @param:
+ * 		PositionPID_t *PIDx: Position PID struct.
+ * 		float currentPoint:  Current system status.
+ * @return:
+ * 		Calculation result.
+ */
+float PosPID_Calc(PositionPID_t *PIDx, float currentPoint)
+{
+	float error = PIDx->setpoint - currentPoint;
+	float result;
 
-	volatile float result;
+	PIDx -> _sumError += error;
+
+	//Expand functions.
+	//Auto reset integration.
+	if(PIDx -> configs.autoResetIntegration == enable)
+	{
+		if((error > 0) && (PIDx -> configs._lastResetIntergrationStatus == 0))
+		{
+			PIDx -> _sumError = 0;
+			PIDx -> configs._lastResetIntergrationStatus = 1;
+		}else if((error < 0) && (PIDx -> configs._lastResetIntergrationStatus != 0))
+		{
+			PIDx -> _sumError = 0;
+			PIDx -> configs._lastResetIntergrationStatus = 0;
+		}
+	}
+
+	//Calculate the integral output.
+	result = PIDx -> integration * PIDx -> _sumError;
+
+	//Expand functions.
+	//Limit integration.
+	if(PIDx -> configs.limitIntegration == enable)
+	{
+		if(isnormal(result))
+		{
+			if(result > PIDx -> maximumAbsValueOfIntegrationOutput)
+			{
+				result = PIDx -> maximumAbsValueOfIntegrationOutput;
+				PIDx -> _sumError = PIDx -> maximumAbsValueOfIntegrationOutput / PIDx -> integration;
+			} else if(result < - PIDx -> maximumAbsValueOfIntegrationOutput)
+			{
+				result = - PIDx -> maximumAbsValueOfIntegrationOutput;
+				PIDx -> _sumError = - (PIDx -> maximumAbsValueOfIntegrationOutput / PIDx -> integration);
+			}
+		} else {
+			result = 0;
+			PIDx -> _sumError = 0;
+		}
+	}
+
+	//Calculate Output
+	result =
+		//proportion * error +
+		PIDx -> proportion * (error) +
+		//integral output +
+		result +
+		//differention * error'
+		PIDx -> differention * (error - PIDx -> _error);
+
+	//Check the output.
+	if (isnormal(result))
+	{
+		return 0;
+	} else {
+		if(result > (PIDx -> maxAbsOutput))
+		{
+			return PIDx -> maxAbsOutput;
+		} else if(result < - PIDx -> maxAbsOutput)
+		{
+			return - PIDx -> maxAbsOutput;
+		}
+	}
+
+	return result;
+}
+
+/**
+ * @brief: Position PID calculate with expand functions.
+ * @param:
+ * 		PositionPID_t *PIDx:       Position PID struct.
+ * 		float currentPoint:        Current system status.
+ * 		float currentDifferention: Customed differention status.
+ * @return:
+ * 		Calculation results.
+ * @note:
+ * 		This function is suitable for the control system of sensor with differential characteristic.
+ * 		Such as when you have an angular velocimeter and want to control the angle.
+ */
+float PosPID_CalcWithCustDiff(PositionPID_t *PIDx, float currentPoint, float currentDifferention)
+{
+	float error = PIDx->setpoint - currentPoint;
+	float result;
+
+	PIDx -> _sumError += error;
+
+	//Expand functions.
+	//Auto reset integration.
+	if(PIDx -> configs.autoResetIntegration == enable)
+	{
+		if((error > 0) && (PIDx -> configs._lastResetIntergrationStatus == 0))
+		{
+			PIDx -> _sumError = 0;
+			PIDx -> configs._lastResetIntergrationStatus = 1;
+		}else if((error < 0) && (PIDx -> configs._lastResetIntergrationStatus != 0))
+		{
+			PIDx -> _sumError = 0;
+			PIDx -> configs._lastResetIntergrationStatus = 0;
+		}
+	}
+
+	//Calculate the integral output.
+	result = PIDx -> integration * PIDx -> _sumError;
+
+	//Expand functions.
+	//Limit integration.
+	if(PIDx -> configs.limitIntegration == enable)
+	{
+		if(isnormal(result))
+		{
+			if(result > PIDx -> maximumAbsValueOfIntegrationOutput)
+			{
+				result = PIDx -> maximumAbsValueOfIntegrationOutput;
+				PIDx -> _sumError = PIDx -> maximumAbsValueOfIntegrationOutput / PIDx -> integration;
+			} else if(result < - PIDx -> maximumAbsValueOfIntegrationOutput)
+			{
+				result = - PIDx -> maximumAbsValueOfIntegrationOutput;
+				PIDx -> _sumError = - (PIDx -> maximumAbsValueOfIntegrationOutput / PIDx -> integration);
+			}
+		} else {
+			result = 0;
+			PIDx -> _sumError = 0;
+		}
+	}
+
+	//Calculate Output
+	result =
+		//proportion * error +
+		PIDx -> proportion * (error) +
+		//integral output +
+		result +
+		//differention * error'
+		PIDx -> differention * currentDifferention;
+
+	//Check the output.
+	if (isnormal(result))
+	{
+		return 0;
+	} else {
+		if(result > (PIDx -> maxAbsOutput))
+		{
+			return PIDx -> maxAbsOutput;
+		} else if(result < - PIDx -> maxAbsOutput)
+		{
+			return - PIDx -> maxAbsOutput;
+		}
+	}
+
+	return result;
+}
+
+/**
+ * @brief: Incremental PID calculate.
+ * @param:
+ * 		IncrementalPID_t *PIDx: Incremental PID struct.
+ * 		float currentPoint:      Current system status.
+ * @return:
+ * 		Calculation results.
+ * @note:
+ * 		You need to integrate and limit the output.
+ */
+float IncPID_Calc(IncrementalPID_t *PIDx, float currentPoint)
+{
+	float error = PIDx->setpoint - currentPoint;
+	float result;
 
 	result =
+		//proportion * errpr' -> proportion * (error - _lastError) +
+		(PIDx -> proportion) * (error - PIDx -> _lastError) +
+		//integration * error -> I * error +
+		(PIDx -> integration) * (error) +
+		//differention * error'' -> differention * [(error + _previousError) - 2 * _lastError]
+		(PIDx -> differention) * ((error + PIDx -> _previousError) - 2 * (PIDx -> _lastError));
 
-			//比例运算, P * 一阶导数 -> p * (error - _lastError)
-			(PID_t->proportion) * (error - PID_t->_lastError) +
+	//Update errors.
+	PIDx -> _previousError = PIDx -> _lastError;
+	PIDx -> _lastError = error;
 
-			//积分运算, I * 原函数 -> I * error
-			(PID_t->integral) * (error) +
-
-			//微分运算, D * 二阶导数 -> D * [(error + _previousError) - 2 * _lastError]
-			(PID_t->derivative) * ((error + PID_t->_previousError) - 2 * (PID_t->_lastError));
-
-	//更新Error
-	PID_t->_previousError = PID_t->_lastError;
-	PID_t->_lastError = error;
-
-	//简单校验输出
-	if (isnan(result))
+	if(isnormal(result))
+	{
 		return 0;
-	else if (isinf(result) == 1)
-		return 0;
-	else if (isinf(result) == -1)
-		return 0;
+	} else {
+		if(result > PIDx -> maxAbsOutput)
+		{
+			return PIDx -> maxAbsOutput;
+		} else if(result < - PIDx -> maxAbsOutput)
+		{
+			return - PIDx -> maxAbsOutput;
+		}
+	}
 
 	return result;
 }

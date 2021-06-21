@@ -9,6 +9,17 @@
 #define APP_FASTMATCH_FASTMATCH_H_
 
 /**
+ * @performance: The following performance results are the performance when key values are matched.
+ *
+ * @group: Arm Cortex M3 (STM32F103), 72Mhz, Optimization: -O0.
+ * @result:
+ * 		Match Float:
+ * 		| Time usage | Frequency |
+ * 		| ---------- | --------- |
+ * 		| 1.3032us   | 767.3Khz  |
+ */
+
+/**
  * @brief: Try to match key with string. If matched, it will run your code **and return**.
  * @param:
  * 		string:         Source string.

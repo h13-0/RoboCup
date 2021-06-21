@@ -11,7 +11,6 @@
 #include "PIDManagement.h"
 #include "PID.h"
 #include "ports.h"
-#include "BitOperation.h"
 
 /**
  * @group: Configs
@@ -46,33 +45,28 @@ static PositionPID_t forwardPID;
  * 		Bit0: Status of direction PID.
  * 				Enable   -> 1.
  * 				Disable  -> 0.
- * 		Bit1: Last error status of direction PID (To clear the integral term).
- * 				positive -> 1.
- * 				negative -> 0.
- * 		Bit2: Status of forward PID.
- * 				Enable   -> 1.
- * 				Disable  -> 0.
- * 		Bit3: Last error status of forward PID (To clear the integral term).
+ * 		Bit1: Status of forward PID.
  * 				Enable   -> 1.
  * 				Disable  -> 0.
  */
-static uint8_t pidStatus = 0;
-//Bit0: Status of direction PID.
-#define enableDirectionPID()          Set8Bit0(pidStatus)
-#define disableDirectionPID()         Reset8Bit0(pidStatus)
-#define getDirectionPIDStatus()       Get8Bit0(pidStatus)
-//Bit1: Last error status of direction PID (To clear the integral term).
-#define setDirectionPIDLastStatus()   Set8Bit1(pidStatus)
-#define resetDirectionPIDLastStatus() Reset8Bit1(pidStatus)
-#define getDirectionPIDLastStatus()   Get8Bit1(pidStatus)
-//Bit2: Status of forward PID.
-#define enableForwardPID()            Set8Bit2(pidStatus)
-#define disableForwardPID()           Reset8Bit2(pidStatus)
-#define getForwardPIDStatus()         Get8Bit2(pidStatus)
-//Bit3: Last error status of forward PID (To clear the integral term).
-#define setForwardPIDLastStatus()     Set8Bit3(pidStatus)
-#define resetForwardPIDLastStatus()   Reset8Bit3(pidStatus)
-#define getForwardPIDLastStatus()     Get8Bit3(pidStatus)
+
+struct motionControlStatusStructure
+{
+	uint8_t directionPID_Status : 1;
+	uint8_t forwardPID_Status : 1;
+};
+
+static struct motionControlStatusStructure status;
+
+//Status of direction PID.
+#define enableDirectionPID()          status.directionPID_Status = 1
+#define disableDirectionPID()         status.directionPID_Status = 0
+#define getDirectionPIDStatus()       status.directionPID_Status
+//Status of forward PID.
+#define enableForwardPID()            status.forwardPID_Status = 1
+#define disableForwardPID()           status.forwardPID_Status = 0
+#define getForwardPIDStatus()         status.forwardPID_Status
+
 
 /**
  * @group: Direction Variables.
@@ -80,10 +74,6 @@ static uint8_t pidStatus = 0;
 //
 static float pitch = 0, roll = 0, yaw = 0;
 
-static const float anglePIDSumErrorLimit = 500.0;
-
-static float pwmDifference = 0;
-static const float maxDifference = 500.0;
 
 /**
  * @group: Forward Variables.
@@ -93,6 +83,7 @@ static float distance = 0.0;
 /**
  *
  */
+static float pwmDifference = 0;
 static float pwmBaseOutput = 0;
 
 
@@ -104,15 +95,23 @@ static float pwmBaseOutput = 0;
  */
 void MotionControlInit(void)
 {
+	//angle PID configs.
 	anglePID.proportion = 5.0;
-	anglePID.integral = 0.75;
-	anglePID.derivative = 200.0;
+	anglePID.integration = 0.75;
+	anglePID.differention = 200.0;
 	anglePID.setpoint = 0.0;
+	anglePID.maxAbsOutput = GetMaxValueOfPWM() * 0.4;
+
+	anglePID.configs.autoResetIntegration = enable;
+	anglePID.configs.limitIntegration = enable;
+	anglePID.maximumAbsValueOfIntegrationOutput = 200.0;
+
 
 	forwardPID.proportion = 0.0;
-	forwardPID.integral = 0.0;
-	forwardPID.derivative = 0.0;
+	forwardPID.integration = 0.0;
+	forwardPID.differention = 0.0;
 	forwardPID.setpoint = 0.0;
+	anglePID.maxAbsOutput = GetMaxValueOfPWM() * 0.8;
 }
 
 /**
@@ -123,7 +122,8 @@ void TurnTo(direction_t Direction)
 {
 	switch(Direction)
 	{
-
+	default:
+		break;
 	}
 }
 
@@ -232,32 +232,7 @@ __attribute__((always_inline)) inline void DirectionPIDCalculateHandler(void)
 {
 	if (getDirectionPIDStatus())
 	{
-		if (getDirectionPIDLastStatus() && (yaw < anglePID.setpoint))
-		{
-			resetDirectionPIDLastStatus();
-			anglePID._sum_error = 0;
-		} else if ((!getDirectionPIDLastStatus()) && (yaw > anglePID.setpoint))
-		{
-			setDirectionPIDLastStatus();
-			anglePID._sum_error = 0;
-		}
-
-		if(anglePID._sum_error > anglePIDSumErrorLimit)
-		{
-			anglePID._sum_error = anglePIDSumErrorLimit;
-		}else if(anglePID._sum_error < -anglePIDSumErrorLimit)
-		{
-			anglePID._sum_error = -anglePIDSumErrorLimit;
-		}
-
-		float tempDifference = PosPIDCalc(&anglePID, yaw);
-		if(tempDifference > maxDifference)
-		{
-			tempDifference = maxDifference;
-		}else if(tempDifference < -maxDifference)
-		{
-			tempDifference = -maxDifference;
-		}
+		float tempDifference = PosPID_Calc(&anglePID, yaw);
 		pwmDifference = tempDifference;
 	}
 }
@@ -266,15 +241,6 @@ __attribute__((always_inline)) inline void ForwardPIDCalculateHandler(void)
 {
 	if (getForwardPIDStatus())
 	{
-		if (getForwardPIDLastStatus() && (distance < forwardPID.setpoint))
-		{
-			resetForwardPIDLastStatus();
-			forwardPID._sum_error = 0;
-		} else if ((!getForwardPIDLastStatus()) && (distance > forwardPID.setpoint))
-		{
-			setForwardPIDLastStatus();
-			forwardPID._sum_error = 0;
-		}
-		pwmBaseOutput = PosPIDCalc(&ForwardPID, distance);
+		pwmBaseOutput = PosPID_Calc(&ForwardPID, distance);
 	}
 }

@@ -18,23 +18,19 @@
 //Motion Control
 #include "MotionControl.h"
 
-
 int App(void) {
 	//Init Log First.
 	LogInit();
 	Log(Debug, "Start!");
-
 
 	 //Init MPU and DMP.
 	 uint8_t ret = 0;
 	 //Init MPU
 	 ret = MPUInit();
 	 while (ret) {
-	 char logMsg[32];
-	 sprintf(logMsg, "MPU Init Fail with ret: %d", ret);
-	 Log(Warning, logMsg);
-	 DelayMS(400);
-	 ret = MPUInit();
+		 Log(Warning, "MPU Init Fail with ret: %d", ret);
+		 DelayMS(400);
+		 ret = MPUInit();
 	 }
 
 	 Log(Info, "MPU OK");
@@ -42,11 +38,9 @@ int App(void) {
 	 //Init DMP
 	 ret = DMPInit();
 	 while (ret) {
-	 char logMsg[32];
-	 sprintf(logMsg, "dmp Init Fail with ret: %d", ret);
-	 Log(Warning, logMsg);
-	 DelayMS(400);
-	 ret = DMPInit();
+		 Log(Warning, "dmp Init Fail with ret: %d", ret);
+		 DelayMS(400);
+		 ret = DMPInit();
 	 }
 
 	 Log(Info, "dmp OK");
@@ -56,13 +50,13 @@ int App(void) {
 
 	 while(1);
 
-	 /*
+/*
 	 while (1)
 	 {
 		 float data[]={GetTOFDistance()};
 		 SendJustFloatFrame(data, 1);
 	 }
-	 */
+*/
 
 /*
 	SPIInit();

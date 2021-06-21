@@ -12,7 +12,7 @@
  * @brief: Serial Debug Interrupt Handler.
  * @param: data.
  */
-void SerialDebugInterruptHandler(uint8_t data)
+__attribute__((always_inline)) inline void SerialDebugInterruptHandler(uint8_t data)
 {
 
 }

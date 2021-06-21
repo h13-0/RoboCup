@@ -85,20 +85,27 @@ static __attribute__((always_inline)) inline void getDistanceHandler(char* data)
 		{
 			data += 6;
 			//Write data to variable
-			uint8_t *variablePtr = (uint8_t *)(&distance);
+			uint16_t tempDistance = 0;
 
-			variablePtr ++;
-
-			*variablePtr = ((*data) - '0') << 4;
+			//'Data_Hh' 'Data_Hl' 'Data_Lh' 'Data_Hl'
+			//To:
+			//'Data_Lh' 'Data_Hl' 'Data_Hh' 'Data_Hl'
+			//'Data_L' 'Data_H'
+			//tempDistance += (((*data) - '0') & 0x0f) << 12;
+			tempDistance = (((*data) - '0') & 0x0f) << 12;
 			data ++;
-			*variablePtr |= ((*data) - '0');
-			data++;
 
-			variablePtr --;
-
-			*variablePtr = ((*data) - '0') << 4;
+			//tempDistance += (((*data) - '0') & 0x0f) << 8;
+			tempDistance |= (((*data) - '0') & 0x0f) << 8;
 			data ++;
-			*variablePtr |= ((*data) - '0');
+
+			//tempDistance += (((*data) - '0') & 0x0f) << 4;
+			tempDistance |= (((*data) - '0') & 0x0f) << 4;
+			data ++;
+
+			//tempDistance |= (((*data) - '0') & 0x0f);
+			tempDistance |= (((*data) - '0') & 0x0f) << 0;
+			distance = tempDistance;
 		}
 	}
 }

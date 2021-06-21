@@ -32,9 +32,9 @@ __attribute__((always_inline)) inline void PIDAdjustHandler(char *data, uint8_t 
 {
 	matchKeyFloat(data, len, "AP:", 3, AnglePID.proportion);
 
-	matchKeyFloat(data, len, "AI:", 3, AnglePID.integral);
+	matchKeyFloat(data, len, "AI:", 3, AnglePID.integration);
 
-	matchKeyFloat(data, len, "AD:", 3, AnglePID.derivative);
+	matchKeyFloat(data, len, "AD:", 3, AnglePID.differention);
 
 	matchKeyFloat(data, len, "TA:", 3, AnglePID.setpoint);
 }

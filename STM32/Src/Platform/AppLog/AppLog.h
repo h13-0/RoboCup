@@ -26,9 +26,9 @@ void LogInit();
 
 /**
  * @brief: Output Log To Display(Release) or USART(Debug).
- * @param: Log Level and Log in string.
+ * @param: Log Level and Log in format.
  */
-void Log(LogLevel_t level, char *string);
+void Log(LogLevel_t level, char *fmt, ...);
 
 /**
  * @brief: Output Float Data to VOFA+
