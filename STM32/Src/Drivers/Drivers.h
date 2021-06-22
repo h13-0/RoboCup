@@ -10,4 +10,8 @@
 
 #include "SSD1283.h"
 
+#include "SKTOF.h"
+
+#include "WT101.h"
+
 #endif /* DRIVERS_DRIVERS_H_ */

@@ -22,4 +22,6 @@ void SerialDebugInterruptHandler(uint8_t data);
  */
 void TOFInterruptHandler(uint8_t data);
 
+void WT101InterruptHandler(uint8_t data);
+
 #endif /* PLATFORM_INTERRUPTS_USARTINTERRUPTS_USARTINTERRUPTS_H_ */

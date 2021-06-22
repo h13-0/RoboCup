@@ -14,12 +14,12 @@
  * @brief: TOF Serial Handler.
  * @param: data.
  */
-void TOFHandler(uint8_t data);
+void TOF_Handler(uint8_t data);
 
 /**
  * @brief:  Get TOF Distance value.
  * @return: Distance value in millimeters.
  */
-uint16_t GetTOFDistance(void);
+uint16_t GetTOF_Distance(void);
 
 #endif /* DRIVERS_SKTOF_SKTOF_H_ */

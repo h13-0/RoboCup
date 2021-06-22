@@ -53,7 +53,7 @@ void SetLeftMotorPWM(int16_t pwmValue) {
 		if(pwmValue > (- GetMaxValueOfPWM()))
 		{
 			setChannel1Value(0);
-			setChannel2Value(pwmValue + deadZone);
+			setChannel2Value(- pwmValue + deadZone);
 		}else{
 			setChannel1Value(0);
 			setChannel2Value(MAXPWMVALUE);
@@ -83,7 +83,7 @@ void SetRightMotorPWM(int16_t pwmValue)
 		if(pwmValue > (- GetMaxValueOfPWM()))
 		{
 			setChannel3Value(0);
-			setChannel4Value(pwmValue + deadZone);
+			setChannel4Value(- pwmValue + deadZone);
 		}else{
 			setChannel3Value(0);
 			setChannel4Value(MAXPWMVALUE);

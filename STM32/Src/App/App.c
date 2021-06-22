@@ -21,44 +21,76 @@
 int App(void) {
 	//Init Log First.
 	LogInit();
+
 	Log(Debug, "Start!");
-
-	 //Init MPU and DMP.
-	 uint8_t ret = 0;
-	 //Init MPU
-	 ret = MPU_Init();
-	 while (ret) {
-		 Log(Warning, "MPU Init Fail with ret: %d", ret);
-		 DelayMS(400);
-		 ret = MPU_Init();
-	 }
-
-	 Log(Info, "MPU OK");
-
-	 //Init DMP
-	 ret = DMP_Init();
-	 while (ret) {
-		 Log(Warning, "dmp Init Fail with ret: %d", ret);
-		 DelayMS(400);
-		 ret = DMP_Init();
-	 }
 
 	 Log(Info, "dmp OK");
 
 	 MotorInit();
 	 MotionControlInit();
 
-	 KeepAngle(0);
+	 while(1)
+	 {
+		 float data[] = {GetYawValue(), GetYawVelocity(), GetTemperature()};
+		 LogJustFloat(data, 3);
+	 }
 
-	 while(1);
+	 //KeepAngle(0);
+	 //KeepDistance(500);
 
-/*
+	 StraightUntill(300);
+
+	 TurnTo(Left);
+
+	 StraightUntill(1775);
+
+	 TurnTo(Right);
+
+	 StraightUntill(325);
+
+	 TurnTo(Left);
+
+	 StraightUntill(200);
+
+	 TurnTo(Right);
+
+	 TurnTo(Left);
+
+	 StraightUntill(3700);
+
+	 StraightUntill(2400);
+
+	 TurnTo(Right);
+
+	 StraightUntill(2400);
+
+	 TurnTo(Right);
+
+	 StraightUntill(650);
+
+	 TurnTo(Left);
+
+	 StraightUntill(2200);
+
+	 StraightUntill(300);
+
+	 TurnTo(Left);
+
+	 StraightUntill(400);
+
+	 TurnTo(Right);
+
+	 StraightUntill(2100);
+
+	 //while(1);
+
+
 	 while (1)
 	 {
-		 float data[]={GetTOFDistance()};
-		 SendJustFloatFrame(data, 1);
+		 float data[]={GetTOF_Distance()};
+		 LogJustFloat(data, 1);
 	 }
-*/
+
 
 /*
 	SPIInit();

@@ -34,7 +34,7 @@ static void getDistanceHandler(char* data);
  * @brief: TOF Serial Handler.
  * @param: data.
  */
-__attribute__((always_inline)) inline void TOFHandler(uint8_t data)
+__attribute__((always_inline)) inline void TOF_Handler(uint8_t data)
 {
 	if (getH0DStatus()) {
 		if (data != 0x0a) {
@@ -91,20 +91,40 @@ static __attribute__((always_inline)) inline void getDistanceHandler(char* data)
 			//To:
 			//'Data_Lh' 'Data_Hl' 'Data_Hh' 'Data_Hl'
 			//'Data_L' 'Data_H'
-			//tempDistance += (((*data) - '0') & 0x0f) << 12;
-			tempDistance = (((*data) - '0') & 0x0f) << 12;
+			if((*data) <= '9')
+			{
+				tempDistance = (((*data) - '0') & 0x0f) << 12;
+			} else {
+				tempDistance = (((*data) - 'A' + 10) & 0x0f) << 12;
+			}
+
 			data ++;
 
-			//tempDistance += (((*data) - '0') & 0x0f) << 8;
-			tempDistance |= (((*data) - '0') & 0x0f) << 8;
+			if((*data) <= '9')
+			{
+				tempDistance |= (((*data) - '0') & 0x0f) << 8;
+			} else {
+				tempDistance |= (((*data) - 'A' + 10) & 0x0f) << 8;
+			}
+
 			data ++;
 
-			//tempDistance += (((*data) - '0') & 0x0f) << 4;
-			tempDistance |= (((*data) - '0') & 0x0f) << 4;
+			if((*data) <= '9')
+			{
+				tempDistance |= (((*data) - '0') & 0x0f) << 4;
+			} else {
+				tempDistance |= (((*data) - 'A' + 10) & 0x0f) << 4;
+			}
+
 			data ++;
 
-			//tempDistance |= (((*data) - '0') & 0x0f);
-			tempDistance |= (((*data) - '0') & 0x0f) << 0;
+			if((*data) <= 9)
+			{
+				tempDistance |= (((*data) - '0') & 0x0f) << 0;
+			} else {
+				tempDistance |= (((*data) - 'A' + 10) & 0x0f) << 0;
+			}
+
 			distance = tempDistance;
 		}
 	}
@@ -114,7 +134,7 @@ static __attribute__((always_inline)) inline void getDistanceHandler(char* data)
  * @brief:  Get TOF Distance value.
  * @return: Distance value in millimeters.
  */
-__attribute__((always_inline)) inline uint16_t GetTOFDistance(void)
+__attribute__((always_inline)) inline uint16_t GetTOF_Distance(void)
 {
 	return distance;
 }

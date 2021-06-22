@@ -44,13 +44,7 @@ void KeepDistance(uint16_t Distance);
 /**
  *
  */
-void ForwardUntill(uint16_t distance);
-
-/**
- * @brief: Update Distance Handler.
- * @param: Distance in millimeter.
- */
-void UpdateDistanceHandler(uint16_t distance);
+void StraightUntill(uint16_t distance);
 
 /**
  * @group: PID Calculate Handler.
