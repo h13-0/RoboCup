@@ -12,13 +12,7 @@
 #endif
 
 /**
- * @brief: 选择要输出的串口号
- * @note: 默认USART1
- */
-void SetJustFloatSerialPort(USART_TypeDef *USARTx);
-
-/**
- * @brief: 输出一帧JustFloat帧
+ * @brief: Send one frame to VOFA+
  */
 void SendJustFloatFrame(float data[], uint8_t len);
 

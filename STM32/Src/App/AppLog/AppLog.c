@@ -6,8 +6,8 @@
  */
 
 #include "AppLog.h"
+#include <stdio.h>
 #include <stdarg.h>
-#include "SerialPrintf.h"
 //Serial Printf Lib
 #include "JustFloat.h"
 
@@ -22,8 +22,6 @@ inline void LogInit()
 
 #else
 	//Debug Init Functions.
-	SetSerialPrintfTarget(USART1);
-	SetJustFloatSerialPort(USART1);
 #endif
 }
 
@@ -90,6 +88,7 @@ void Log(LogLevel_t level, char *fmt, ...)
 	va_start(arg, fmt);
 	vprintf(fmt, arg);
 	va_end(arg);
+	printf("\r\n");
 }
 
 /**

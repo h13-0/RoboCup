@@ -163,11 +163,11 @@ void TurnTo(direction_t Direction)
 	switch(Direction)
 	{
 	case Left:
-		anglePID.setpoint -= 90;
+		anglePID.setpoint += 90;
 		break;
 
 	case Right:
-		anglePID.setpoint += 90;
+		anglePID.setpoint -= 90;
 		break;
 
 	case BackWard:
@@ -249,8 +249,8 @@ void KeepAngle(uint16_t Angle)
 		SetLeftMotorPWM(pwmBaseOutput - pwmDifference);
 		SetRightMotorPWM(pwmBaseOutput + pwmDifference);
 
-		float data[] = { pitch, roll, yaw, anglePID.setpoint, pwmDifference };
-		LogJustFloat(data, 5);
+		float data[] = { yaw, anglePID.setpoint, pwmDifference };
+		LogJustFloat(data, 3);
 	}
 	disableDirectionPID();
 }

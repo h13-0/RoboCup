@@ -17,6 +17,18 @@
 void WT101Handler(uint8_t data);
 
 /**
+ * @brief: Reset yaw value to zero.
+ */
+void ResetYaw(void);
+
+/**
+ * @brief: Set WT101 Return Rate To 100hz.
+ * @note:
+ * 		**This will not take effect until WT101 is repowered**
+ */
+void SetWT101ReturnRateTo100(void);
+
+/**
  * @brief:  Get Yaw value.
  * @return: Yaw value in angle.
  */

@@ -210,6 +210,16 @@
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/Platform/Interrupts/USARTInterrupts}&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/Drivers/WT101}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/Platform/WT101Ports}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/App/AppLog}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/App/AppLog/JustFloat}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/Platform/USART/DebugPorts}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/Platform/USART/WT101Ports}&quot;"/>
                                     								
                                 </option>
                                 								
@@ -422,6 +432,16 @@
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/Drivers/VL53L0X/platform/inc}&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/Drivers/WT101}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/Platform/WT101Ports}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/App/AppLog}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/App/AppLog/JustFloat}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/Platform/USART/DebugPorts}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/Platform/USART/WT101Ports}&quot;"/>
                                     								
                                 </option>
                                 								
@@ -760,6 +780,16 @@
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/Drivers/VL53L0X/platform/inc}&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/Drivers/WT101}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/Platform/WT101Ports}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/App/AppLog}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/App/AppLog/JustFloat}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/Platform/USART/DebugPorts}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/Platform/USART/WT101Ports}&quot;"/>
                                     								
                                 </option>
                                 								
@@ -1002,6 +1032,16 @@
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/Drivers/VL53L0X/platform/inc}&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/Drivers/WT101}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/Platform/WT101Ports}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/App/AppLog}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/App/AppLog/JustFloat}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/Platform/USART/DebugPorts}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Src/Platform/USART/WT101Ports}&quot;"/>
                                     								
                                 </option>
                                 								

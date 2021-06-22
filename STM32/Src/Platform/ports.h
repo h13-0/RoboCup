@@ -23,6 +23,11 @@
 /**
  * @group: Additional APIs.
  */
+//WT101
+#include "WT101Ports.h"
+//Debug
+#include "DebugPorts.h"
+
 //Servo
 #include "ServoPorts.h"
 #include "Servo.h"

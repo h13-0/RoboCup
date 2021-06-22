@@ -4,9 +4,8 @@
  *  Created on: 2021Äê6ÔÂ22ÈÕ
  *      Author: h13
  */
-
-
 #include "WT101.h"
+#include "ports.h"
 
 struct WT101BufferStatusStructure
 {
@@ -109,6 +108,27 @@ void WT101Handler(uint8_t data)
 }
 
 /**
+ * @brief: Reset yaw value to zero.
+ */
+void ResetYaw(void)
+{
+	WT101SerialSend(0xff);
+	WT101SerialSend(0xaa);
+	WT101SerialSend(0x76);
+	WT101SerialSend(0x00);
+	WT101SerialSend(0x00);
+}
+
+void SetWT101ReturnRateTo100(void)
+{
+	WT101SerialSend(0xff);
+	WT101SerialSend(0xaa);
+	WT101SerialSend(0x03);
+	WT101SerialSend(0x09);
+	WT101SerialSend(0x00);
+}
+
+/**
  * @brief:  Get Yaw value.
  * @return: Yaw value in angle.
  */
@@ -134,4 +154,3 @@ __attribute__((always_inline)) inline float GetTemperature(void)
 {
 	return rawTemperatureData / 100.0;
 }
-

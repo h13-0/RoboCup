@@ -70,6 +70,7 @@ uint8_t I2CReadByte(uint8_t address, uint8_t reg) {
  * 		uint8_t *buf: 要写入的数据
  * @return: 错误码, 成功为0
  */
+
 /*
 uint8_t I2CWriteBytes(uint8_t address, uint8_t reg, uint8_t len, uint8_t *buf) {
 	if (HAL_I2C_IsDeviceReady(i2cport, address * 2, I2C_RETRY, I2C_TIMEOUT)

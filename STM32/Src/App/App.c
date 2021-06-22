@@ -24,72 +24,82 @@ int App(void) {
 
 	Log(Debug, "Start!");
 
-	 Log(Info, "dmp OK");
+	//First run
+#ifdef FirstRun
+	//Init WT101
+	SetWT101ReturnRateTo100();
 
-	 MotorInit();
-	 MotionControlInit();
+	//Please close the macro definition and rebuild and redownload the program.
+	while(1)
+		Log(Info, "All peripherals are configured, Please close the macro definition and rebuild and redownload the program.");
+#endif
 
-	 while(1)
-	 {
-		 float data[] = {GetYawValue(), GetYawVelocity(), GetTemperature()};
-		 LogJustFloat(data, 3);
-	 }
+	ResetYaw();
 
-	 //KeepAngle(0);
-	 //KeepDistance(500);
+	MotorInit();
+	MotionControlInit();
 
-	 StraightUntill(300);
+	while(1)
+	{
+		float data[] = {GetYawValue(), GetYawVelocity(), GetTemperature()};
+		LogJustFloat(data, 3);
+	}
 
-	 TurnTo(Left);
+	//KeepAngle(0);
+	//KeepDistance(500);
 
-	 StraightUntill(1775);
+	StraightUntill(300);
 
-	 TurnTo(Right);
+	TurnTo(Left);
 
-	 StraightUntill(325);
+	StraightUntill(1775);
 
-	 TurnTo(Left);
+	TurnTo(Right);
 
-	 StraightUntill(200);
+	StraightUntill(325);
 
-	 TurnTo(Right);
+	TurnTo(Left);
 
-	 TurnTo(Left);
+	StraightUntill(300);
 
-	 StraightUntill(3700);
+	TurnTo(Right);
 
-	 StraightUntill(2400);
+	TurnTo(Left);
 
-	 TurnTo(Right);
+	StraightUntill(3700);
 
-	 StraightUntill(2400);
+	StraightUntill(2400);
 
-	 TurnTo(Right);
+	TurnTo(Right);
 
-	 StraightUntill(650);
+	StraightUntill(2400);
 
-	 TurnTo(Left);
+	TurnTo(Right);
 
-	 StraightUntill(2200);
+	StraightUntill(650);
 
-	 StraightUntill(300);
+	TurnTo(Left);
 
-	 TurnTo(Left);
+	StraightUntill(2200);
 
-	 StraightUntill(400);
+	StraightUntill(300);
 
-	 TurnTo(Right);
+	TurnTo(Left);
 
-	 StraightUntill(2100);
+	StraightUntill(400);
+
+	TurnTo(Right);
+
+	StraightUntill(2100);
 
 	 //while(1);
 
 
-	 while (1)
-	 {
-		 float data[]={GetTOF_Distance()};
-		 LogJustFloat(data, 1);
-	 }
+	while (1)
+	{
+		float data[]={GetTOF_Distance()};
+		LogJustFloat(data, 1);
+	}
 
 
 /*
