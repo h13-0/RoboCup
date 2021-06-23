@@ -126,6 +126,32 @@ float PosPID_Calc(PositionPID_t *PIDx, float currentPoint);
 float PosPID_CalcWithCustDiff(PositionPID_t *PIDx, float currentPoint, float currentDifferention);
 
 /**
+ * @brief: Position PID calculate with expand functions.
+ * @param:
+ * 		PositionPID_t *PIDx: Position PID struct.
+ * 		float currentError:  Customed error.
+ * @return:
+ * 		Calculation results.
+ * @note:
+ * 		This function is suitable for continuous control systems with sudden change points.
+ * 		Such as in the yaw Angle control plus or minus 180 degree problem.
+ */
+float PosPID_CalcWithCustErr(PositionPID_t *PIDx, float currentError);
+
+/**
+ * @brief: Position PID calculate with expand functions.
+ * @param:
+ * 		PositionPID_t *PIDx:       Position PID struct.
+ * 		float currentError:        Customed error.
+ * 		float currentDifferention: Customed differention status.
+ * @return:
+ * 		Calculation results.
+ * @note:
+ * 		This function is suitable for continuous control systems with sudden change points and have a sensor with differential characteristic.
+ */
+float PosPID_CalcWithCustErrAndDiff(PositionPID_t *PIDx, float currentError, float currentDifferention);
+
+/**
  * @group: Incremental PID.
  */
 

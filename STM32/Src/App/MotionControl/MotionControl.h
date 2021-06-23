@@ -35,7 +35,7 @@ void TurnTo(direction_t Direction);
 /**
  * @brief: Keep Angle To Adjust PID Value.
  */
-void KeepAngle(uint16_t Angle);
+void KeepAngle(void);
 
 void KeepDistance(uint16_t Distance);
 

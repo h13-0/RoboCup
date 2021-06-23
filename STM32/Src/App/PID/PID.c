@@ -221,6 +221,178 @@ float PosPID_CalcWithCustDiff(PositionPID_t *PIDx, float currentPoint, float cur
 }
 
 /**
+ * @brief: Position PID calculate with expand functions.
+ * @param:
+ * 		PositionPID_t *PIDx: Position PID struct.
+ * 		float currentPoint:  Current system status.
+ * 		float currentError:  Customed error.
+ * @return:
+ * 		Calculation results.
+ * @note:
+ * 		This function is suitable for continuous control systems with sudden change points.
+ * 		Such as in the yaw Angle control plus or minus 180 degree problem.
+ */
+float PosPID_CalcWithCustErr(PositionPID_t *PIDx, float currentError)
+{
+	float result;
+
+	PIDx -> _sumError += currentError;
+
+	//Expand functions.
+	//Auto reset integration.
+	if(PIDx -> configs.autoResetIntegration == enable)
+	{
+		if((currentError > 0) && (PIDx -> configs._lastResetIntergrationStatus == 0))
+		{
+			PIDx -> _sumError = 0;
+			PIDx -> configs._lastResetIntergrationStatus = 1;
+		}else if((currentError < 0) && (PIDx -> configs._lastResetIntergrationStatus != 0))
+		{
+			PIDx -> _sumError = 0;
+			PIDx -> configs._lastResetIntergrationStatus = 0;
+		}
+	}
+
+	//Calculate the integral output.
+	result = PIDx -> integration * PIDx -> _sumError;
+
+	//Expand functions.
+	//Limit integration.
+	if(PIDx -> configs.limitIntegration == enable)
+	{
+		if(isnormal(result))
+		{
+			if(result > PIDx -> maximumAbsValueOfIntegrationOutput)
+			{
+				result = PIDx -> maximumAbsValueOfIntegrationOutput;
+				PIDx -> _sumError = PIDx -> maximumAbsValueOfIntegrationOutput / PIDx -> integration;
+			} else if(result < - PIDx -> maximumAbsValueOfIntegrationOutput)
+			{
+				result = - PIDx -> maximumAbsValueOfIntegrationOutput;
+				PIDx -> _sumError = - (PIDx -> maximumAbsValueOfIntegrationOutput / PIDx -> integration);
+			}
+		} else {
+			result = 0;
+			PIDx -> _sumError = 0;
+		}
+	}
+
+	//Calculate Output
+	result =
+		//proportion * error +
+		PIDx -> proportion * (currentError) +
+		//integral output +
+		result +
+		//differention * error'
+		PIDx -> differention * (currentError - PIDx -> _error);
+
+	//Update error.
+	PIDx -> _error = currentError;
+
+	//Check the output.
+	if (!isnormal(result))
+	{
+		return 0;
+	} else {
+		if(result > (PIDx -> maxAbsOutput))
+		{
+			return PIDx -> maxAbsOutput;
+		} else if(result < - PIDx -> maxAbsOutput)
+		{
+			return - PIDx -> maxAbsOutput;
+		}
+	}
+
+	return result;
+}
+
+/**
+ * @brief: Position PID calculate with expand functions.
+ * @param:
+ * 		PositionPID_t *PIDx:       Position PID struct.
+ * 		float currentPoint:        Current system status.
+ * 		float currentError:        Customed error.
+ * 		float currentDifferention: Customed differention status.
+ * @return:
+ * 		Calculation results.
+ * @note:
+ * 		This function is suitable for continuous control systems with sudden change points and have a sensor with differential characteristic.
+ */
+float PosPID_CalcWithCustErrAndDiff(PositionPID_t *PIDx, float currentError, float currentDifferention)
+{
+	float result;
+
+	PIDx -> _sumError += currentError;
+
+	//Expand functions.
+	//Auto reset integration.
+	if(PIDx -> configs.autoResetIntegration == enable)
+	{
+		if((currentError > 0) && (PIDx -> configs._lastResetIntergrationStatus == 0))
+		{
+			PIDx -> _sumError = 0;
+			PIDx -> configs._lastResetIntergrationStatus = 1;
+		}else if((currentError < 0) && (PIDx -> configs._lastResetIntergrationStatus != 0))
+		{
+			PIDx -> _sumError = 0;
+			PIDx -> configs._lastResetIntergrationStatus = 0;
+		}
+	}
+
+	//Calculate the integral output.
+	result = PIDx -> integration * PIDx -> _sumError;
+
+	//Expand functions.
+	//Limit integration.
+	if(PIDx -> configs.limitIntegration == enable)
+	{
+		if(isnormal(result))
+		{
+			if(result > PIDx -> maximumAbsValueOfIntegrationOutput)
+			{
+				result = PIDx -> maximumAbsValueOfIntegrationOutput;
+				PIDx -> _sumError = PIDx -> maximumAbsValueOfIntegrationOutput / PIDx -> integration;
+			} else if(result < - PIDx -> maximumAbsValueOfIntegrationOutput)
+			{
+				result = - PIDx -> maximumAbsValueOfIntegrationOutput;
+				PIDx -> _sumError = - (PIDx -> maximumAbsValueOfIntegrationOutput / PIDx -> integration);
+			}
+		} else {
+			result = 0;
+			PIDx -> _sumError = 0;
+		}
+	}
+
+	//Calculate Output
+	result =
+		//proportion * error +
+		PIDx -> proportion * (currentError) +
+		//integral output +
+		result +
+		//differention * error'
+		PIDx -> differention * currentDifferention;
+
+	//Update error.
+	PIDx -> _error = currentError;
+
+	//Check the output.
+	if (!isnormal(result))
+	{
+		return 0;
+	} else {
+		if(result > (PIDx -> maxAbsOutput))
+		{
+			return PIDx -> maxAbsOutput;
+		} else if(result < - PIDx -> maxAbsOutput)
+		{
+			return - PIDx -> maxAbsOutput;
+		}
+	}
+
+	return result;
+}
+
+/**
  * @brief: Incremental PID calculate.
  * @param:
  * 		IncrementalPID_t *PIDx: Incremental PID struct.

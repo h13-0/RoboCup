@@ -163,19 +163,19 @@ void TurnTo(direction_t Direction)
 	switch(Direction)
 	{
 	case Left:
-		anglePID.setpoint += 90;
+		anglePID.setpoint = ((int)(anglePID.setpoint + 180 + 90) % 360) - 180;
 		break;
 
 	case Right:
-		anglePID.setpoint -= 90;
+		anglePID.setpoint = ((int)(anglePID.setpoint + 180 - 90) % 360) - 180;
 		break;
 
 	case BackWard:
-
+		anglePID.setpoint = ((int)(anglePID.setpoint + 180 + 180) % 360) - 180;
 		break;
 
 	default:
-		break;
+		return;
 	}
 
 	//Keep Angle
@@ -184,8 +184,8 @@ void TurnTo(direction_t Direction)
 	uint32_t startTime = GetMS();
 	while(1)
 	{
-		SetLeftMotorPWM(pwmBaseOutput - pwmDifference);
-		SetRightMotorPWM(pwmBaseOutput + pwmDifference);
+		SetLeftMotorPWM(pwmBaseOutput + pwmDifference);
+		SetRightMotorPWM(pwmBaseOutput - pwmDifference);
 
 		if((uint16_t)abs(yaw - anglePID.setpoint) > angleAccurary)
 		{
@@ -215,8 +215,8 @@ void StraightUntill(uint16_t Distance)
 	uint32_t startTime = GetMS();
 	while (1)
 	{
-		SetLeftMotorPWM(pwmBaseOutput - pwmDifference);
-		SetRightMotorPWM(pwmBaseOutput + pwmDifference);
+		SetLeftMotorPWM(pwmBaseOutput + pwmDifference);
+		SetRightMotorPWM(pwmBaseOutput - pwmDifference);
 
 		if((uint16_t)abs(distance - forwardPID.setpoint) > forwardAccuracy)
 		{
@@ -240,14 +240,14 @@ void StraightUntill(uint16_t Distance)
 /**
  * @brief: Keep Angle To Adjust PID Value.
  */
-void KeepAngle(uint16_t Angle)
+void KeepAngle(void)
 {
 	anglePID.setpoint = Angle;
 	enableDirectionPID();
 	while (1)
 	{
-		SetLeftMotorPWM(pwmBaseOutput - pwmDifference);
-		SetRightMotorPWM(pwmBaseOutput + pwmDifference);
+		SetLeftMotorPWM(pwmBaseOutput + pwmDifference);
+		SetRightMotorPWM(pwmBaseOutput - pwmDifference);
 
 		float data[] = { yaw, anglePID.setpoint, pwmDifference };
 		LogJustFloat(data, 3);
@@ -263,8 +263,8 @@ void KeepDistance(uint16_t Distance)
 
 	while(1)
 	{
-		SetLeftMotorPWM(pwmBaseOutput - pwmDifference);
-		SetRightMotorPWM(pwmBaseOutput + pwmDifference);
+		SetLeftMotorPWM(pwmBaseOutput + pwmDifference);
+		SetRightMotorPWM(pwmBaseOutput - pwmDifference);
 		float data[] = { distance, yaw, forwardPID.setpoint, pwmBaseOutput, pwmDifference };
 		LogJustFloat(data, 5);
 	}
@@ -285,8 +285,31 @@ __attribute__((always_inline)) inline void DirectionPIDCalculateHandler(void)
 	if (getDirectionPIDStatus())
 	{
 		yaw = GetYawValue();
-		float tempDifference = PosPID_Calc(&anglePID, yaw);
-		pwmDifference = tempDifference;
+		float error = 0;
+
+		//if(clockwiseError > antiClockwiseError)
+		if((anglePID.setpoint - yaw < 180.0) || (anglePID.setpoint - yaw < - 180.0))
+		{
+			//Turn clockwise, error < 0.
+			//if(Cross ¡À180 degrees)
+			if(yaw > 0 && anglePID.setpoint < 0)
+			{
+				error = yaw - anglePID.setpoint - 360;
+			} else {
+				error = yaw - anglePID.setpoint;
+			}
+		} else {
+			//Turn anti-clockwise, error > 0.
+			//if(Cross ¡À180 degrees)
+			if(yaw < 0 && anglePID.setpoint > 0)
+			{
+				error = yaw - anglePID.setpoint + 360;
+			} else {
+				error = yaw - anglePID.setpoint;
+			}
+		}
+		pwmDifference = PosPID_CalcWithCustErr(&anglePID, error);
+		//pwmDifference = PosPID_Calc(&anglePID, yaw);
 	}
 }
 

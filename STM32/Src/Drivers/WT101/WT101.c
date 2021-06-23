@@ -7,6 +7,10 @@
 #include "WT101.h"
 #include "ports.h"
 
+#define Clockwise     0
+#define AntiClockwise 1
+#define PositiveDirection Clockwise
+
 struct WT101BufferStatusStructure
 {
 	uint8_t header      : 1;
@@ -134,7 +138,11 @@ void SetWT101ReturnRateTo100(void)
  */
 __attribute__((always_inline)) inline float GetYawValue(void)
 {
+#if(PositiveDirection == Clockwise)
+	return - rawYawData * 180.0 / 32768;
+#else
 	return rawYawData * 180.0 / 32768;
+#endif
 }
 
 /**
@@ -152,5 +160,9 @@ __attribute__((always_inline)) inline float GetYawVelocity(void)
  */
 __attribute__((always_inline)) inline float GetTemperature(void)
 {
+#if(PositiveDirection == Clockwise)
+	return - rawTemperatureData / 100.0;
+#else
 	return rawTemperatureData / 100.0;
+#endif
 }

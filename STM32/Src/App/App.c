@@ -39,13 +39,7 @@ int App(void) {
 	MotorInit();
 	MotionControlInit();
 
-	while(1)
-	{
-		float data[] = {GetYawValue(), GetYawVelocity(), GetTemperature()};
-		LogJustFloat(data, 3);
-	}
-
-	//KeepAngle(0);
+	KeepAngle();
 	//KeepDistance(500);
 
 	StraightUntill(300);
@@ -92,7 +86,7 @@ int App(void) {
 
 	StraightUntill(2100);
 
-	 //while(1);
+	//while(1);
 
 
 	while (1)
