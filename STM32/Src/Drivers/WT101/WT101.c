@@ -151,7 +151,11 @@ __attribute__((always_inline)) inline float GetYawValue(void)
  */
 __attribute__((always_inline)) inline float GetYawVelocity(void)
 {
+#if(PositiveDirection == Clockwise)
+	return - rawYawVelocityData * 2000.0 / 32768;
+#else
 	return rawYawVelocityData * 2000.0 / 32768;
+#endif
 }
 
 /**
@@ -160,9 +164,5 @@ __attribute__((always_inline)) inline float GetYawVelocity(void)
  */
 __attribute__((always_inline)) inline float GetTemperature(void)
 {
-#if(PositiveDirection == Clockwise)
-	return - rawTemperatureData / 100.0;
-#else
 	return rawTemperatureData / 100.0;
-#endif
 }

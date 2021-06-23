@@ -131,7 +131,7 @@ void MotionControlInit(void)
 	//angle PID configs.
 	anglePID.proportion = 7.5;
 	anglePID.integration = 1.8;
-	anglePID.differention = 417.0;
+	anglePID.differention = 4.2;
 	anglePID.setpoint = 0.0;
 	anglePID.maxAbsOutput = GetMaxValueOfPWM() * 0.4;
 
@@ -237,20 +237,20 @@ void StraightUntill(uint16_t Distance)
 }
 
 #ifdef DEBUG
+
 /**
  * @brief: Keep Angle To Adjust PID Value.
  */
 void KeepAngle(void)
 {
-	anglePID.setpoint = Angle;
 	enableDirectionPID();
 	while (1)
 	{
 		SetLeftMotorPWM(pwmBaseOutput + pwmDifference);
 		SetRightMotorPWM(pwmBaseOutput - pwmDifference);
 
-		float data[] = { yaw, anglePID.setpoint, pwmDifference };
-		LogJustFloat(data, 3);
+		float data[] = { yaw, anglePID.setpoint, GetYawVelocity(), pwmDifference };
+		LogJustFloat(data, 4);
 	}
 	disableDirectionPID();
 }
@@ -308,7 +308,9 @@ __attribute__((always_inline)) inline void DirectionPIDCalculateHandler(void)
 				error = yaw - anglePID.setpoint;
 			}
 		}
-		pwmDifference = PosPID_CalcWithCustErr(&anglePID, error);
+
+		pwmDifference = PosPID_CalcWithCustErrAndDiff(&AnglePID, error, GetYawVelocity());
+		//pwmDifference = PosPID_CalcWithCustErr(&anglePID, error);
 		//pwmDifference = PosPID_Calc(&anglePID, yaw);
 	}
 }
