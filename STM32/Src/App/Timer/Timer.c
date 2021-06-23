@@ -6,7 +6,7 @@
  */
 #include "Timer.h"
 
-#include "PIDManagement.h"
+#include "MotionControl.h"
 
 /**
  * @brief: Timer Interrupt Handler.
@@ -16,7 +16,8 @@
  */
 __attribute__((always_inline)) inline void TimerHandler(void)
 {
-	PIDHandler();
+	DirectionPIDCalculateHandler();
+	ForwardPIDCalculateHandler();
 }
 
 /**
@@ -29,4 +30,3 @@ __attribute__((always_inline)) inline void LVGLHandler(void)
 {
 
 }
-

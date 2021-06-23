@@ -23,7 +23,6 @@
 #include "stm32f1xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "App.h"
 #include "Interrupts.h"
 /* USER CODE END Includes */
 
@@ -211,7 +210,7 @@ void USART1_IRQHandler(void)
 		LL_USART_ClearFlag_RXNE(USART1);
 
 #ifdef DEBUG
-		DebugHandler(data);
+		SerialDebugInterruptHandler(data);
 #endif
 	}
 
@@ -269,7 +268,7 @@ void TIM7_IRQHandler(void)
   /* USER CODE BEGIN TIM7_IRQn 0 */
 	if (LL_TIM_IsActiveFlag_UPDATE(TIM7)) {
 		LL_TIM_ClearFlag_UPDATE(TIM7);
-		TimerHandler();
+		TimerInterruptHandler();
 	}
 
   /* USER CODE END TIM7_IRQn 0 */

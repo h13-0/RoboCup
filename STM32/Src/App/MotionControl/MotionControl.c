@@ -10,7 +10,6 @@
 
 #include "Drivers.h"
 
-#include "PIDManagement.h"
 #include "PID.h"
 #include "ports.h"
 
@@ -82,7 +81,6 @@ static struct motionControlStatusStructure status;
 //
 static float yaw = 0;
 
-
 /**
  * @group: Forward Variables.
  */
@@ -107,7 +105,7 @@ void MotionControlInit(void)
 	//angle PID configs.
 	anglePID.proportion = 5.0;
 	anglePID.integration = 0.95;
-	anglePID.differention = 200.0;
+	anglePID.differention = 2.0;
 	anglePID.setpoint = 0.0;
 	anglePID.maxAbsOutput = GetMaxValueOfPWM() * 0.3;
 

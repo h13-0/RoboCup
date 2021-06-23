@@ -9,12 +9,6 @@
 #define APP_APP_H_
 
 /**
- * @group: Interrupt Handlers
- */
-#include "Timer.h"
-#include "Debug.h"
-
-/**
  * @brief: The main workflow of the robot.
  */
 int App(void);

@@ -10,4 +10,6 @@
 
 #include "USARTInterrupts.h"
 
+#include "TimerInterrupts.h"
+
 #endif /* PLATFORM_INTERRUPTS_INTERRUPTS_H_ */

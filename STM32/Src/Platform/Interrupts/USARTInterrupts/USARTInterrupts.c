@@ -7,6 +7,7 @@
 #include "USARTInterrupts.h"
 #include "SKTOF.h"
 #include "WT101.h"
+#include "Debug.h"
 
 /**
  * @brief: Serial Debug Interrupt Handler.
@@ -14,7 +15,7 @@
  */
 __attribute__((always_inline)) inline void SerialDebugInterruptHandler(uint8_t data)
 {
-
+	DebugHandler(data);
 }
 
 /**
