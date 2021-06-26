@@ -10,17 +10,26 @@
 
 #include <stdint.h>
 
+typedef enum
+{
+	SPI_OK,
+	SPI_Busy,
+	SPI_TransmissionTimeout,
+} SPI_Error_t;
+
 /**
  * @brief: Initialize the SPI interface.
  * @note:  If multiple devices are mounted under the SPI interface, be aware of SPI initialization sequence and repeated initialization issues.
+ *
  */
 void SPIInit(void);
 
 /**
- * @brief: SPI write 8-bit data.
- * @param: data.
+ * @brief:  SPI write 8-bit data.
+ * @param:  data.
+ * @return: Status.
  */
-void SPIWriteByte(uint8_t data);
+SPI_Error_t SPIWriteByte(uint8_t data);
 
 /**
  * @group: Set and Reset Pins of LCD.

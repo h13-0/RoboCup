@@ -19,6 +19,8 @@
 #include "MotionControl.h"
 
 int App(void) {
+	ClockInit();
+
 	//Init Log First.
 	LogInit();
 
@@ -91,12 +93,12 @@ int App(void) {
 
 	while (1)
 	{
-		float data[]={GetTOF_Distance()};
-		LogJustFloat(data, 1);
+		float data[]={ GetTOF_Distance(), GetYawValue()};
+		LogJustFloat(data, 2);
 	}
 
 
-/*
+/**Display Test
 	SPIInit();
 	LCDInit();
 
@@ -108,7 +110,8 @@ int App(void) {
 		FillScreen(BLUE);
 	}
 */
-/*
+
+/**LVGL Test
 	SPIInit();
 	lv_init();
 	lv_port_disp_init();
@@ -119,10 +122,6 @@ int App(void) {
 		lv_tick_inc(10);
 		lv_task_handler();
 		HAL_Delay(10);
-		float pitch = 0, roll = 0, yaw = 0;
-		MPUGetData(&pitch, &roll, &yaw);
-		float data[] = {pitch, roll, yaw};
-		LogJustFloat(data, 3);
 	}
 */
 }

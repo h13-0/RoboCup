@@ -9,13 +9,14 @@
 #define APP_MOTIONCONTROL_MOTIONCONTROL_H_
 
 #include <stdint.h>
+#include <stdnoreturn.h>
 
 typedef enum
 {
 	Left,
 	Right,
 	BackWard
-}direction_t;
+} direction_t;
 
 /**
  * @brief: Init Motion Control.
@@ -35,9 +36,9 @@ void TurnTo(direction_t Direction);
 /**
  * @brief: Keep Angle To Adjust PID Value.
  */
-void KeepAngle(void);
+_Noreturn void KeepAngle(void);
 
-void KeepDistance(uint16_t Distance);
+_Noreturn void KeepDistance(uint16_t Distance);
 
 #endif
 

@@ -76,9 +76,9 @@ static void lcdWriteCmd(uint8_t reg, uint16_t data) {
  */
 static void lcdReset(void) {
 	LCDResetRST();
-	DelayMS(100);
+	SleepMillisecond(100);
 	LCDSetRST();
-	DelayMS(50);
+	SleepMillisecond(50);
 }
 
 /**
@@ -95,12 +95,12 @@ void LCDInit(void) {
 	lcdWriteCmd(0x27, 0x057F); /* further bias current setting */
 	lcdWriteCmd(0x29, 0x89A1); /* vcom OTP */
 	lcdWriteCmd(0x00, 0x0001); /* OSC en */
-	DelayMS(100);
+	SleepMillisecond(100);
 	lcdWriteCmd(0x29, 0x80B0); /* vcom OTP */
-	DelayMS(30);
+	SleepMillisecond(30);
 	lcdWriteCmd(0x29, 0xFFFE); /* vcom OTP */
 	lcdWriteCmd(0x07, 0x0023); /* display control */
-	DelayMS(30);
+	SleepMillisecond(30);
 	lcdWriteCmd(0x07, 0x0033); /* display control */
 #if (Rotation == 0)
 	lcdWriteCmd(0x01, 0x2183); /* driver output control, REV, TB, RGB */

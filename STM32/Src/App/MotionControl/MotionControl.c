@@ -26,8 +26,19 @@
 
 #define Roughness Normal
 
+/**
+ * @group: Angle adjust configs.
+ * @param:
+ */
 static const float angleAccurary = 2.0;
+static const uint16_t angleAdjustTimeLimit = 3000;
+
+/**
+ *
+ */
 static const uint16_t forwardAccuracy = 20;
+
+
 #define stableTimeLimit 500
 #if(stableTimeLimit > 12750)
 #error "stableTimeLimit must less than 12750"
@@ -131,12 +142,36 @@ void MotionControlInit(void)
 	anglePID.integration = 1.8;
 	anglePID.differention = 4.2;
 	anglePID.setpoint = 0.0;
-	anglePID.maxAbsOutput = GetMaxValueOfPWM() * 0.4;
+	anglePID.maxAbsOutput = GetMaxValueOfPWM() * 0.5;
 
 	//Extend functions config.
 	anglePID.configs.autoResetIntegration = enable;
 	anglePID.configs.limitIntegration = enable;
-	anglePID.maximumAbsValueOfIntegrationOutput = 150.0;
+	anglePID.maximumAbsValueOfIntegrationOutput = 300.0;
+
+
+	forwardPID.proportion = -1.0;
+	forwardPID.integration = 0.0;
+	forwardPID.differention = 0.0;
+	forwardPID.setpoint = 0.0;
+	forwardPID.maxAbsOutput = GetMaxValueOfPWM() * 0.5;
+
+	//Extend functions config.
+	forwardPID.configs.autoResetIntegration = disable;
+	forwardPID.configs.limitIntegration = enable;
+	forwardPID.maximumAbsValueOfIntegrationOutput = 200.0;
+#elif(Roughness == Rough)
+	//angle PID configs.
+	anglePID.proportion = 7.5;
+	anglePID.integration = 1.8;
+	anglePID.differention = 4.2;
+	anglePID.setpoint = 0.0;
+	anglePID.maxAbsOutput = GetMaxValueOfPWM() * 0.5;
+
+	//Extend functions config.
+	anglePID.configs.autoResetIntegration = enable;
+	anglePID.configs.limitIntegration = enable;
+	anglePID.maximumAbsValueOfIntegrationOutput = 300.0;
 
 
 	forwardPID.proportion = -1.0;
@@ -154,18 +189,19 @@ void MotionControlInit(void)
 
 /**
  * @brief: Turn To ..
- * @param: Direction you want to turn to.
+ * @param:
+ * 		Direction: The direction you want to turn to.
  */
 void TurnTo(direction_t Direction)
 {
 	switch(Direction)
 	{
 	case Left:
-		anglePID.setpoint = ((int)(anglePID.setpoint + 180 + 90) % 360) - 180;
+		anglePID.setpoint = ((int)(anglePID.setpoint + 180 - 90) % 360) - 180;
 		break;
 
 	case Right:
-		anglePID.setpoint = ((int)(anglePID.setpoint + 180 - 90) % 360) - 180;
+		anglePID.setpoint = ((int)(anglePID.setpoint + 180 + 90) % 360) - 180;
 		break;
 
 	case BackWard:
@@ -179,7 +215,9 @@ void TurnTo(direction_t Direction)
 	//Keep Angle
 	enableDirectionPID();
 
-	uint32_t startTime = GetMS();
+	uint32_t startTime = GetCurrentTimeMillisecond();
+	uint32_t startStableTime = GetCurrentTimeMillisecond();
+
 	while(1)
 	{
 		SetLeftMotorPWM(pwmBaseOutput + pwmDifference);
@@ -187,10 +225,15 @@ void TurnTo(direction_t Direction)
 
 		if((uint16_t)abs(yaw - anglePID.setpoint) > angleAccurary)
 		{
-			startTime = GetMS();
+			startStableTime = GetCurrentTimeMillisecond();
 		}
 
-		if(GetMS() - startTime > stableTimeLimit)
+		if(GetCurrentTimeMillisecond() - startStableTime > stableTimeLimit)
+		{
+			break;
+		}
+
+		if(GetCurrentTimeMillisecond() - startTime > angleAdjustTimeLimit)
 		{
 			break;
 		}
@@ -210,7 +253,7 @@ void StraightUntill(uint16_t Distance)
 	forwardPID.setpoint = Distance;
 	enableForwardPID();
 
-	uint32_t startTime = GetMS();
+	uint32_t startTime = GetCurrentTimeMillisecond();
 	while (1)
 	{
 		SetLeftMotorPWM(pwmBaseOutput + pwmDifference);
@@ -218,10 +261,10 @@ void StraightUntill(uint16_t Distance)
 
 		if((uint16_t)abs(distance - forwardPID.setpoint) > forwardAccuracy)
 		{
-			startTime = GetMS();
+			startTime = GetCurrentTimeMillisecond();
 		}
 
-		if(GetMS() - startTime > stableTimeLimit)
+		if(GetCurrentTimeMillisecond() - startTime > stableTimeLimit)
 		{
 			break;
 		}
@@ -238,8 +281,11 @@ void StraightUntill(uint16_t Distance)
 
 /**
  * @brief: Keep Angle To Adjust PID Value.
+ * @note:
+ * 		**Blocking function!!!**
+ * 		Just for PID Adjust!!!
  */
-void KeepAngle(void)
+_Noreturn void KeepAngle(void)
 {
 	enableDirectionPID();
 	while (1)
@@ -253,7 +299,7 @@ void KeepAngle(void)
 	disableDirectionPID();
 }
 
-void KeepDistance(uint16_t Distance)
+_Noreturn void KeepDistance(uint16_t Distance)
 {
 	forwardPID.setpoint = Distance;
 	enableDirectionPID();
@@ -285,8 +331,14 @@ __attribute__((always_inline)) inline void DirectionPIDCalculateHandler(void)
 		yaw = GetYawValue();
 		float error = 0;
 
+		//baseError = anglePID.setPoint - yaw
+		//Then baseError in (-360, 360).
+		//baseError in (-360, -180) -> clockwise
+		//baseError in (-180, 0)    -> antiClockwise
+		//baseError in (0, 180)     -> closkwise
+		//baseError in (180, 360)   -> antiClockwise
 		//if(clockwiseError > antiClockwiseError)
-		if((anglePID.setpoint - yaw < 180.0) || (anglePID.setpoint - yaw < - 180.0))
+		if(((anglePID.setpoint - yaw < 180.0) && (anglePID.setpoint - yaw > 0.0)) || (anglePID.setpoint - yaw < - 180.0))
 		{
 			//Turn clockwise, error < 0.
 			//if(Cross ¡À180 degrees)

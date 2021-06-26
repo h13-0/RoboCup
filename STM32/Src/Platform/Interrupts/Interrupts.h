@@ -12,4 +12,6 @@
 
 #include "TimerInterrupts.h"
 
+#include "Clock.h"
+
 #endif /* PLATFORM_INTERRUPTS_INTERRUPTS_H_ */
