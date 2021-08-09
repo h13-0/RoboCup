@@ -20,16 +20,16 @@ void ServoInit(void);
 /**
  * @group: API for setting high level times for all servos.
  */
-void SetServo0Time(uint16_t HighLevelTime);
+void SetServo0_Time(uint16_t HighLevelTime);
 
-void SetServo1Time(uint16_t HighLevelTime);
+void SetServo1_Time(uint16_t HighLevelTime);
 
-void SetServo2Time(uint16_t HighLevelTime);
+void SetServo2_Time(uint16_t HighLevelTime);
 
-void SetServo3Time(uint16_t HighLevelTime);
+void SetServo3_Time(uint16_t HighLevelTime);
 
-void SetServo4Time(uint16_t HighLevelTime);
+void SetServo4_Time(uint16_t HighLevelTime);
 
-void SetServo5Time(uint16_t HighLevelTime);
+void SetServo5_Time(uint16_t HighLevelTime);
 
 #endif /* PLATFORM_SERVOPORTS_SERVOPORTS_H_ */

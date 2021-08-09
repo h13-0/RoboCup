@@ -285,7 +285,7 @@ void StraightUntill(uint16_t Distance)
  * 		**Blocking function!!!**
  * 		Just for PID Adjust!!!
  */
-_Noreturn void KeepAngle(void)
+void KeepAngle(void)
 {
 	enableDirectionPID();
 	while (1)
@@ -299,7 +299,7 @@ _Noreturn void KeepAngle(void)
 	disableDirectionPID();
 }
 
-_Noreturn void KeepDistance(uint16_t Distance)
+void KeepDistance(uint16_t Distance)
 {
 	forwardPID.setpoint = Distance;
 	enableDirectionPID();

@@ -17,10 +17,118 @@
  */
 void CalibrationAllServo(void)
 {
-	SetServo0Time(50);
-	SetServo1Time(50);
-	SetServo2Time(250);
-	SetServo3Time(250);
-	SetServo4Time(50);
-	SetServo5Time(250);
+	SetServo0_Time(50);
+	SetServo1_Time(50);
+	SetServo2_Time(250);
+	SetServo3_Time(150);
+	SetServo4_Time(50);
+	SetServo5_Time(250);
 }
+
+/**
+ * @brief: Rotate the arm node.
+ * @param: Angle, Rotation range: [0, 180]
+ */
+void ArmNode0_Rotate(float Angle)
+{
+	if(Angle > 180)
+	{
+		Angle = 180;
+	} else if(Angle < 0)
+	{
+		Angle = 0;
+	}
+
+	SetServo0_Time(50 + (Angle / 180.0) * 200.0 * 0.867);
+}
+
+/**
+ * @brief: Rotate the arm node.
+ * @param: Angle, Rotation range: [0, 180]
+ */
+void ArmNode1_Rotate(float Angle)
+{
+	if(Angle > 180)
+	{
+		Angle = 180;
+	} else if(Angle < 0)
+	{
+		Angle = 0;
+	}
+
+	SetServo1_Time(50 + (Angle / 180.0) * 200.0 * 0.857);
+}
+
+/**
+ * @brief: Rotate the arm node.
+ * @param: Angle, Rotation range: [0, 180]
+ */
+void ArmNode2_Rotate(float Angle)
+{
+	if(Angle > 180)
+	{
+		Angle = 180;
+	} else if(Angle < 0)
+	{
+		Angle = 0;
+	}
+
+	SetServo2_Time(250 - (Angle / 180.0) * 200.0);
+}
+
+/**
+ * @brief: Rotate the arm node.
+ * @param: Angle, Rotation range: [-90, 90]
+ */
+void ArmNode3_Rotate(float Angle)
+{
+	if(Angle > 90)
+	{
+		Angle = 90;
+	} else if(Angle < -90)
+	{
+		Angle = -90;
+	}
+
+	SetServo3_Time(150 - (Angle / 180.0) * 200.0 * 0.9375);
+}
+
+/**
+ * @brief: Rotate the arm node.
+ * @param: Angle, Rotation range: [0, 180]
+ */
+void ArmNode4_Rotate(float Angle)
+{
+	if(Angle > 180)
+	{
+		Angle = 180;
+	} else if(Angle < 0)
+	{
+		Angle = 0;
+	}
+
+	SetServo4_Time(50 + (Angle / 180.0) * 200.0);
+}
+
+/**
+ * @brief: Rotate the claw.
+ * @param: Angle, Rotation range: [0, 180]
+ */
+void ClawRotate(float Angle)
+{
+	if(Angle > 180)
+	{
+		Angle = 180;
+	} else if(Angle < 0)
+	{
+		Angle = 0;
+	}
+
+	SetServo5_Time(50 + (Angle / 180.0) * 200.0);
+}
+
+/**
+ * @brief: Open or close the claw.
+ * @param:
+ */
+void ClawGrab(float Angle);

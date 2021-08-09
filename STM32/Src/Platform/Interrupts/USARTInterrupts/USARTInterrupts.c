@@ -31,3 +31,9 @@ __attribute__((always_inline)) inline void WT101InterruptHandler(uint8_t data)
 {
 	WT101Handler(data);
 }
+
+__attribute__((always_inline)) inline void ImageProcessingModuleInterruptHandler(uint8_t data)
+{
+
+}
+

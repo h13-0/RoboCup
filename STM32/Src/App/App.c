@@ -19,9 +19,10 @@
 #include "MotionControl.h"
 
 int App(void) {
+	//Init Clock First.
 	ClockInit();
 
-	//Init Log First.
+	//Init Log.
 	LogInit();
 
 	Log(Debug, "Start!");
@@ -40,61 +41,17 @@ int App(void) {
 
 	MotorInit();
 	MotionControlInit();
+	ServoInit();
 
-	KeepAngle();
-	//KeepDistance(500);
-
-	StraightUntill(300);
-
-	TurnTo(Left);
-
-	StraightUntill(1775);
-
-	TurnTo(Right);
-
-	StraightUntill(325);
-
-	TurnTo(Left);
-
-	StraightUntill(300);
-
-	TurnTo(Right);
-
-	TurnTo(Left);
-
-	StraightUntill(3700);
-
-	StraightUntill(2400);
-
-	TurnTo(Right);
-
-	StraightUntill(2400);
-
-	TurnTo(Right);
-
-	StraightUntill(650);
-
-	TurnTo(Left);
-
-	StraightUntill(2200);
-
-	StraightUntill(300);
-
-	TurnTo(Left);
-
-	StraightUntill(400);
-
-	TurnTo(Right);
-
-	StraightUntill(2100);
+	CalibrationAllServo();
 
 	//while(1);
 
 
 	while (1)
 	{
-		float data[]={ GetTOF_Distance(), GetYawValue()};
-		LogJustFloat(data, 2);
+		//float data[]={ GetTOF_Distance(), GetYawValue()};
+		//LogJustFloat(data, 2);
 	}
 
 

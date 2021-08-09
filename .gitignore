@@ -1,3 +1,7 @@
 材料表.xlsx
 *.log
 *Debug.launch
+yolo/datasets
+OpenMV/CascadeClassifier/Resized/Apple
+OpenMV/CascadeClassifier/Source/Apple
+OpenMV/CascadeClassifier/Background

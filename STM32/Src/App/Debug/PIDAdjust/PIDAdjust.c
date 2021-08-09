@@ -15,7 +15,7 @@
 #include "PID.h"
 #include "FastMatch.h"
 
-#define process
+#include "ArmControl.h"
 
 extern PositionPID_t AnglePID;
 extern PositionPID_t ForwardPID;
@@ -32,29 +32,37 @@ __attribute__((always_inline)) inline void PIDAdjustHandler(char *data, uint8_t 
 {
 	//3 Bytes keys:
 	//AnglePID
-	matchKeyFloat(data, len, "AP:", 3, AnglePID.proportion);
+	MatchKeyFloat(data, len, "AP:", 3, AnglePID.proportion, return);
 
-	matchKeyFloat(data, len, "AI:", 3, AnglePID.integration);
+	MatchKeyFloat(data, len, "AI:", 3, AnglePID.integration, return);
 
-	matchKeyFloat(data, len, "AD:", 3, AnglePID.differention);
+	MatchKeyFloat(data, len, "AD:", 3, AnglePID.differention, return);
 
-	matchKeyFloat(data, len, "TA:", 3, AnglePID.setpoint);
+	MatchKeyFloat(data, len, "TA:", 3, AnglePID.setpoint, return);
 
 	//ForwardPID
-	matchKeyFloat(data, len, "FP:", 3, ForwardPID.proportion);
+	MatchKeyFloat(data, len, "FP:", 3, ForwardPID.proportion, return);
 
-	matchKeyFloat(data, len, "FI:", 3, ForwardPID.integration);
+	MatchKeyFloat(data, len, "FI:", 3, ForwardPID.integration, return);
 
-	matchKeyFloat(data, len, "FD:", 3, ForwardPID.differention);
+	MatchKeyFloat(data, len, "FD:", 3, ForwardPID.differention, return);
 
-	matchKeyFloat(data, len, "TF:", 3, ForwardPID.setpoint);
+	MatchKeyFloat(data, len, "TF:", 3, ForwardPID.setpoint, return);
 
 	//4 Bytes keys:
 	//AnglePID
-	matchKeyFloat(data, len, "AMI:", 4, AnglePID.maximumAbsValueOfIntegrationOutput);
+	MatchKeyFloat(data, len, "AMI:", 4, AnglePID.maximumAbsValueOfIntegrationOutput, return);
 
 	//ForwardPID
-	matchKeyFloat(data, len, "FMI:", 4, ForwardPID.maximumAbsValueOfIntegrationOutput);
+	MatchKeyFloat(data, len, "FMI:", 4, ForwardPID.maximumAbsValueOfIntegrationOutput, return);
+
+	//Test
+	static float RotationAngle, AxialLength, Z_AxisHeight;
+	MatchKeyFloat(data, len, "RA:", 3, RotationAngle, SetClawPosition(RotationAngle, AxialLength, Z_AxisHeight); return);
+	MatchKeyFloat(data, len, "AL:", 3, AxialLength, SetClawPosition(RotationAngle, AxialLength, Z_AxisHeight); return);
+	MatchKeyFloat(data, len, "ZA:", 3, Z_AxisHeight, SetClawPosition(RotationAngle, AxialLength, Z_AxisHeight); return);
+	//SetClawPosition(float RotationAngle, float AxialLength, float Z_AxisHeight);
+
 }
 
 #endif

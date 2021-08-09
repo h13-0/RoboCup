@@ -7,9 +7,9 @@
 
 #ifndef APP_FASTMATCH_FASTMATCH_H_
 #define APP_FASTMATCH_FASTMATCH_H_
-
+#include <String.h>
 /**
- * @performance: The following performance results are the performance when key values are matched.
+ * @performance: The following performance results are the performance when Key values are matched.
  *
  * @group: Arm Cortex M3 (STM32F103), 72Mhz, Optimization: -O0.
  * @result:
@@ -22,33 +22,29 @@
 /**
  * @brief: Try to match key with string. If matched, it will run your code **and return**.
  * @param:
- * 		string:         Source string.
- * 		stringLength:   Length of string.
- * 		key:            The string representation of key.
- * 		keyLength:      Length of key.
+ * 		String:         Source String.
+ * 		StringLength:   Length of String.
+ * 		Key:            The String representation of Key.
+ * 		KeyLength:      Length of Key.
  *
  * @example:
- * 		matchKey(string, stringLength, "Enable Ble", 10)
- * 			EnableBluetooth();
- * 		endMatchKey()
+ * 		MatchKey(String, StringLength, "Enable Ble", 10, EnableBluetooth());
  *
- * 		matchKey(string, stringLength, "Disable Ble", 11)
- * 			EnableBluetooth();
- * 		endMatchKey()
+ * 		MatchKey(String, StringLength, "Disable Ble", 11, EnableBluetooth());
  *
  * @equals:
- * 		if(stringLength == 10)
+ * 		if(StringLength == 10)
  * 		{
- * 			if(!memcmp(string, "Enable Ble", 10))
+ * 			if(!memcmp(String, "Enable Ble", 10))
  * 			{
  * 				EnableBluetooth();
  * 				return;
  * 			}
  * 		}
  *
- * 		if(stringLength == 11)
+ * 		if(StringLength == 11)
  * 		{
- * 			if(!memcmp(string, "Disable Ble", 11))
+ * 			if(!memcmp(String, "Disable Ble", 11))
  * 			{
  * 				EnableBluetooth();
  * 				return;
@@ -58,50 +54,49 @@
  * @usage:
  * 		example:
  * 			When input params are:
- * 				string="Enable Ble"
- * 				stringLength=10
+ * 				String="Enable Ble"
+ * 				StringLength=10
  * 			Then the following functions are executed:
  * 				EnableBluetooth();
  */
-#define matchKey(string, stringLength, key, keyLength) \
-			if(stringLength == keyLength) \
+#define MatchKeyDo(String, StringLength, Key, KeyLength, Callback) \
+			if(StringLength == KeyLength) \
 			{ \
-				if(!memcmp(string, key, keyLength)) \
-				{
-
-#define endMatchKey() return;}}
-
-
-
-/**
- * @brief: Generic implementation for passing nonstandard and standard variables, such as struct and Float.
- */
-#define matchKeyRaw(string, stringLength, key, keyLength, targetVariable, targetSize) \
-			if(stringLength == keyLength + targetSize) \
-			{ \
-				if(!memcmp(string, key, keyLength)) \
+				if(!memcmp(String, Key, KeyLength)) \
 				{ \
-					string += keyLength; \
-					char *target = (char *) &(targetVariable); \
-					memcpy(target, string, targetSize); \
-					return; \
+					Callback; \
 				} \
 			}
 
 /**
- * @brief: Try to match key to Float. If matched, it will write data to your float variable **and return**.
+ * @brief: Generic implementation for passing nonstandard and standard variables, such as struct and Float.
+ */
+#define MatchKeyRaw(String, StringLength, Key, KeyLength, TargetVariable, TargetSize, Callback) \
+			if(StringLength == KeyLength + TargetSize) \
+			{ \
+				if(!memcmp(String, Key, KeyLength)) \
+				{ \
+					String += KeyLength; \
+					char *Target = (char *) &(TargetVariable); \
+					memcpy(Target, String, TargetSize); \
+					Callback; \
+				} \
+			}
+
+/**
+ * @brief: Try to match Key to Float. If matched, it will write data to your float variable **and return**.
  * @param:
- * 		string:         Source string.
- * 		stringLength:   Length of string.
- * 		key:            The string representation of key.
- * 		keyLength:      Length of key.
- * 		targetVariable: The float target variable.
+ * 		String:         Source String.
+ * 		StringLength:   Length of String.
+ * 		Key:            The String representation of Key.
+ * 		KeyLength:      Length of Key.
+ * 		TargetVariable: The float Target variable.
  *
  * @usage:
  * 		if(length == 7)
  * 		{
- * 			matchKeyValue(data, length, "AP:", 3, AnglePID.proportion);
- * 			matchKeyValue(data, length, "TA:", 3, AnglePID.setpoint);
+ * 			MatchKeyValue(data, length, "AP:", 3, AnglePID.proportion);
+ * 			MatchKeyValue(data, length, "TA:", 3, AnglePID.setpoint);
  * 		}
  *
  * @equals:
@@ -110,63 +105,53 @@
  * 			if (!memcmp(data, "AP:", 3))
  * 			{
  * 				data += 3;
- * 				char *target = (char*) &(AnglePID.proportion);
- * 				memcpy(target, data, 4);
+ * 				char *Target = (char*) &(AnglePID.proportion);
+ * 				memcpy(Target, data, 4);
  * 				return;
  * 			}
  *
  * 			if (!memcmp(data, "TA:", 3))
  *      	{
  *      		data += 3;
- *      		char *target = (char*) &(AnglePID.setpoint);
- *      		memcpy(target, data, 4);
+ *      		char *Target = (char*) &(AnglePID.setpoint);
+ *      		memcpy(Target, data, 4);
  *      		return;
  *      	}
  *      }
  *
  * @note:
- * 		**The targetVariable must be float!!!**
- * 		**To optimize efficiency, you must first manually check the string length!!!**
+ * 		**The TargetVariable must be float!!!**
+ * 		**To optimize efficiency, you must first manually check the String length!!!**
  *
  */
-/*
-#define matchKeyValue(string, stringLength, key, keyLength, targetVariable) \
-	if (!memcmp(string, key, keyLength)) \
-	{ \
-		string += keyLength; \
-		char *target = (char *) &(targetVariable); \
-		memcpy(target, string, 4); \
-		return; \
-	}
-*/
 
-#define matchKeyFloat(string, stringLength, key, keyLength, targetFloat) matchKeyRaw(string, stringLength, key, keyLength, targetFloat, 4)
+#define MatchKeyFloat(String, StringLength, Key, KeyLength, TargetFloat, Callback) MatchKeyRaw(String, StringLength, Key, KeyLength, TargetFloat, 4, Callback)
 
-#define matchKeyDouble(string, stringLength, key, keyLength, targetDouble) matchKeyRaw(string, stringLength, key, keyLength, targetDouble, 8)
+#define MatchKeyDouble(String, StringLength, Key, KeyLength, TargetDouble, Callback) MatchKeyRaw(String, StringLength, Key, KeyLength, TargetDouble, 8, Callback)
 
-#define matchKeyInt8_t(string, stringLength, key, keyLength, targetInt8_t) matchKeyRaw(string, stringLength, key, keyLength, targetInt8_t, 1)
+#define MatchKeyInt8_t(String, StringLength, Key, KeyLength, TargetInt8_t, Callback) MatchKeyRaw(String, StringLength, Key, KeyLength, TargetInt8_t, 1, Callback)
 
-#define matchKeyInt16_t(string, stringLength, key, keyLength, targetInt16_t) matchKeyRaw(string, stringLength, key, keyLength, targetInt16_t, 2)
+#define MatchKeyInt16_t(String, StringLength, Key, KeyLength, TargetInt16_t, Callback) MatchKeyRaw(String, StringLength, Key, KeyLength, TargetInt16_t, 2, Callback)
 
-#define matchKeyInt32_t(string, stringLength, key, keyLength, targetInt32_t) matchKeyRaw(string, stringLength, key, keyLength, targetInt32_t, 3)
+#define MatchKeyInt32_t(String, StringLength, Key, KeyLength, TargetInt32_t, Callback) MatchKeyRaw(String, StringLength, Key, KeyLength, TargetInt32_t, 3, Callback)
 
-#define matchKeyInt64_t(string, stringLength, key, keyLength, targetInt64_t) matchKeyRaw(string, stringLength, key, keyLength, targetInt64_t, 4)
+#define MatchKeyInt64_t(String, StringLength, Key, KeyLength, TargetInt64_t, Callback) MatchKeyRaw(String, StringLength, Key, KeyLength, TargetInt64_t, 4, Callback)
 
-#define matchKeyString(string, stringLength, key, keyLength, targetString, targetLength) \
-			if(stringLength >= keyLength) \
+#define MatchKeyString(String, StringLength, Key, KeyLength, TargetString, TargetLength, Callback) \
+			if(StringLength >= KeyLength) \
 			{ \
-				if(!memcmp(string, key, keyLength)) \
+				if(!memcmp(String, Key, KeyLength)) \
 				{ \
-					memset(targetString, '0', targetLength); \
-					string += keyLength; \
-					stringLength -= keyLength; \
-					if(stringLength <= targetLength) \
+					memset(TargetString, '0', TargetLength); \
+					String += KeyLength; \
+					StringLength -= KeyLength; \
+					if(StringLength <= TargetLength) \
 					{ \
-						memcpy(targetString, string, stringLength); \
+						memcpy(TargetString, String, StringLength); \
 					} else { \
-						memcpy(targetString, string, targetLength); \
+						memcpy(TargetString, String, TargetLength); \
 					} \
-					return; \
+					Callback; \
 				} \
 			}
 
