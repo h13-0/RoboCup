@@ -19,7 +19,7 @@ typedef enum
 } direction_t;
 
 /**
- * @brief: Init Motion Control.
+ * @brief: Init motion control.
  * @note:
  * 		Before you can use this, you need to initialize Motor and MPU manually ahead of time.
  * 		It will Init Direction PID, turn to zero and brake.

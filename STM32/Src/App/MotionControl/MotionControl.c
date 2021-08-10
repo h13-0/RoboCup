@@ -71,10 +71,10 @@ static PositionPID_t forwardPID;
 struct motionControlStatusStructure
 {
 	uint8_t directionPID_Status : 1;
-	uint8_t forwardPID_Status : 1;
+	uint8_t forwardPID_Status   : 1;
 };
 
-static struct motionControlStatusStructure status;
+static struct motionControlStatusStructure status = { 0 };
 
 //Status of direction PID.
 #define enableDirectionPID()          status.directionPID_Status = 1
@@ -105,7 +105,7 @@ static float pwmBaseOutput = 0;
 
 
 /**
- * @brief: Init Motion Control.
+ * @brief: Init motion control.
  * @note:
  * 		Before you can use this, you need to initialize Motor and MPU manually ahead of time.
  * 		It will Init Direction PID, turn to zero and brake.

@@ -16,6 +16,7 @@
 #include "FastMatch.h"
 
 #include "ArmControl.h"
+#include "Servo.h"
 
 extern PositionPID_t AnglePID;
 extern PositionPID_t ForwardPID;
@@ -58,10 +59,14 @@ __attribute__((always_inline)) inline void PIDAdjustHandler(char *data, uint8_t 
 
 	//Test
 	static float RotationAngle, AxialLength, Z_AxisHeight;
-	MatchKeyFloat(data, len, "RA:", 3, RotationAngle, SetClawPosition(RotationAngle, AxialLength, Z_AxisHeight); return);
-	MatchKeyFloat(data, len, "AL:", 3, AxialLength, SetClawPosition(RotationAngle, AxialLength, Z_AxisHeight); return);
-	MatchKeyFloat(data, len, "ZA:", 3, Z_AxisHeight, SetClawPosition(RotationAngle, AxialLength, Z_AxisHeight); return);
-	//SetClawPosition(float RotationAngle, float AxialLength, float Z_AxisHeight);
+	MatchKeyFloat(data, len, "RA:", 3, RotationAngle, SetOpenLoopClawPosition(RotationAngle, AxialLength, Z_AxisHeight); return);
+	MatchKeyFloat(data, len, "AL:", 3, AxialLength, SetOpenLoopClawPosition(RotationAngle, AxialLength, Z_AxisHeight); return);
+	MatchKeyFloat(data, len, "ZA:", 3, Z_AxisHeight, SetOpenLoopClawPosition(RotationAngle, AxialLength, Z_AxisHeight); return);
+
+	float angle = 0;
+	MatchKeyFloat(data, len, "N1:", 3, angle, ArmNode1_Rotate(angle); return);
+	MatchKeyFloat(data, len, "N2:", 3, angle, ArmNode2_Rotate(angle); return);
+	MatchKeyFloat(data, len, "N3:", 3, angle, ArmNode3_Rotate(angle); return);
 
 }
 

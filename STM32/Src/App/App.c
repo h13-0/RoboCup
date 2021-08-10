@@ -44,17 +44,22 @@ int App(void) {
 
 	MotorInit();
 	MotionControlInit();
+
 	ServoInit();
 
 	//CalibrationAllServo();
 
-	ArmNode3_Rotate(30);
+	//ArmNode3_Rotate(30);
 	//while(1);
 
-	//SetClawPosition(90, 0, 255);  //255 -> 250
+	//SetClawPosition(90, 0, 260);  //255 -> 250
 
 	while (1)
 	{
+		Coordinates_t coordinates = { 0 };
+		GetAppleCoordinates(&coordinates);
+		float data[] = {coordinates.X, coordinates.Y, coordinates.TimeStamp};
+		LogJustFloat(data, 3);
 		//float data[]={ GetTOF_Distance(), GetYawValue()};
 		//LogJustFloat(data, 2);
 	}

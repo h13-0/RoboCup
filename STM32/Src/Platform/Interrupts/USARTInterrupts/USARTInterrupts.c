@@ -8,6 +8,7 @@
 #include "SKTOF.h"
 #include "WT101.h"
 #include "Debug.h"
+#include "ImageProcessingModule.h"
 
 /**
  * @brief: Serial Debug Interrupt Handler.
@@ -34,6 +35,6 @@ __attribute__((always_inline)) inline void WT101_InterruptHandler(uint8_t data)
 
 __attribute__((always_inline)) inline void ImageProcessingModuleInterruptHandler(uint8_t data)
 {
-
+	ImageProcessingModuleHandler(data);
 }
 

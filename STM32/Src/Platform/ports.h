@@ -35,4 +35,7 @@
 #include "MotorPorts.h"
 #include "Motor.h"
 
+//Image Processing Module
+#include "ImageProcessingModule.h"
+
 #endif /* APP_PORTS_H_ */

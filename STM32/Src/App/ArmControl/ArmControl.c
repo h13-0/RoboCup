@@ -6,20 +6,73 @@
  */
 
 #include "ArmControl.h"
+#include "RobotConfigs.h"
+
 #include <math.h>
 #include <stdint.h>
 
-#include "ArmControlConfigs.h"
-
 #include "Servo.h"
+#include "PID.h"
 
-#include "AppLog.h"
+#ifdef DEBUG
+PositionPID_t X_AxisPID = { 0 };
+PositionPID_t Y_AxisPID = { 0 };
+#define xAxisPID X_AxisPID
+#define yAxisPID Y_AxisPID
+#else
+static PositionPID_t xAxisPID = { 0 };
+static PositionPID_t yAxisPID = { 0 };
+#endif
 
-typedef struct{
+struct ArmControlStatusStructure
+{
+	uint8_t X_AxisPID_Status : 1;
+	uint8_t Y_AxisPID_Status : 1;
+#if(ArmControlMethod == ClosedLoopGeometricControl)
+	uint8_t Z_AxisPID_Status : 1;
+#endif
+};
+
+static struct ArmControlStatusStructure status = { 0 };
+
+#define enableX_AxisPID()       status.X_AxisPID_Status = 1
+#define disableX_AxisPID()      status.X_AxisPID_Status = 0
+#define getX_AxisPID_Status()   status.X_AxisPID_Status
+
+#define enableY_AYisPID()       status.Y_AYisPID_Status = 1
+#define disableY_AYisPID()      status.Y_AYisPID_Status = 0
+#define getY_AYisPID_Status()   status.Y_AYisPID_Status
+
+#if(ArmControlMethod == ClosedLoopGeometricControl)
+#define enableZ_AZisPID()       status.Z_AZisPID_Status = 1
+#define disableZ_AZisPID()      status.Z_AZisPID_Status = 0
+#define getZ_AZisPID_Status()   status.Z_AZisPID_Status
+#endif
+
+static float absoluteZ_AxisHeight = 0;
+static float relativeZ_AxisHeight = 0;
+
+/**
+ * @brief: Init arm control of the robot.
+ */
+void ArmControlInit(void)
+{
+	xAxisPID.proportion = 0.0;
+	xAxisPID.integration = 0.0;
+	xAxisPID.differention = 0.0;   //note: Try not to use differention.
+
+	xAxisPID.configs.autoResetIntegration = disable;
+	xAxisPID.configs.limitIntegration = enable;
+
+	xAxisPID.maxAbsOutput = (Node0_ServoMaximumRotationAngle - Node0_ServoMinimumRotationAngle) / 75.0;
+	xAxisPID.maximumAbsValueOfIntegrationOutput = xAxisPID.maxAbsOutput * 0.1;
+}
+
+typedef struct {
 	double X, Y;
 } Point_t;
 
-typedef struct{
+typedef struct {
 	Point_t Center;
 	double Radius;
 } Circle_t;
@@ -134,7 +187,7 @@ static IntersectType_t calculateIntersectionPoint(Circle_t Circles[], Point_t Po
  * 		AxialLength:   The length of the axis relative to zero in millimeters.
  * 		Z_AxisHeight:  The height above the ground in millimeters.
  */
-ArmControlResult_t SetClawPosition(float RotationAngle, float AxialLength, float Z_AxisHeight)
+ArmControlResult_t SetOpenLoopClawPosition(float RotationAngle, float AxialLength, float Z_AxisHeight)
 {
 	//Check target value.
 	if(Z_AxisHeight < ArmNode0_Height)
@@ -276,9 +329,68 @@ ArmControlResult_t SetClawPosition(float RotationAngle, float AxialLength, float
 		ArmNode1_Rotate(node1[betterIntersectionID]);
 		ArmNode2_Rotate(node2[betterIntersectionID]);
 		ArmNode3_Rotate(node3);
-
-		float data[] = { node1[betterIntersectionID], node2[betterIntersectionID], node3 };
-		LogJustFloat(data, 3);
 	}
 	return ArmControlOK;
+}
+
+/**
+ * @brief: Arm control PID calculate handler.
+ * @note:  **The call frequency must be 50 Hz!!**
+ */
+void ArmControlPIDCalculateHandler(void)
+{
+	static float xAxisPID_Accumulator = 0;
+	static float yAxisPID_Accumulator = 0;
+#if(ArmControlMethod == ClosedLoopGeometricControl)
+	static float zAxisPID_Accumulator = 0;
+#endif
+
+	Coordinates_t coordinates = { 0 };
+	GetAppleCoordinates(&coordinates);
+	if(GetCurrentTimeMillisecond() - coordinates.TimeStamp < (1000.0 * MaximumFPS_Fluctuation / AppleDetectionAverageFPS))
+	{
+		xAxisPID_Accumulator += PosPID_Calc(&X_AxisPID, coordinates.X);
+		if(xAxisPID_Accumulator > Node0_ServoMaximumRotationAngle)
+		{
+			xAxisPID_Accumulator = Node0_ServoMaximumRotationAngle;
+		} else if(xAxisPID_Accumulator < Node0_ServoMinimumRotationAngle) {
+			xAxisPID_Accumulator = Node0_ServoMinimumRotationAngle;
+		}
+
+		yAxisPID_Accumulator += PosPID_Calc(&Y_AxisPID, coordinates.Y);
+		if(yAxisPID_Accumulator > 600)
+		{
+			yAxisPID_Accumulator = 600;
+		} else if(yAxisPID_Accumulator < 50) {
+			yAxisPID_Accumulator = 50;
+		}
+		SetOpenLoopClawPosition(xAxisPID_Accumulator, yAxisPID_Accumulator, absoluteZ_AxisHeight);
+	}
+
+}
+
+/**
+ * @brief: Aim the mechanical claw at the apple.
+ * @param:
+ * 		float AbsoluteZ_AxisHeight:   Absolute Z-Axis height.
+ * 		[float RelativeZ_AxisHeight]: Relative Z-Axis height.
+ * 		mtime_t TimeOut:              Time out in millisecond.
+ * @note:
+ * 		When using open-loop control, the `RelativeZ_AxisHeight` does not take effect.
+ */
+void AimAtApple(float AbsoluteZ_AxisHeight, float RelativeZ_AxisHeight, mtime_t TimeOut)
+{
+	absoluteZ_AxisHeight = AbsoluteZ_AxisHeight;
+	relativeZ_AxisHeight = RelativeZ_AxisHeight;
+	enableX_AxisPID();
+
+}
+
+/**
+ * @brief: Grab.
+ * @TODO:  Use current to judge whether it is firmly grasped.
+ */
+void Grab(void)
+{
+
 }

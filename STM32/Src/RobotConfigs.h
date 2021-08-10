@@ -58,7 +58,67 @@
 #define ClawSuspendedTofI2C_Address
 #endif
 
-/***********************Servos Config***********************/
+/*************************Arm Config************************/
+//List of available arm types.
+#define MechanicalArm          0
+//#define LiftingPlatform        1
 
+//Arm type selection.
+#define ArmType                MechanicalArm
+
+#if(ArmType == MechanicalArm)
+//List of available arm control methods.
+#define OpenLoopGeometricControl    0
+#define ClosedLoopGeometricControl  1
+
+//Arm size configs.
+#define ArmNode0_Height        (121)
+#define ArmNode0_RotationRange (180)
+#define ArmNode1_Length        (242)
+#define ArmNode2_Length        (105)
+#define ArmNode3_Length        (ArmNode1_Length - ArmNode2_Length)
+
+//Arm Z-Axis control method selection.
+#define ArmZ_AxisControlMethod       OpenLoopGeometricControl
+
+#if(ArmZ_AxisControlMethod == OpenLoopGeometricControl)
+
+/***********************Servos Config***********************/
+#define Node0_ServoMinimumRotationAngle  (0)
+#define Node0_ServoMaximumRotationAngle  (180)
+#define Node0_ServoProportion            (0.867)
+#define Node0_ServoOffset                (0.0)
+
+#define Node1_ServoMinimumRotationAngle  (0)
+#define Node1_ServoMaximumRotationAngle  (180)
+#define Node1_ServoProportion            (0.857)
+#define Node1_ServoOffset                (0.0)
+
+#define Node2_ServoMinimumRotationAngle  (0)
+#define Node2_ServoMaximumRotationAngle  (180)
+#define Node2_ServoProportion            (0.908386)
+#define Node2_ServoOffset                (-1.218346)
+
+#define Node3_ServoMinimumRotationAngle  (-90)
+#define Node3_ServoMaximumRotationAngle  (90)
+#define Node3_ServoProportion            (1.0)
+#define Node3_ServoOffset                (4.4)
+
+#elif(ArmControlMethod == ClosedLoopGeometricControl)
+
+
+#elif(ArmType == LiftingPlatform)
+
+#endif //ArmZ_AxisControlMethod
+
+#endif //ArmType
+
+
+/**************Image Processing Module Configs**************/
+#define AppleDetectionAverageFPS            (15)
+#define MaximumFPS_Fluctuation              (1.5)
+#define ImageProcessingSerialBufferLength   (32)
+#define AppleTargetCenterX                  (0.5)
+#define AppleTargetCenterY                  (0.7)
 
 #endif /* ROBOTCONFIGS_H_ */

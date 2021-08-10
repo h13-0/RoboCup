@@ -7,6 +7,7 @@
 
 #include "Servo.h"
 #include "ServoPorts.h"
+#include "RobotConfigs.h"
 
 #if defined(STM32F103xC) || defined(STM32F103xD) || defined(STM32F103xE)
 #include "stm32f1xx_ll_tim.h"
@@ -31,15 +32,17 @@ void CalibrationAllServo(void)
  */
 void ArmNode0_Rotate(float Angle)
 {
-	if(Angle > 180)
+	Angle += Node0_ServoOffset;
+
+	if(Angle > Node0_ServoMaximumRotationAngle)
 	{
 		Angle = 180;
-	} else if(Angle < 0)
+	} else if(Angle < Node0_ServoMinimumRotationAngle)
 	{
 		Angle = 0;
 	}
 
-	SetServo0_Time(50 + (Angle / 180.0) * 200.0 * 0.867);
+	SetServo0_Time(50 + (Angle / 180.0) * 200.0 * Node0_ServoProportion);
 }
 
 /**
@@ -48,15 +51,17 @@ void ArmNode0_Rotate(float Angle)
  */
 void ArmNode1_Rotate(float Angle)
 {
-	if(Angle > 180)
+	Angle += Node1_ServoOffset;
+
+	if(Angle > Node1_ServoMaximumRotationAngle)
 	{
 		Angle = 180;
-	} else if(Angle < 0)
+	} else if(Angle < Node1_ServoMinimumRotationAngle)
 	{
 		Angle = 0;
 	}
 
-	SetServo1_Time(50 + (Angle / 180.0) * 200.0 * 0.857);
+	SetServo1_Time(50 + (Angle / 180.0) * 200.0 * Node1_ServoProportion);
 }
 
 /**
@@ -65,15 +70,17 @@ void ArmNode1_Rotate(float Angle)
  */
 void ArmNode2_Rotate(float Angle)
 {
-	if(Angle > 180)
+	Angle += Node2_ServoOffset;
+
+	if(Angle > Node2_ServoMaximumRotationAngle)
 	{
 		Angle = 180;
-	} else if(Angle < 0)
+	} else if(Angle < Node2_ServoMinimumRotationAngle)
 	{
 		Angle = 0;
 	}
 
-	SetServo2_Time(250 - (Angle / 180.0) * 200.0);
+	SetServo2_Time(250 - (Angle / 180.0) * 200.0 * Node2_ServoProportion);
 }
 
 /**
@@ -82,6 +89,8 @@ void ArmNode2_Rotate(float Angle)
  */
 void ArmNode3_Rotate(float Angle)
 {
+	Angle += Node3_ServoOffset;
+
 	if(Angle > 90)
 	{
 		Angle = 90;
@@ -90,7 +99,7 @@ void ArmNode3_Rotate(float Angle)
 		Angle = -90;
 	}
 
-	SetServo3_Time(150 - (Angle / 180.0) * 200.0);
+	SetServo3_Time(150 - (Angle / 180.0) * 200.0 * Node3_ServoProportion);
 }
 
 /**

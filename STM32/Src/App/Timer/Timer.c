@@ -7,6 +7,7 @@
 #include "Timer.h"
 
 #include "MotionControl.h"
+#include "ArmControl.h"
 
 /**
  * @brief: Timer Interrupt Handler.
@@ -18,6 +19,15 @@ __attribute__((always_inline)) inline void TimerHandler(void)
 {
 	DirectionPIDCalculateHandler();
 	ForwardPIDCalculateHandler();
+
+	static uint8_t interruptCounter50hz = 0;
+	if(interruptCounter50hz)
+	{
+		interruptCounter50hz ++;
+		ArmControlPIDCalculateHandler();
+	} else {
+		interruptCounter50hz = 0;
+	}
 }
 
 /**

@@ -7,6 +7,137 @@
 
 #include "I2C.h"
 
+#if(STM_I2C_LIB_TYPE == HAL)
+
+#if defined(STM32F103xB) || defined(STM32F103xC) || defined(STM32F103xD) || defined(STM32F103xE)
+#include "stm32f1xx_hal.h"
+#endif
+
+#include <stddef.h>
+
+#define I2C_RETRY   3
+#define I2C_TIMEOUT 1000
+
+static I2C_HandleTypeDef *i2cPort = NULL;
+
+void I2C_SetPort(I2C_HandleTypeDef *Port)
+{
+	i2cPort = Port;
+}
+
+I2C_Error_t I2C_WriteByte(uint8_t Address, uint8_t Register, uint8_t Byte)
+{
+	if(HAL_I2C_IsDeviceReady(i2cPort, Address*2, I2C_RETRY, I2C_TIMEOUT) == HAL_OK)
+	{
+		if(HAL_I2C_Mem_Write(i2cPort, Address*2, Register, I2C_MEMADD_SIZE_8BIT, &Byte, 1, I2C_TIMEOUT) == HAL_OK)
+		{
+			return I2C_OK;
+		} else {
+			return I2C_TransmissionTimeout;
+		}
+	} else {
+		return I2C_SlaveNotFound;
+	}
+}
+
+I2C_Error_t I2C_ReadByte(uint8_t Address, uint8_t Register, uint8_t *Byte)
+{
+	if(HAL_I2C_IsDeviceReady(i2cPort, (Address * 2) + 1, I2C_RETRY, I2C_TIMEOUT) == HAL_OK)
+	{
+		if(HAL_I2C_Mem_Read(i2cPort, (Address * 2) + 1, Register, I2C_MEMADD_SIZE_8BIT, Byte, 1, I2C_TIMEOUT) == HAL_OK)
+		{
+			return I2C_OK;
+		} else {
+			return I2C_TransmissionTimeout;
+		}
+	} else {
+		return I2C_SlaveNotFound;
+	}
+}
+
+I2C_Error_t I2C_WriteLen(uint8_t Address, uint8_t Register, uint8_t Length, uint8_t *Buffer)
+{
+	if(HAL_I2C_IsDeviceReady(i2cPort, Address * 2, I2C_RETRY, I2C_TIMEOUT) == HAL_OK)
+	{
+		if(HAL_I2C_Mem_Write(i2cPort, Address * 2, Register, I2C_MEMADD_SIZE_8BIT, Buffer, Length, I2C_TIMEOUT) == HAL_OK)
+		{
+			return I2C_OK;
+		} else {
+			return I2C_TransmissionTimeout;
+		}
+	} else {
+		return I2C_SlaveNotFound;
+	}
+}
+
+I2C_Error_t I2C_ReadLen(uint8_t Address, uint8_t Register, uint8_t Length, uint8_t *Buffer)
+{
+	if(HAL_I2C_IsDeviceReady(i2cPort, (Address * 2) + 1, I2C_RETRY, I2C_TIMEOUT) == HAL_OK)
+	{
+		if(HAL_I2C_Mem_Read(i2cPort, (Address * 2) + 1, Register, I2C_MEMADD_SIZE_8BIT, Buffer, Length, I2C_TIMEOUT) == HAL_OK)
+		{
+			return I2C_OK;
+		} else {
+			return I2C_TransmissionTimeout;
+		}
+	} else {
+		return I2C_SlaveNotFound;
+	}
+}
+
+/**
+ *
+ * HAL_OK       = 0x00U,
+  HAL_ERROR    = 0x01U,
+  HAL_BUSY     = 0x02U,
+  HAL_TIMEOUT  = 0x03U
+ */
+
+
+I2C_Error_t I2C_Transmit(uint8_t Address, uint8_t *Buffer, uint8_t Length)
+{
+	HAL_StatusTypeDef ret = HAL_OK;
+	ret = HAL_I2C_Master_Transmit(i2cPort, Address, Buffer, Length , I2C_TIMEOUT);
+	switch(ret)
+	{
+	case HAL_OK:
+		return I2C_OK;
+
+	case HAL_ERROR:
+		return I2C_HardwareFault;
+
+	case HAL_BUSY:
+		return I2C_Busy;
+
+	case HAL_TIMEOUT:
+		return I2C_TransmissionTimeout;
+	}
+	return I2C_OK;
+}
+
+I2C_Error_t I2C_Receive(uint8_t Address, uint8_t *Buffer, uint8_t Length)
+{
+	HAL_StatusTypeDef ret = HAL_OK;
+	ret = HAL_I2C_Master_Receive(i2cPort, Address, Buffer, Length , I2C_TIMEOUT);
+	switch(ret)
+	{
+	case HAL_OK:
+		return I2C_OK;
+
+	case HAL_ERROR:
+		return I2C_HardwareFault;
+
+	case HAL_BUSY:
+		return I2C_Busy;
+
+	case HAL_TIMEOUT:
+		return I2C_TransmissionTimeout;
+	}
+	return I2C_OK;
+}
+
+#elif(STM_I2C_LIB_TYPE == LL)
+
 #if defined(STM32F103xB) || defined(STM32F103xC) || defined(STM32F103xD) || defined(STM32F103xE)
 #include "stm32f1xx_ll_i2c.h"
 #endif
@@ -162,3 +293,4 @@ I2C_Error_t I2C_ReadLen(uint8_t address, uint8_t reg, uint8_t len, uint8_t *buf)
 	}
 	return I2C_OK;
 }
+#endif

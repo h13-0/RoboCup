@@ -181,7 +181,7 @@ PB11 = RX
 ~ 01 030100  0196  C5C8
 ```
 
-### OpenMV
+### 图像处理模块
 接口: UART4  
 ```
 PC10 = TX
@@ -252,3 +252,8 @@ SPI1
 #### UI框架 LVGL
 [官网: https://github.com/lvgl/lvgl](https://github.com/lvgl/lvgl)
 > 版本: 7.11.0
+
+
+# 图像处理部分  
+参考:  
+![通信协议](../ImageProcessing/Protocol.md)  
