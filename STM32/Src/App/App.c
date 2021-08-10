@@ -18,6 +18,9 @@
 //Motion Control
 #include "MotionControl.h"
 
+//Arm Control
+#include "ArmControl.h"
+
 int App(void) {
 	//Init Clock First.
 	ClockInit();
@@ -30,7 +33,7 @@ int App(void) {
 	//First run
 #ifdef FirstRun
 	//Init WT101
-	SetWT101ReturnRateTo100();
+	SetWT101_ReturnRateTo(Rate100Hz);
 
 	//Please close the macro definition and rebuild and redownload the program.
 	while(1)
@@ -43,10 +46,12 @@ int App(void) {
 	MotionControlInit();
 	ServoInit();
 
-	CalibrationAllServo();
+	//CalibrationAllServo();
 
+	ArmNode3_Rotate(30);
 	//while(1);
 
+	//SetClawPosition(90, 0, 255);  //255 -> 250
 
 	while (1)
 	{

@@ -20,9 +20,9 @@ void SerialDebugInterruptHandler(uint8_t data);
  * @brief: TOF Interrupt Handler.
  * @param: data.
  */
-void TOFInterruptHandler(uint8_t data);
+void TOF_InterruptHandler(uint8_t data);
 
-void WT101InterruptHandler(uint8_t data);
+void WT101_InterruptHandler(uint8_t data);
 
 void ImageProcessingModuleInterruptHandler(uint8_t data);
 

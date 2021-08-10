@@ -22,14 +22,14 @@ __attribute__((always_inline)) inline void SerialDebugInterruptHandler(uint8_t d
  * @brief: TOF Interrupt Handler.
  * @param: data.
  */
-__attribute__((always_inline)) inline void TOFInterruptHandler(uint8_t data)
+__attribute__((always_inline)) inline void TOF_InterruptHandler(uint8_t data)
 {
 	TOF_Handler(data);
 }
 
-__attribute__((always_inline)) inline void WT101InterruptHandler(uint8_t data)
+__attribute__((always_inline)) inline void WT101_InterruptHandler(uint8_t data)
 {
-	WT101Handler(data);
+	WT101_Handler(data);
 }
 
 __attribute__((always_inline)) inline void ImageProcessingModuleInterruptHandler(uint8_t data)

@@ -13,7 +13,7 @@
 
 #include "Servo.h"
 
-#include "JustFloat.h"
+#include "AppLog.h"
 
 typedef struct{
 	double X, Y;
@@ -173,72 +173,112 @@ ArmControlResult_t SetClawPosition(float RotationAngle, float AxialLength, float
 	IntersectType_t intersectType;
 	intersectType = calculateIntersectionPoint(nodeCircles, intersections);
 
-	uint8_t betterIntersectionID = 0;
-
+	//Calculate angle.
+	double node1[2] = { 0 };
+	double node2[2] = { 0 };
+	double node3 = 0.0;
 	if((intersectType != OneIntersectionPoint) && (intersectType != TwoIntersectionPoints))
 	{
 		return TooFar;
 	} else if(intersectType == TwoIntersectionPoints)
 	{
-		if((intersections[0].Y < 0) && (intersections[1].Y > 0))
+		node1[0] = acos(( - intersections[0].X) / ArmNode1_Length) * 180.0 / 3.1415926;
+		node1[1] = acos(( - intersections[1].X) / ArmNode1_Length) * 180.0 / 3.1415926;
+		if(intersections[0].Y < node3Point.Y)
 		{
-			betterIntersectionID = 1;
-		} else if((intersections[0].Y > 0) && (intersections[1].Y < 0))
-		{
-			betterIntersectionID = 0;
-		} else if((intersections[0].Y > 0) && (intersections[1].Y > 0))
-		{
-			if((intersections[0].Y < node3Point.Y) && (intersections[1].Y < node3Point.Y))
-			{
-				return TooFar;
-			}
-
-			//
-			if(intersections[0].X < intersections[1].X)
-			{
-				betterIntersectionID = 0;
-			} else {
-				betterIntersectionID = 1;
-			}
+			node2[0] = acos((node3Point.X - intersections[0].X) / ArmNode2_Length) * 180.0 / 3.1415926;
 		} else {
-			return TooFar;
+			node2[0] = - acos((node3Point.X - intersections[0].X) / ArmNode2_Length) * 180.0 / 3.1415926;
+		}
+
+		if(intersections[1].Y < node3Point.Y)
+		{
+			node2[1] = acos((node3Point.X - intersections[1].X) / ArmNode2_Length) * 180.0 / 3.1415926;
+		} else {
+			node2[1] = - acos((node3Point.X - intersections[1].X) / ArmNode2_Length) * 180.0 / 3.1415926;
 		}
 	} else if (intersectType == OneIntersectionPoint)
 	{
+		node1[0] = acos(( - intersections[0].X) / ArmNode1_Length) * 180.0 / 3.1415926;
+		if(intersections[0].Y < node3Point.Y)
+		{
+			node2[0] = - acos((node3Point.X - intersections[0].X) / ArmNode2_Length) * 180.0 / 3.1415926;
+		} else {
+			node2[0] = acos((node3Point.X - intersections[0].X) / ArmNode2_Length) * 180.0 / 3.1415926;
+		}
+	}
+
+	//Select better intersection.
+	uint8_t betterIntersectionID = -1;
+	uint8_t isIntersection0_Avaliable = 1;
+	uint8_t isIntersection1_Avaliable = 1;
+	if(intersectType == OneIntersectionPoint)
+	{
+		isIntersection1_Avaliable = 0;
+	}
+
+	//Eliminate solutions that mechanical conflicts.
+	if(node1[0] + node2[0] < 0)
+	{
+		isIntersection0_Avaliable = 0;
+	}
+
+	if((isIntersection1_Avaliable) && (node1[1] + node2[1] < 0))
+	{
+		isIntersection0_Avaliable = 0;
+	}
+
+	//Eliminate solutions beyond the range of motion.
+	if((isIntersection0_Avaliable) && (node1[0] + node2[0] > 180))
+	{
+		isIntersection0_Avaliable = 0;
+	}
+
+	if((isIntersection1_Avaliable) && (node1[1] + node2[1] > 180))
+	{
+		isIntersection0_Avaliable = 0;
+	}
+
+	//Eliminate solutions that touch the table.
+	if((isIntersection0_Avaliable) && (intersections[0].X > 0) && (intersections[0].Y < node3Point.Y))
+	{
+		isIntersection0_Avaliable = 0;
+	}
+
+	if((isIntersection1_Avaliable) && (intersections[1].X > 0) && (intersections[1].Y < node3Point.Y))
+	{
+		isIntersection1_Avaliable = 0;
+	}
+
+	//Choose the lower intersection.
+	if((isIntersection0_Avaliable) && (isIntersection1_Avaliable))
+	{
+		if(intersections[0].Y > intersections[1].Y)
+		{
+			betterIntersectionID = 1;
+		} else {
+			betterIntersectionID = 0;
+		}
+	} else if(isIntersection0_Avaliable)
+	{
 		betterIntersectionID = 0;
-	}
-
-	//Calculate angle.
-	double node1 = acos(( - intersections[betterIntersectionID].X) / ArmNode1_Length) * 180.0 / 3.1415926;
-	double node2 = acos((node3Point.X - intersections[betterIntersectionID].X) / ArmNode2_Length) * 180.0 / 3.1415926;
-	double node3 = 0.0;
-
-	//
-
-
-	if(intersections[betterIntersectionID].Y >= node3Point.Y)
+	} else if(isIntersection1_Avaliable)
 	{
-		node3 = -node2;
-		node2 = node1 - node2;
-	} else {
-		node3 = node2;
-		node2 = node1 + node2;
+		betterIntersectionID = 1;
 	}
 
-	if((node1 > 180) || (node2 > 180) || (node3 > 90))
+	if(betterIntersectionID >= 0)
 	{
-		return TooFar;
+		node3 = node2[betterIntersectionID];
+		node2[betterIntersectionID] += node1[betterIntersectionID];
+		//Move the robot arm.
+		ArmNode0_Rotate(RotationAngle);
+		ArmNode1_Rotate(node1[betterIntersectionID]);
+		ArmNode2_Rotate(node2[betterIntersectionID]);
+		ArmNode3_Rotate(node3);
+
+		float data[] = { node1[betterIntersectionID], node2[betterIntersectionID], node3 };
+		LogJustFloat(data, 3);
 	}
-
-
-	float data[] = {0, 0, intersections[betterIntersectionID].X, intersections[betterIntersectionID].Y, AxialLength, Z_AxisHeight};
-	SendJustFloatFrame(data, 6);
-
-	//Move the robot arm.
-	ArmNode0_Rotate(RotationAngle);
-	ArmNode1_Rotate(node1);
-	ArmNode2_Rotate(node2);
-	ArmNode3_Rotate(node3);
-
 	return ArmControlOK;
 }

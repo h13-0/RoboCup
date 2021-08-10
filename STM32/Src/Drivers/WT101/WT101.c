@@ -36,7 +36,7 @@ static int16_t rawTemperatureData = 0;
  * @brief: WT101 Serial Handler.
  * @param: data.
  */
-void WT101Handler(uint8_t data)
+void WT101_Handler(uint8_t data)
 {
 	//Check Header (0x55).
 	if((data == 0x55) && (status.header == Reset))
@@ -123,12 +123,17 @@ void ResetYaw(void)
 	WT101SerialSend(0x00);
 }
 
-void SetWT101ReturnRateTo100(void)
+/**
+ * @brief: Set WT101 Return Rate.
+ * @note:
+ * 		**This will not take effect until WT101 is repowered**
+ */
+void SetWT101_ReturnRateTo(WT101_ReturnRate_t Rate)
 {
 	WT101SerialSend(0xff);
 	WT101SerialSend(0xaa);
 	WT101SerialSend(0x03);
-	WT101SerialSend(0x09);
+	WT101SerialSend(Rate);
 	WT101SerialSend(0x00);
 }
 

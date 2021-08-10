@@ -645,6 +645,10 @@ static void MX_UART4_Init(void)
   GPIO_InitStruct.Mode = LL_GPIO_MODE_FLOATING;
   LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
+  /* UART4 interrupt Init */
+  NVIC_SetPriority(UART4_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),2, 0));
+  NVIC_EnableIRQ(UART4_IRQn);
+
   /* USER CODE BEGIN UART4_Init 1 */
 
   /* USER CODE END UART4_Init 1 */
@@ -658,7 +662,8 @@ static void MX_UART4_Init(void)
   LL_USART_ConfigAsyncMode(UART4);
   LL_USART_Enable(UART4);
   /* USER CODE BEGIN UART4_Init 2 */
-
+  LL_USART_ClearFlag_RXNE(UART4);
+  LL_USART_EnableIT_RXNE(UART4);
   /* USER CODE END UART4_Init 2 */
 
 }
@@ -753,7 +758,7 @@ static void MX_USART1_UART_Init(void)
   LL_GPIO_AF_EnableRemap_USART1();
 
   /* USART1 interrupt Init */
-  NVIC_SetPriority(USART1_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),2, 0));
+  NVIC_SetPriority(USART1_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),1, 0));
   NVIC_EnableIRQ(USART1_IRQn);
 
   /* USER CODE BEGIN USART1_Init 1 */
@@ -811,7 +816,7 @@ static void MX_USART2_UART_Init(void)
   LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* USART2 interrupt Init */
-  NVIC_SetPriority(USART2_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),2, 0));
+  NVIC_SetPriority(USART2_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),4, 0));
   NVIC_EnableIRQ(USART2_IRQn);
 
   /* USER CODE BEGIN USART2_Init 1 */
@@ -869,7 +874,7 @@ static void MX_USART3_UART_Init(void)
   LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* USART3 interrupt Init */
-  NVIC_SetPriority(USART3_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),2, 0));
+  NVIC_SetPriority(USART3_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),3, 0));
   NVIC_EnableIRQ(USART3_IRQn);
 
   /* USER CODE BEGIN USART3_Init 1 */

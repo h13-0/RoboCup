@@ -230,7 +230,7 @@ void USART2_IRQHandler(void)
 		uint8_t data = LL_USART_ReceiveData8(USART2);
 		LL_USART_ClearFlag_RXNE(USART2);
 
-		WT101InterruptHandler(data);
+		WT101_InterruptHandler(data);
 	}
   /* USER CODE END USART2_IRQn 0 */
   /* USER CODE BEGIN USART2_IRQn 1 */
@@ -249,14 +249,31 @@ void USART3_IRQHandler(void)
 		uint8_t data = LL_USART_ReceiveData8(USART3);
 		LL_USART_ClearFlag_RXNE(USART3);
 
-		TOFInterruptHandler(data);
+		TOF_InterruptHandler(data);
 	}
-
-
   /* USER CODE END USART3_IRQn 0 */
   /* USER CODE BEGIN USART3_IRQn 1 */
 
   /* USER CODE END USART3_IRQn 1 */
+}
+
+/**
+  * @brief This function handles UART4 global interrupt.
+  */
+void UART4_IRQHandler(void)
+{
+  /* USER CODE BEGIN UART4_IRQn 0 */
+	if(LL_USART_IsActiveFlag_RXNE(UART4))
+	{
+		uint8_t data = LL_USART_ReceiveData8(UART4);
+		LL_USART_ClearFlag_RXNE(UART4);
+
+		ImageProcessingModuleInterruptHandler(data);
+	}
+  /* USER CODE END UART4_IRQn 0 */
+  /* USER CODE BEGIN UART4_IRQn 1 */
+
+  /* USER CODE END UART4_IRQn 1 */
 }
 
 /**

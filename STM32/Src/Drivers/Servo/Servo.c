@@ -90,7 +90,7 @@ void ArmNode3_Rotate(float Angle)
 		Angle = -90;
 	}
 
-	SetServo3_Time(150 - (Angle / 180.0) * 200.0 * 0.9375);
+	SetServo3_Time(150 - (Angle / 180.0) * 200.0);
 }
 
 /**

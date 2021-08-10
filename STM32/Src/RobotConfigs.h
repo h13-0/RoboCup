@@ -19,12 +19,12 @@
 //#define MPU9250_InI2C_Mode   2      //Not recommended.
 
 //Model selection.
-#define DirectionSensorModel WT101_InI2C_Mode
+#define DirectionSensorModel WT101_InSerialMode
 
 //I2C Configs.
 //I2C address please use 7-bit address.
 #if(DirectionSensorModel == WT101_InI2C_Mode)
-#define WT101_I2C_Address
+#define WT101_I2C_Address   0x50
 #endif
 
 /*********************TOF Sensor Config*********************/
