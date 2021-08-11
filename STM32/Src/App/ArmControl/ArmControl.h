@@ -31,15 +31,20 @@ void ArmControlInit(void);
 ArmControlResult_t SetOpenLoopClawPosition(float RotationAngle, float AxialLength, float Z_AxisHeight);
 
 /**
+ * @brief: Get claw position in **Polar coordinates** in Open loop control system.
+ * @param: Pointer of parameters.
+ */
+void GetOpenLoopClawPosition(float *RotationAngle, float *AxialLength, float *Z_AxisHeight);
+
+/**
  * @brief: Aim the mechanical claw at the apple.
  * @param:
- * 		float AbsoluteZ_AxisHeight:   Absolute Z-Axis height.
  * 		[float RelativeZ_AxisHeight]: Relative Z-Axis height.
  * 		mtime_t TimeOut:              Time out in millisecond.
  * @note:
  * 		When using open-loop control, the `RelativeZ_AxisHeight` does not take effect.
  */
-void AimAtApple(float AbsoluteZ_AxisHeight, float RelativeZ_AxisHeight, mtime_t TimeOut);
+void AimAtApple(float RelativeZ_AxisHeight, mtime_t TimeOut);
 
 /**
  * @brief: Grab.

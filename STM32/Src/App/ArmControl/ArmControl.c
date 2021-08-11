@@ -39,33 +39,49 @@ static struct ArmControlStatusStructure status = { 0 };
 #define disableX_AxisPID()      status.X_AxisPID_Status = 0
 #define getX_AxisPID_Status()   status.X_AxisPID_Status
 
-#define enableY_AYisPID()       status.Y_AYisPID_Status = 1
-#define disableY_AYisPID()      status.Y_AYisPID_Status = 0
-#define getY_AYisPID_Status()   status.Y_AYisPID_Status
+#define enableY_AYisPID()       status.Y_AxisPID_Status = 1
+#define disableY_AYisPID()      status.Y_AxisPID_Status = 0
+#define getY_AxisPID_Status()   status.Y_AxisPID_Status
 
 #if(ArmControlMethod == ClosedLoopGeometricControl)
-#define enableZ_AZisPID()       status.Z_AZisPID_Status = 1
-#define disableZ_AZisPID()      status.Z_AZisPID_Status = 0
-#define getZ_AZisPID_Status()   status.Z_AZisPID_Status
+#define enableZ_AxisPID()       status.Z_AxisPID_Status = 1
+#define disableZ_AxisPID()      status.Z_AxisPID_Status = 0
+#define getZ_AxisPID_Status()   status.Z_AxisPID_Status
 #endif
 
-static float absoluteZ_AxisHeight = 0;
+static float rotationAngle = 0;
+static float axialLength = 0;
+static float zAxisHeight = 0;
+#if(ArmControlMethod == ClosedLoopGeometricControl)
 static float relativeZ_AxisHeight = 0;
+#endif
 
 /**
  * @brief: Init arm control of the robot.
  */
 void ArmControlInit(void)
 {
-	xAxisPID.proportion = 0.0;
+	xAxisPID.proportion = 1.0;
 	xAxisPID.integration = 0.0;
 	xAxisPID.differention = 0.0;   //note: Try not to use differention.
+	xAxisPID.setpoint = AppleTargetCenterX;
 
 	xAxisPID.configs.autoResetIntegration = disable;
 	xAxisPID.configs.limitIntegration = enable;
 
 	xAxisPID.maxAbsOutput = (Node0_ServoMaximumRotationAngle - Node0_ServoMinimumRotationAngle) / 75.0;
 	xAxisPID.maximumAbsValueOfIntegrationOutput = xAxisPID.maxAbsOutput * 0.1;
+
+	yAxisPID.proportion = 2.0;
+	yAxisPID.integration = 0.0;
+	yAxisPID.differention = 0.0;
+	yAxisPID.setpoint = AppleTargetCenterY;
+
+	yAxisPID.configs.autoResetIntegration = disable;
+	yAxisPID.configs.limitIntegration = enable;
+
+	yAxisPID.maxAbsOutput = (MaximumAxialLength) / 75.0;
+	yAxisPID.maximumAbsValueOfIntegrationOutput = yAxisPID.maxAbsOutput * 0.1;
 }
 
 typedef struct {
@@ -262,7 +278,7 @@ ArmControlResult_t SetOpenLoopClawPosition(float RotationAngle, float AxialLengt
 	}
 
 	//Select better intersection.
-	uint8_t betterIntersectionID = -1;
+	int8_t betterIntersectionID = -1;
 	uint8_t isIntersection0_Avaliable = 1;
 	uint8_t isIntersection1_Avaliable = 1;
 	if(intersectType == OneIntersectionPoint)
@@ -318,10 +334,16 @@ ArmControlResult_t SetOpenLoopClawPosition(float RotationAngle, float AxialLengt
 	} else if(isIntersection1_Avaliable)
 	{
 		betterIntersectionID = 1;
+	} else {
+		return TooFar;
 	}
 
 	if(betterIntersectionID >= 0)
 	{
+		rotationAngle = RotationAngle;
+		axialLength = AxialLength;
+		zAxisHeight = Z_AxisHeight;
+
 		node3 = node2[betterIntersectionID];
 		node2[betterIntersectionID] += node1[betterIntersectionID];
 		//Move the robot arm.
@@ -331,6 +353,15 @@ ArmControlResult_t SetOpenLoopClawPosition(float RotationAngle, float AxialLengt
 		ArmNode3_Rotate(node3);
 	}
 	return ArmControlOK;
+}
+
+/**
+ * @brief: Get claw position in **Polar coordinates** in Open loop control system.
+ * @param: Pointer of parameters.
+ */
+void GetOpenLoopClawPosition(float *RotationAngle, float *AxialLength, float *Z_AxisHeight)
+{
+
 }
 
 /**
@@ -345,45 +376,75 @@ void ArmControlPIDCalculateHandler(void)
 	static float zAxisPID_Accumulator = 0;
 #endif
 
-	Coordinates_t coordinates = { 0 };
-	GetAppleCoordinates(&coordinates);
-	if(GetCurrentTimeMillisecond() - coordinates.TimeStamp < (1000.0 * MaximumFPS_Fluctuation / AppleDetectionAverageFPS))
+#if(ArmControlMethod == ClosedLoopGeometricControl)
+	if(getX_AxisPID_Status() || getY_AxisPID_Status() || getZ_AxisPID_Status())
+#else
+	if(getX_AxisPID_Status() || getY_AxisPID_Status())
+#endif
 	{
-		xAxisPID_Accumulator += PosPID_Calc(&X_AxisPID, coordinates.X);
-		if(xAxisPID_Accumulator > Node0_ServoMaximumRotationAngle)
+		Coordinates_t coordinates = { 0 };
+		GetAppleCoordinates(&coordinates);
+		if(GetCurrentTimeMillisecond() - coordinates.TimeStamp < (1000.0 * MaximumFPS_Fluctuation / AppleDetectionAverageFPS))
 		{
-			xAxisPID_Accumulator = Node0_ServoMaximumRotationAngle;
-		} else if(xAxisPID_Accumulator < Node0_ServoMinimumRotationAngle) {
-			xAxisPID_Accumulator = Node0_ServoMinimumRotationAngle;
-		}
+			if(getX_AxisPID_Status())
+			{
+				xAxisPID_Accumulator += PosPID_Calc(&X_AxisPID, coordinates.X);
+				if(xAxisPID_Accumulator > Node0_ServoMaximumRotationAngle)
+				{
+					xAxisPID_Accumulator = Node0_ServoMaximumRotationAngle;
+				} else if(xAxisPID_Accumulator < Node0_ServoMinimumRotationAngle) {
+					xAxisPID_Accumulator = Node0_ServoMinimumRotationAngle;
+				}
+			}
 
-		yAxisPID_Accumulator += PosPID_Calc(&Y_AxisPID, coordinates.Y);
-		if(yAxisPID_Accumulator > 600)
-		{
-			yAxisPID_Accumulator = 600;
-		} else if(yAxisPID_Accumulator < 50) {
-			yAxisPID_Accumulator = 50;
+			if(getY_AxisPID_Status())
+			{
+				yAxisPID_Accumulator += PosPID_Calc(&Y_AxisPID, coordinates.Y);
+				if(yAxisPID_Accumulator > MaximumAxialLength)
+				{
+					yAxisPID_Accumulator = MaximumAxialLength;
+				} else if(yAxisPID_Accumulator < 50) {
+					yAxisPID_Accumulator = 50;
+				}
+			}
+
+			SetOpenLoopClawPosition(xAxisPID_Accumulator, yAxisPID_Accumulator, zAxisHeight);
+			//float data[] = { coordinates.X, coordinates.Y, yAxisPID_Accumulator };
+			//LogJustFloat(data, 3);
 		}
-		SetOpenLoopClawPosition(xAxisPID_Accumulator, yAxisPID_Accumulator, absoluteZ_AxisHeight);
+	} else {
+		xAxisPID_Accumulator = rotationAngle;
+		yAxisPID_Accumulator = axialLength;
 	}
-
 }
+
 
 /**
  * @brief: Aim the mechanical claw at the apple.
  * @param:
- * 		float AbsoluteZ_AxisHeight:   Absolute Z-Axis height.
  * 		[float RelativeZ_AxisHeight]: Relative Z-Axis height.
  * 		mtime_t TimeOut:              Time out in millisecond.
  * @note:
  * 		When using open-loop control, the `RelativeZ_AxisHeight` does not take effect.
  */
-void AimAtApple(float AbsoluteZ_AxisHeight, float RelativeZ_AxisHeight, mtime_t TimeOut)
+void AimAtApple(float RelativeZ_AxisHeight, mtime_t TimeOut)
 {
-	absoluteZ_AxisHeight = AbsoluteZ_AxisHeight;
+	mtime_t startTime = GetCurrentTimeMillisecond();
+#if(ArmControlMethod == ClosedLoopGeometricControl)
 	relativeZ_AxisHeight = RelativeZ_AxisHeight;
+#endif
 	enableX_AxisPID();
+	enableY_AYisPID();
+	while((GetCurrentTimeMillisecond() - startTime) < TimeOut)
+	{
+		Coordinates_t coordinates = { 0 };
+		GetAppleCoordinates(&coordinates);
+		float data[] = { coordinates.X, coordinates.Y };
+		LogJustFloat(data, 2);
 
+	}
+	disableX_AxisPID();
+	disableY_AYisPID();
 }
 
 /**

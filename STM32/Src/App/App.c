@@ -52,7 +52,12 @@ int App(void) {
 	//ArmNode3_Rotate(30);
 	//while(1);
 
-	//SetClawPosition(90, 0, 260);  //255 -> 250
+	ArmControlInit();
+	SetOpenLoopClawPosition(90, 320, 260);  //255 -> 250
+
+	SleepMillisecond(500);
+
+	AimAtApple(10, 100000000);
 
 	while (1)
 	{

@@ -23,10 +23,10 @@ __attribute__((always_inline)) inline void TimerHandler(void)
 	static uint8_t interruptCounter50hz = 0;
 	if(interruptCounter50hz)
 	{
-		interruptCounter50hz ++;
+		interruptCounter50hz = 0;
 		ArmControlPIDCalculateHandler();
 	} else {
-		interruptCounter50hz = 0;
+		interruptCounter50hz = 1;
 	}
 }
 

@@ -21,6 +21,9 @@
 extern PositionPID_t AnglePID;
 extern PositionPID_t ForwardPID;
 
+extern PositionPID_t X_AxisPID;
+extern PositionPID_t Y_AxisPID;
+
 /**
  * @brief: PID Adjust Handler.
  * @param:
@@ -57,6 +60,13 @@ __attribute__((always_inline)) inline void PIDAdjustHandler(char *data, uint8_t 
 	//ForwardPID
 	MatchKeyFloat(data, len, "FMI:", 4, ForwardPID.maximumAbsValueOfIntegrationOutput, return);
 
+	//Arm control
+	MatchKeyFloat(data, len, "XAP:", 4, X_AxisPID.proportion, return);
+	MatchKeyFloat(data, len, "XAI:", 4, X_AxisPID.integration, return);
+
+	MatchKeyFloat(data, len, "YAP:", 4, Y_AxisPID.proportion, return);
+	MatchKeyFloat(data, len, "YAI:", 4, Y_AxisPID.integration, return);
+
 	//Test
 	static float RotationAngle, AxialLength, Z_AxisHeight;
 	MatchKeyFloat(data, len, "RA:", 3, RotationAngle, SetOpenLoopClawPosition(RotationAngle, AxialLength, Z_AxisHeight); return);
@@ -67,7 +77,6 @@ __attribute__((always_inline)) inline void PIDAdjustHandler(char *data, uint8_t 
 	MatchKeyFloat(data, len, "N1:", 3, angle, ArmNode1_Rotate(angle); return);
 	MatchKeyFloat(data, len, "N2:", 3, angle, ArmNode2_Rotate(angle); return);
 	MatchKeyFloat(data, len, "N3:", 3, angle, ArmNode3_Rotate(angle); return);
-
 }
 
 #endif

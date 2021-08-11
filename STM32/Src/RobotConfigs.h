@@ -77,6 +77,7 @@
 #define ArmNode1_Length        (242)
 #define ArmNode2_Length        (105)
 #define ArmNode3_Length        (ArmNode1_Length - ArmNode2_Length)
+#define MaximumAxialLength     (411)
 
 //Arm Z-Axis control method selection.
 #define ArmZ_AxisControlMethod       OpenLoopGeometricControl
