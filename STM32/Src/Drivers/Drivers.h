@@ -14,4 +14,6 @@
 
 #include "WT101.h"
 
+#include "INA219.h"
+
 #endif /* DRIVERS_DRIVERS_H_ */

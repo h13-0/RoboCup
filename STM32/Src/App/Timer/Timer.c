@@ -19,15 +19,6 @@ __attribute__((always_inline)) inline void TimerHandler(void)
 {
 	DirectionPIDCalculateHandler();
 	ForwardPIDCalculateHandler();
-
-	static uint8_t interruptCounter50hz = 0;
-	if(interruptCounter50hz)
-	{
-		interruptCounter50hz = 0;
-		ArmControlPIDCalculateHandler();
-	} else {
-		interruptCounter50hz = 1;
-	}
 }
 
 /**

@@ -82,8 +82,6 @@
 //Arm Z-Axis control method selection.
 #define ArmZ_AxisControlMethod       OpenLoopGeometricControl
 
-#if(ArmZ_AxisControlMethod == OpenLoopGeometricControl)
-
 /***********************Servos Config***********************/
 #define Node0_ServoMinimumRotationAngle  (0)
 #define Node0_ServoMaximumRotationAngle  (180)
@@ -105,21 +103,25 @@
 #define Node3_ServoProportion            (1.0)
 #define Node3_ServoOffset                (4.4)
 
-#elif(ArmControlMethod == ClosedLoopGeometricControl)
+#define MaximumRotationAngleOfGraspingApple  (107)
 
+#if(ArmControlMethod == ClosedLoopGeometricControl)
+
+#endif //#if(ArmControlMethod == ClosedLoopGeometricControl)
 
 #elif(ArmType == LiftingPlatform)
-
-#endif //ArmZ_AxisControlMethod
 
 #endif //ArmType
 
 
 /**************Image Processing Module Configs**************/
-#define AppleDetectionAverageFPS            (15)
+#define AppleDetectionAverageFPS            (18)
 #define MaximumFPS_Fluctuation              (1.5)
 #define ImageProcessingSerialBufferLength   (32)
 #define AppleTargetCenterX                  (0.5)
-#define AppleTargetCenterY                  (0.7)
+#define AppleTargetCenterY                  (0.8)
+#define AppleToleranceErrorX                (0.1)
+#define AppleToleranceErrorY                (0.1)
+#define ClawStableTimesLimit                (90)
 
 #endif /* ROBOTCONFIGS_H_ */

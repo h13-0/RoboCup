@@ -69,23 +69,27 @@
 #define	INA219_CONFIG_MODE_BVOLT_CONTINUOUS		(0x06) /**< bus voltage continuous */
 #define	INA219_CONFIG_MODE_SANDBVOLT_CONTINUOUS (0x07)
 
-uint16_t ina219_calibrationValue;
-int16_t ina219_currentDivider_mA;
-int16_t ina219_powerMultiplier_mW;
+typedef struct
+{
+	uint8_t  Address;
+	uint16_t CalibrationValue;
+	int16_t  CurrentDivider_mA;
+	int16_t  PowerMultiplier_mW;
+} INA219_t;
 
-void INA219_Init(uint8_t Address);
-uint16_t INA219_ReadBusVoltage(uint8_t Address);
-int16_t INA219_ReadCurrent(uint8_t Address);
-int16_t INA219_ReadCurrent_raw(uint8_t Address);
-uint16_t INA219_ReadShuntVolage(uint8_t Address);
+void INA219_Init(INA219_t *INA219, uint8_t Address);
+uint16_t INA219_ReadBusVoltage(INA219_t *INA219);
+int16_t INA219_ReadCurrent(INA219_t *INA219);
+int16_t INA219_ReadCurrent_raw(INA219_t *INA219);
+uint16_t INA219_ReadShuntVolage(INA219_t *INA219);
 
-void INA219_Reset(uint8_t Address);
-void INA219_SetCalibration(uint8_t Address, uint16_t CalibrationData);
-uint16_t INA219_getConfig(uint8_t Address);
-void INA219_SetConfig(uint8_t Address, uint16_t Config);
-void INA219_SetCalibration_32V_2A(uint8_t Address);
-void INA219_SetCalibration_32V_1A(uint8_t Address);
-void INA219_SetCalibration_16V_400mA(uint8_t Address);
-void INA219_SetPowerMode(uint8_t Address, uint8_t Mode);
+void INA219_Reset(INA219_t *INA219);
+void INA219_SetCalibration(INA219_t *INA219, uint16_t CalibrationData);
+uint16_t INA219_getConfig(INA219_t *INA219);
+void INA219_SetConfig(INA219_t *INA219, uint16_t Config);
+void INA219_SetCalibration_32V_2A(INA219_t *INA219);
+void INA219_SetCalibration_32V_1A(INA219_t *INA219);
+void INA219_SetCalibration_16V_400mA(INA219_t *INA219);
+void INA219_SetPowerMode(INA219_t *INA219, uint8_t Mode);
 
 #endif /* INC_INA219_H_ */

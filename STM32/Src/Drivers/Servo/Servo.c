@@ -103,23 +103,6 @@ void ArmNode3_Rotate(float Angle)
 }
 
 /**
- * @brief: Rotate the arm node.
- * @param: Angle, Rotation range: [0, 180]
- */
-void ArmNode4_Rotate(float Angle)
-{
-	if(Angle > 180)
-	{
-		Angle = 180;
-	} else if(Angle < 0)
-	{
-		Angle = 0;
-	}
-
-	SetServo4_Time(50 + (Angle / 180.0) * 200.0);
-}
-
-/**
  * @brief: Rotate the claw.
  * @param: Angle, Rotation range: [0, 180]
  */
@@ -133,11 +116,23 @@ void ClawRotate(float Angle)
 		Angle = 0;
 	}
 
-	SetServo5_Time(50 + (Angle / 180.0) * 200.0);
+	SetServo4_Time(50 + (Angle / 180.0) * 200.0);
 }
 
 /**
  * @brief: Open or close the claw.
- * @param:
+ * @param: Angle, Rotation range: [0, 180]
+ * @note:
+ * 		When grasping an apple, it is recommended that the maximum rotation angle be less than `MaximumRotationAngleOfGraspingApple`.
  */
-void ClawGrab(float Angle);
+void ClawGrab(float Angle)
+{
+	if(Angle > 180)
+	{
+		Angle = 180;
+	} else if(Angle < 0)
+	{
+		Angle = 0;
+	}
+	SetServo5_Time(50 + (Angle / 180.0) * 200.0);
+}

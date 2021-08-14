@@ -28,7 +28,7 @@ void ArmControlInit(void);
  * 		AxialLength:   The length of the axis relative to zero in millimeters.
  * 		Z_AxisHeight:  The height above the ground in millimeters.
  */
-ArmControlResult_t SetOpenLoopClawPosition(float RotationAngle, float AxialLength, float Z_AxisHeight);
+ArmControlResult_t SetOpenLoopClawPosition(uint16_t RotationAngle, uint16_t AxialLength, uint16_t Z_AxisHeight);
 
 /**
  * @brief: Get claw position in **Polar coordinates** in Open loop control system.
@@ -47,15 +47,14 @@ void GetOpenLoopClawPosition(float *RotationAngle, float *AxialLength, float *Z_
 void AimAtApple(float RelativeZ_AxisHeight, mtime_t TimeOut);
 
 /**
- * @brief: Grab.
+ * @brief: Closure the claw.
  * @TODO:  Use current to judge whether it is firmly grasped.
  */
-void Grab(void);
+void ClosureClaw(void);
 
 /**
- * @brief: Arm control PID calculate handler.
- * @note:  **The call frequency must be 50 Hz!!**
+ * @brief: Release the claw.
  */
-void ArmControlPIDCalculateHandler(void);
+void ReleaseClaw(void);
 
 #endif /* APP_ARMCONTROL_ARMCONTROL_H_ */

@@ -38,12 +38,6 @@ void ArmNode2_Rotate(float Angle);
 void ArmNode3_Rotate(float Angle);
 
 /**
- * @brief: Rotate the arm node.
- * @param: Angle, Rotation range: [0, 180]
- */
-void ArmNode4_Rotate(float Angle);
-
-/**
  * @brief: Rotate the claw.
  * @param: Angle, Rotation range: [0, 180]
  */
@@ -51,7 +45,9 @@ void ClawRotate(float Angle);
 
 /**
  * @brief: Open or close the claw.
- * @param:
+ * @param: Angle, Rotation range: [0, 180]
+ * @note:
+ * 		When grasping an apple, it is recommended that the maximum rotation angle be less than `MaximumRotationAngleOfGraspingApple`.
  */
 void ClawGrab(float Angle);
 

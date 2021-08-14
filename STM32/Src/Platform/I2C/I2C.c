@@ -6,14 +6,9 @@
  */
 
 #include "I2C.h"
+#include <stddef.h>
 
 #if(STM_I2C_LIB_TYPE == HAL)
-
-#if defined(STM32F103xB) || defined(STM32F103xC) || defined(STM32F103xD) || defined(STM32F103xE)
-#include "stm32f1xx_hal.h"
-#endif
-
-#include <stddef.h>
 
 #define I2C_RETRY   3
 #define I2C_TIMEOUT 1000
@@ -137,12 +132,6 @@ I2C_Error_t I2C_Receive(uint8_t Address, uint8_t *Buffer, uint8_t Length)
 }
 
 #elif(STM_I2C_LIB_TYPE == LL)
-
-#if defined(STM32F103xB) || defined(STM32F103xC) || defined(STM32F103xD) || defined(STM32F103xE)
-#include "stm32f1xx_ll_i2c.h"
-#endif
-
-#include <stddef.h>
 
 static I2C_TypeDef *i2cport = NULL;
 

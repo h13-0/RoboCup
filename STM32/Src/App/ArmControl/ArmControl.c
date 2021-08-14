@@ -24,6 +24,13 @@ static PositionPID_t xAxisPID = { 0 };
 static PositionPID_t yAxisPID = { 0 };
 #endif
 
+
+static float xAxisPID_Accumulator = 0;
+static float yAxisPID_Accumulator = 0;
+#if(ArmControlMethod == ClosedLoopGeometricControl)
+static float zAxisPID_Accumulator = 0;
+#endif
+
 struct ArmControlStatusStructure
 {
 	uint8_t X_AxisPID_Status : 1;
@@ -32,22 +39,6 @@ struct ArmControlStatusStructure
 	uint8_t Z_AxisPID_Status : 1;
 #endif
 };
-
-static struct ArmControlStatusStructure status = { 0 };
-
-#define enableX_AxisPID()       status.X_AxisPID_Status = 1
-#define disableX_AxisPID()      status.X_AxisPID_Status = 0
-#define getX_AxisPID_Status()   status.X_AxisPID_Status
-
-#define enableY_AYisPID()       status.Y_AxisPID_Status = 1
-#define disableY_AYisPID()      status.Y_AxisPID_Status = 0
-#define getY_AxisPID_Status()   status.Y_AxisPID_Status
-
-#if(ArmControlMethod == ClosedLoopGeometricControl)
-#define enableZ_AxisPID()       status.Z_AxisPID_Status = 1
-#define disableZ_AxisPID()      status.Z_AxisPID_Status = 0
-#define getZ_AxisPID_Status()   status.Z_AxisPID_Status
-#endif
 
 static float rotationAngle = 0;
 static float axialLength = 0;
@@ -203,7 +194,7 @@ static IntersectType_t calculateIntersectionPoint(Circle_t Circles[], Point_t Po
  * 		AxialLength:   The length of the axis relative to zero in millimeters.
  * 		Z_AxisHeight:  The height above the ground in millimeters.
  */
-ArmControlResult_t SetOpenLoopClawPosition(float RotationAngle, float AxialLength, float Z_AxisHeight)
+ArmControlResult_t SetOpenLoopClawPosition(uint16_t RotationAngle, uint16_t AxialLength, uint16_t Z_AxisHeight)
 {
 	//Check target value.
 	if(Z_AxisHeight < ArmNode0_Height)
@@ -361,60 +352,46 @@ ArmControlResult_t SetOpenLoopClawPosition(float RotationAngle, float AxialLengt
  */
 void GetOpenLoopClawPosition(float *RotationAngle, float *AxialLength, float *Z_AxisHeight)
 {
-
+	*RotationAngle = rotationAngle;
+	*AxialLength   = axialLength;
+	*Z_AxisHeight  = zAxisHeight;
 }
 
 /**
  * @brief: Arm control PID calculate handler.
- * @note:  **The call frequency must be 50 Hz!!**
+ * @note:  **Please do not use in interrupt.**
  */
-void ArmControlPIDCalculateHandler(void)
+static void armControlCalculate(void)
 {
-	static float xAxisPID_Accumulator = 0;
-	static float yAxisPID_Accumulator = 0;
-#if(ArmControlMethod == ClosedLoopGeometricControl)
-	static float zAxisPID_Accumulator = 0;
-#endif
 
-#if(ArmControlMethod == ClosedLoopGeometricControl)
-	if(getX_AxisPID_Status() || getY_AxisPID_Status() || getZ_AxisPID_Status())
-#else
-	if(getX_AxisPID_Status() || getY_AxisPID_Status())
-#endif
+
+	Coordinates_t coordinates = { 0 };
+	GetAppleCoordinates(&coordinates);
+	if(GetCurrentTimeMillisecond() - coordinates.TimeStamp < (1000.0 * MaximumFPS_Fluctuation / AppleDetectionAverageFPS))
 	{
-		Coordinates_t coordinates = { 0 };
-		GetAppleCoordinates(&coordinates);
-		if(GetCurrentTimeMillisecond() - coordinates.TimeStamp < (1000.0 * MaximumFPS_Fluctuation / AppleDetectionAverageFPS))
-		{
-			if(getX_AxisPID_Status())
+		//if(fabs(coordinates.X - xAxisPID.setpoint) > AppleToleranceErrorX)
+		//{
+			xAxisPID_Accumulator += PosPID_Calc(&xAxisPID, coordinates.X);
+			if(xAxisPID_Accumulator > Node0_ServoMaximumRotationAngle)
 			{
-				xAxisPID_Accumulator += PosPID_Calc(&X_AxisPID, coordinates.X);
-				if(xAxisPID_Accumulator > Node0_ServoMaximumRotationAngle)
-				{
-					xAxisPID_Accumulator = Node0_ServoMaximumRotationAngle;
-				} else if(xAxisPID_Accumulator < Node0_ServoMinimumRotationAngle) {
-					xAxisPID_Accumulator = Node0_ServoMinimumRotationAngle;
-				}
+				xAxisPID_Accumulator = Node0_ServoMaximumRotationAngle;
+			} else if(xAxisPID_Accumulator < Node0_ServoMinimumRotationAngle) {
+				xAxisPID_Accumulator = Node0_ServoMinimumRotationAngle;
 			}
+		//}
 
-			if(getY_AxisPID_Status())
+		//if(fabs(coordinates.Y - yAxisPID.setpoint) > AppleToleranceErrorY)
+		//{
+			yAxisPID_Accumulator += PosPID_Calc(&yAxisPID, coordinates.Y);
+			if(yAxisPID_Accumulator > MaximumAxialLength)
 			{
-				yAxisPID_Accumulator += PosPID_Calc(&Y_AxisPID, coordinates.Y);
-				if(yAxisPID_Accumulator > MaximumAxialLength)
-				{
-					yAxisPID_Accumulator = MaximumAxialLength;
-				} else if(yAxisPID_Accumulator < 50) {
-					yAxisPID_Accumulator = 50;
-				}
+				yAxisPID_Accumulator = MaximumAxialLength;
+			} else if(yAxisPID_Accumulator < 50) {
+				yAxisPID_Accumulator = 50;
 			}
+		//}
 
-			SetOpenLoopClawPosition(xAxisPID_Accumulator, yAxisPID_Accumulator, zAxisHeight);
-			//float data[] = { coordinates.X, coordinates.Y, yAxisPID_Accumulator };
-			//LogJustFloat(data, 3);
-		}
-	} else {
-		xAxisPID_Accumulator = rotationAngle;
-		yAxisPID_Accumulator = axialLength;
+		SetOpenLoopClawPosition(xAxisPID_Accumulator, yAxisPID_Accumulator, zAxisHeight);
 	}
 }
 
@@ -429,29 +406,59 @@ void ArmControlPIDCalculateHandler(void)
  */
 void AimAtApple(float RelativeZ_AxisHeight, mtime_t TimeOut)
 {
+	static mtime_t lastCalculateTime = 0;
 	mtime_t startTime = GetCurrentTimeMillisecond();
 #if(ArmControlMethod == ClosedLoopGeometricControl)
 	relativeZ_AxisHeight = RelativeZ_AxisHeight;
 #endif
-	enableX_AxisPID();
-	enableY_AYisPID();
+	xAxisPID_Accumulator = rotationAngle;
+	yAxisPID_Accumulator = axialLength;
+
 	while((GetCurrentTimeMillisecond() - startTime) < TimeOut)
 	{
+		if(GetCurrentTimeMillisecond() - lastCalculateTime > 20)
+		{
+			armControlCalculate();
+			lastCalculateTime = GetCurrentTimeMillisecond();
+		}
+
 		Coordinates_t coordinates = { 0 };
 		GetAppleCoordinates(&coordinates);
-		float data[] = { coordinates.X, coordinates.Y };
-		LogJustFloat(data, 2);
+		float data[] = { coordinates.X, coordinates.Y, coordinates.TimeStamp };
+		LogJustFloat(data, 3);
 
+		/*
+		static uint16_t stableTimes = 0;
+		if(stableTimes < ClawStableTimesLimit)
+		{
+			if((fabs(coordinates.X - xAxisPID.setpoint) < AppleToleranceErrorX) && (fabs(coordinates.Y - yAxisPID.setpoint) < AppleToleranceErrorY))
+			{
+				stableTimes ++;
+			} else {
+				stableTimes = 0;
+			}
+		} else {
+			break;
+		}
+		*/
 	}
-	disableX_AxisPID();
-	disableY_AYisPID();
 }
 
 /**
- * @brief: Grab.
+ * @brief: Closure the claw.
  * @TODO:  Use current to judge whether it is firmly grasped.
  */
-void Grab(void)
+void ClosureClaw(void)
 {
-
+	ClawGrab(MaximumRotationAngleOfGraspingApple);
 }
+
+/**
+ * @brief: Release the claw.
+ */
+void ReleaseClaw(void)
+{
+	ClawGrab(0);
+}
+
+

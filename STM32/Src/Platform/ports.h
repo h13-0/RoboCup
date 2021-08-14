@@ -18,6 +18,7 @@
 #include "Clock.h"
 #include "AppLog.h"
 #include "SPI.h"
+#include "I2C.h"
 
 /**
  * @group: Additional APIs.
@@ -37,5 +38,10 @@
 
 //Image Processing Module
 #include "ImageProcessingModule.h"
+
+/**
+ * @brief: Initialize all base peripherals.
+ */
+void PortsInit(void);
 
 #endif /* APP_PORTS_H_ */

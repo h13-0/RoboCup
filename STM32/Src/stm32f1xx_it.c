@@ -186,7 +186,7 @@ void SysTick_Handler(void)
 	SysTickInterruptHandler();
   /* USER CODE END SysTick_IRQn 0 */
   /* USER CODE BEGIN SysTick_IRQn 1 */
-
+	HAL_IncTick();
   /* USER CODE END SysTick_IRQn 1 */
 }
 

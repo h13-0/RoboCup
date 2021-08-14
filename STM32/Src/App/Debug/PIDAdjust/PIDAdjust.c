@@ -77,6 +77,8 @@ __attribute__((always_inline)) inline void PIDAdjustHandler(char *data, uint8_t 
 	MatchKeyFloat(data, len, "N1:", 3, angle, ArmNode1_Rotate(angle); return);
 	MatchKeyFloat(data, len, "N2:", 3, angle, ArmNode2_Rotate(angle); return);
 	MatchKeyFloat(data, len, "N3:", 3, angle, ArmNode3_Rotate(angle); return);
+
+	MatchKeyFloat(data, len, "CG:", 3, angle, ClawGrab(angle); return);
 }
 
 #endif
