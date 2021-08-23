@@ -13,15 +13,14 @@
 #endif
 
 //Maximum PWM output value(Value of AutoReload Register + 1)
-#define MAXPWMVALUE 1000
+#define MAXPWMVALUE (1000)
 
 /**
  * @configs:
  *		deadZone:
- *			No Load: 172
- *			Loaded:  215
+ *			Loaded:  335
  */
-static const uint16_t deadZone = 215;
+static const uint16_t deadZone = 335;
 
 /**
  * @brief:  Get the max value of pwm.

@@ -116,11 +116,11 @@ void WT101_Handler(uint8_t data)
  */
 void ResetYaw(void)
 {
-	WT101SerialSend(0xff);
-	WT101SerialSend(0xaa);
-	WT101SerialSend(0x76);
-	WT101SerialSend(0x00);
-	WT101SerialSend(0x00);
+	WT101_SerialSend(0xff);
+	WT101_SerialSend(0xaa);
+	WT101_SerialSend(0x76);
+	WT101_SerialSend(0x00);
+	WT101_SerialSend(0x00);
 }
 
 /**
@@ -130,11 +130,11 @@ void ResetYaw(void)
  */
 void SetWT101_ReturnRateTo(WT101_ReturnRate_t Rate)
 {
-	WT101SerialSend(0xff);
-	WT101SerialSend(0xaa);
-	WT101SerialSend(0x03);
-	WT101SerialSend(Rate);
-	WT101SerialSend(0x00);
+	WT101_SerialSend(0xff);
+	WT101_SerialSend(0xaa);
+	WT101_SerialSend(0x03);
+	WT101_SerialSend(Rate);
+	WT101_SerialSend(0x00);
 }
 
 /**

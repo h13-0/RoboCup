@@ -16,4 +16,12 @@
 
 #include "INA219.h"
 
+#include "Motor.h"
+
+#include "Servo.h"
+
+#include "ImageProcessingModule.h"
+
+#include "Bluetooth.h"
+
 #endif /* DRIVERS_DRIVERS_H_ */

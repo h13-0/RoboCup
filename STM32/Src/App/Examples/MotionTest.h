@@ -8,6 +8,6 @@
 #ifndef APP_EXAMPLES_MOTIONTEST_H_
 #define APP_EXAMPLES_MOTIONTEST_H_
 
-
+void MotionTest(void);
 
 #endif /* APP_EXAMPLES_MOTIONTEST_H_ */

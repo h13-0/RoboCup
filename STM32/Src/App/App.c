@@ -23,40 +23,69 @@
 //Arm Control
 #include "ArmControl.h"
 
-int App(void) {
-	//Init all base peripherals.
-	PortsInit();
+int App(void)
+{
+	//Init all modules and peripherals.
+	//Current posture: ¡ý
+	AllInit();
 
-	//Init Log.
-	LogInit();
+	ConnectToBluetoothDevice();
 
-	Log(Debug, "Start!");
+	while(1);
 
-	//First run
-#ifdef FirstRun
-	//Init WT101
-	SetWT101_ReturnRateTo(Rate100Hz);
+	ClosureClaw();
 
-	//Please close the macro definition and rebuild and redownload the program.
-	while(1)
-		Log(Info, "All peripherals are configured, Please close the macro definition and rebuild and redownload the program.");
-#endif
+	PlaceApple();
 
-	ResetYaw();
+	SleepMillisecond(3000);
 
-	MotionControlInit();
+	CatchApple(RightTarget);
 
-	ArmControlInit();
+	while(1);
 
-	CatchApple();
+	//Go to the refrigerator.
+	StraightUntill(325 + 150);
 
-	while (1)
-	{
-		Coordinates_t coordinates = { 0 };
-		GetAppleCoordinates(&coordinates);
-		float data[] = { coordinates.X, coordinates.Y, coordinates.TimeStamp };
-		LogJustFloat(data, 3);
-		//float data[]={ GetTOF_Distance(), GetYawValue()};
-		//LogJustFloat(data, 2);
-	}
+	TurnTo(Left);
+
+	StraightUntill(375 + 150);
+
+	TurnTo(Right);
+
+	StraightUntill(1600);
+
+	TurnTo(Left);
+
+	StraightUntill(600);
+
+	TurnTo(Left);
+
+	StraightUntill(1550);
+
+	//Arrival refrigerator.
+	//Current posture: ¡ü
+	TurnOnTheBluetoothLight();
+
+	//TODO: Identify fruit.
+	//Catch apple.
+	CatchApple(MaximumTarget);
+
+	//Go to the pool.
+	StraightUntill(400);
+
+	TurnTo(Left);
+
+	StraightUntill(650);
+
+	TurnTo(Left);
+
+	StraightUntill(1350);
+
+	//Arrival pool.
+	//Current posture: ¡ý
+	WashApple();
+
+	//Go to the desk.
+
+
 }

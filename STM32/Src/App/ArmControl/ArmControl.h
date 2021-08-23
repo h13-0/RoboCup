@@ -57,4 +57,9 @@ void ClosureClaw(void);
  */
 void ReleaseClaw(void);
 
+/**
+ * @brief: Wash Apple
+ */
+void WashApple(void);
+
 #endif /* APP_ARMCONTROL_ARMCONTROL_H_ */

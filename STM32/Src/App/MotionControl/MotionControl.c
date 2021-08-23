@@ -5,8 +5,10 @@
  *      Author: h13
  */
 #include "MotionControl.h"
+#include "RobotConfigs.h"
 
 #include <stdlib.h>
+#include <math.h>
 
 #include "Drivers.h"
 
@@ -25,19 +27,6 @@
 #define Rough  2
 
 #define Roughness Normal
-
-/**
- * @group: Angle adjust configs.
- * @param:
- */
-static const float angleAccurary = 2.0;
-static const uint16_t angleAdjustTimeLimit = 3000;
-
-/**
- *
- */
-static const uint16_t forwardAccuracy = 20;
-
 
 #define stableTimeLimit 500
 #if(stableTimeLimit > 12750)
@@ -142,7 +131,7 @@ void MotionControlInit(void)
 	anglePID.integration = 1.8;
 	anglePID.differention = 4.2;
 	anglePID.setpoint = 0.0;
-	anglePID.maxAbsOutput = GetMaxValueOfPWM() * 0.5;
+	anglePID.maxAbsOutput = GetMaxValueOfPWM() * 0.4;
 
 	//Extend functions config.
 	anglePID.configs.autoResetIntegration = enable;
@@ -154,7 +143,7 @@ void MotionControlInit(void)
 	forwardPID.integration = 0.0;
 	forwardPID.differention = 0.0;
 	forwardPID.setpoint = 0.0;
-	forwardPID.maxAbsOutput = GetMaxValueOfPWM() * 0.5;
+	forwardPID.maxAbsOutput = GetMaxValueOfPWM() * 0.6;
 
 	//Extend functions config.
 	forwardPID.configs.autoResetIntegration = disable;
@@ -223,7 +212,7 @@ void TurnTo(direction_t Direction)
 		SetLeftMotorPWM(pwmBaseOutput + pwmDifference);
 		SetRightMotorPWM(pwmBaseOutput - pwmDifference);
 
-		if((uint16_t)abs(yaw - anglePID.setpoint) > angleAccurary)
+		if((uint16_t)fabs(yaw - anglePID.setpoint) > AngleAccurary)
 		{
 			startStableTime = GetCurrentTimeMillisecond();
 		}
@@ -233,13 +222,14 @@ void TurnTo(direction_t Direction)
 			break;
 		}
 
-		if(GetCurrentTimeMillisecond() - startTime > angleAdjustTimeLimit)
+		if(GetCurrentTimeMillisecond() - startTime > AngleAdjustTimeLimit)
 		{
 			break;
 		}
 	}
 
 	disableDirectionPID();
+	anglePID._sumError = 0;
 	Brake();
 
 	anglePID._sumError = 0;
@@ -259,7 +249,7 @@ void StraightUntill(uint16_t Distance)
 		SetLeftMotorPWM(pwmBaseOutput + pwmDifference);
 		SetRightMotorPWM(pwmBaseOutput - pwmDifference);
 
-		if((uint16_t)abs(distance - forwardPID.setpoint) > forwardAccuracy)
+		if((uint16_t)fabs(distance - forwardPID.setpoint) > ForwardAccuracy)
 		{
 			startTime = GetCurrentTimeMillisecond();
 		}
@@ -295,8 +285,12 @@ void KeepAngle(void)
 
 		float data[] = { yaw, anglePID.setpoint, GetYawVelocity(), pwmDifference };
 		LogJustFloat(data, 4);
+
+		SleepMillisecond(10);
 	}
 	disableDirectionPID();
+	anglePID._sumError = 0;
+	Brake();
 }
 
 void KeepDistance(uint16_t Distance)
@@ -311,10 +305,12 @@ void KeepDistance(uint16_t Distance)
 		SetRightMotorPWM(pwmBaseOutput - pwmDifference);
 		float data[] = { distance, yaw, forwardPID.setpoint, pwmBaseOutput, pwmDifference };
 		LogJustFloat(data, 5);
+		SleepMillisecond(10);
 	}
 
 	disableForwardPID();
 	disableDirectionPID();
+	forwardPID._sumError = 0;
 	Brake();
 }
 

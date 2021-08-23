@@ -14,6 +14,6 @@
  * @brief: Send data to WT101 through serialPort
  * @param: data
  */
-void WT101SerialSend(uint8_t data);
+void WT101_SerialSend(uint8_t data);
 
 #endif /* PLATFORM_USART_WT101PORTS_WT101PORTS_H_ */

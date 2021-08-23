@@ -12,4 +12,10 @@
 
 #include "CatchApple.h"
 
+#include "AllInit.h"
+
+#include "PlaceApple.h"
+
+#include "BluetoothTest.h"
+
 #endif /* APP_EXAMPLES_EXAMPLES_H_ */

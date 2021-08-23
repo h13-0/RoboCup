@@ -79,6 +79,9 @@ __attribute__((always_inline)) inline void PIDAdjustHandler(char *data, uint8_t 
 	MatchKeyFloat(data, len, "N3:", 3, angle, ArmNode3_Rotate(angle); return);
 
 	MatchKeyFloat(data, len, "CG:", 3, angle, ClawGrab(angle); return);
+
+	float speed = 0;
+	MatchKeyFloat(data, len, "sp:", 3, speed, SetLeftMotorPWM(speed); SetRightMotorPWM(speed); return);
 }
 
 #endif

@@ -6,12 +6,11 @@
  */
 
 #include "DebugPorts.h"
+#include "RobotConfigs.h"
 
 #if defined(STM32F103xC) || defined(STM32F103xD) || defined(STM32F103xE)
 #include "stm32f1xx_ll_usart.h"
 #endif
-
-#define target USART1
 
 /**
  * @brief: Send debug data through serialPort
@@ -19,8 +18,8 @@
  */
 __attribute__((always_inline)) inline void LogSerialSend(uint8_t data)
 {
-	while (LL_USART_IsActiveFlag_TC(target) == RESET);
-	LL_USART_TransmitData8(target, data);
+	while (LL_USART_IsActiveFlag_TC(DebugPorts) == RESET);
+	LL_USART_TransmitData8(DebugPorts, data);
 }
 
 #ifdef __GNUC__

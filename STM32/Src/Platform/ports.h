@@ -23,11 +23,17 @@
 /**
  * @group: Additional APIs.
  */
+/*************************USART Ports************************/
 //WT101
 #include "WT101Ports.h"
 //Debug
 #include "DebugPorts.h"
+//Image Processing Module
+#include "ImageProcessingModulePorts.h"
+//Bluetooth
+#include "BluetoothPorts.h"
 
+/**************************PWM Ports*************************/
 //Servo
 #include "ServoPorts.h"
 #include "Servo.h"
@@ -36,8 +42,8 @@
 #include "MotorPorts.h"
 #include "Motor.h"
 
-//Image Processing Module
-#include "ImageProcessingModule.h"
+/*************************GPIO Ports*************************/
+#include "HC05_GPIO_Ports.h"
 
 /**
  * @brief: Initialize all base peripherals.

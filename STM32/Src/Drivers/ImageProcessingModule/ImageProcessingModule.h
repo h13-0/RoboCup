@@ -20,9 +20,12 @@ void ImageProcessingModuleHandler(uint8_t data);
 typedef enum
 {
 	NotReady = -1,
-	StandBy  = 0,
-	AppleDetection = 1,
-
+	Standby  = 0,
+	AppleDetectMax = 1,
+	AppleDetectLeft = 2,
+	AppleDetectRight = 3,
+	TargetDetect = 4,
+	FruitDetection = 5,
 } ImageProcessingModuleWorkingMode_t;
 
 /**

@@ -5,3 +5,7 @@ ImageProcessing/yolo/datasets
 ImageProcessing/OpenMV/CascadeClassifier/Resized/Apple
 ImageProcessing/OpenMV/CascadeClassifier/Source/Apple
 ImageProcessing/OpenMV/CascadeClassifier/Background
+/yolo/datasets
+/OpenMV/CascadeClassifier/Resized/Apple
+/OpenMV/CascadeClassifier/Source/Apple
+/OpenMV/CascadeClassifier/Background

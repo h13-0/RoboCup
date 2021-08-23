@@ -10,7 +10,7 @@
 #include "SimpleProtocolPraise.h"
 #include "FastMatch.h"
 
-static ImageProcessingModuleWorkingMode_t currentMode = 0;
+static ImageProcessingModuleWorkingMode_t currentMode = NotReady;
 static Coordinates_t appleCoordinates = { 0 };
 
 static void updateTimeStamp(void)
@@ -24,8 +24,6 @@ static void binaryProtocolPraise(char *data, uint8_t length)
 
 	MatchKeyFloat(data, length, "AppCenX:", 8, appleCoordinates.X, updateTimeStamp(); return);
 	MatchKeyFloat(data, length, "AppCenY:", 8, appleCoordinates.Y, updateTimeStamp(); return);
-
-
 }
 
 /**
@@ -40,13 +38,57 @@ __attribute__((always_inline)) inline void ImageProcessingModuleHandler(uint8_t 
 	GeneratePraiseWithSuffixMethod(data, "\r\n", 2, bufferPtr, ImageProcessingSerialBufferLength, length, binaryProtocolPraise(bufferPtr, length - 2));
 }
 
+__attribute__((always_inline)) static inline void imageProcessingModuleSendString(char *string)
+{
+	while(*string != '\0')
+	{
+		ImageProcessingModuleSerialSend(*string);
+		string ++;
+	}
+}
+
+
+
 /**
  * @brief: Switch the working mode of image processing module.
  * @param: Working mode.
  */
 __attribute__((always_inline)) inline void SwitchImageProcessingModuleWorkingMode(ImageProcessingModuleWorkingMode_t Mode)
 {
+	while(currentMode != Mode)
+	{
+		//TODO: Timeout.
+		switch(Mode)
+		{
+		case Standby:
+			imageProcessingModuleSendString("CMD:Standby\r\n");
+			break;
 
+		case AppleDetectMax:
+			imageProcessingModuleSendString("CMD:AppleDetectMax\r\n");
+			break;
+
+		case AppleDetectLeft:
+			imageProcessingModuleSendString("CMD:AppleDetectLeft\r\n");
+			break;
+
+		case AppleDetectRight:
+			imageProcessingModuleSendString("CMD:AppleDetectRight\r\n");
+			break;
+
+		case TargetDetect:
+			imageProcessingModuleSendString("CMD:TargetDetect\r\n");
+			break;
+
+		case FruitDetection:
+			imageProcessingModuleSendString("CMD:FruitDetect\r\n");
+			break;
+
+		default:
+			break;
+		}
+		SleepMillisecond(50);
+	}
 }
 
 /**

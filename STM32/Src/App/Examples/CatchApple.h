@@ -8,6 +8,13 @@
 #ifndef APP_EXAMPLES_CATCHAPPLE_H_
 #define APP_EXAMPLES_CATCHAPPLE_H_
 
-void CatchApple(void);
+typedef enum
+{
+	MaximumTarget,
+	LeftTarget,
+	RightTarget,
+} TargetType_t;
+
+void CatchApple(TargetType_t Target);
 
 #endif /* APP_EXAMPLES_CATCHAPPLE_H_ */

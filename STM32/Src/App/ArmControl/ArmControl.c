@@ -11,8 +11,10 @@
 #include <math.h>
 #include <stdint.h>
 
-#include "Servo.h"
+#include "Drivers.h"
+
 #include "PID.h"
+
 
 #ifdef DEBUG
 PositionPID_t X_AxisPID = { 0 };
@@ -42,7 +44,7 @@ struct ArmControlStatusStructure
 
 static float rotationAngle = 0;
 static float axialLength = 0;
-static float zAxisHeight = 0;
+static float zAxisHeight = ArmNode0_Height;
 #if(ArmControlMethod == ClosedLoopGeometricControl)
 static float relativeZ_AxisHeight = 0;
 #endif
@@ -461,4 +463,33 @@ void ReleaseClaw(void)
 	ClawGrab(0);
 }
 
+/**
+ * @brief: Wash Apple
+ */
+void WashApple(void)
+{
+	for(uint8_t angle = 0; angle < 180; angle++)
+	{
+		ClawRotate(angle);
+		SleepMillisecond(5);
+	}
+
+	for(uint8_t angle = 180; angle > 0; angle--)
+	{
+		ClawRotate(angle);
+		SleepMillisecond(5);
+	}
+
+	for(uint8_t angle = 0; angle < 180; angle++)
+	{
+		ClawRotate(angle);
+		SleepMillisecond(5);
+	}
+
+	for(uint8_t angle = 180; angle > 0; angle--)
+	{
+		ClawRotate(angle);
+		SleepMillisecond(5);
+	}
+}
 
