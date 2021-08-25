@@ -18,4 +18,6 @@
 
 #include "BluetoothTest.h"
 
+#include "WashApple.h"
+
 #endif /* APP_EXAMPLES_EXAMPLES_H_ */

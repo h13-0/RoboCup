@@ -213,6 +213,16 @@ void USART1_IRQHandler(void)
 #endif
 	}
 
+	if(LL_USART_IsActiveFlag_ORE(USART1))
+	{
+		LL_USART_ClearFlag_ORE(USART1);
+	}
+
+	if(LL_USART_IsActiveFlag_PE(USART1))
+	{
+		LL_USART_ClearFlag_PE(USART1);
+	}
+
   /* USER CODE END USART1_IRQn 0 */
   /* USER CODE BEGIN USART1_IRQn 1 */
 
@@ -231,6 +241,16 @@ void USART2_IRQHandler(void)
 		LL_USART_ClearFlag_RXNE(USART2);
 
 		WT101_InterruptHandler(data);
+	}
+
+	if(LL_USART_IsActiveFlag_ORE(USART2))
+	{
+		LL_USART_ClearFlag_ORE(USART2);
+	}
+
+	if(LL_USART_IsActiveFlag_PE(USART2))
+	{
+		LL_USART_ClearFlag_PE(USART2);
 	}
   /* USER CODE END USART2_IRQn 0 */
   /* USER CODE BEGIN USART2_IRQn 1 */
@@ -251,6 +271,16 @@ void USART3_IRQHandler(void)
 
 		TOF_InterruptHandler(data);
 	}
+
+	if(LL_USART_IsActiveFlag_ORE(USART3))
+	{
+		LL_USART_ClearFlag_ORE(USART3);
+	}
+
+	if(LL_USART_IsActiveFlag_PE(USART3))
+	{
+		LL_USART_ClearFlag_PE(USART3);
+	}
   /* USER CODE END USART3_IRQn 0 */
   /* USER CODE BEGIN USART3_IRQn 1 */
 
@@ -269,6 +299,16 @@ void UART4_IRQHandler(void)
 		LL_USART_ClearFlag_RXNE(UART4);
 
 		ImageProcessingModuleInterruptHandler(data);
+	}
+
+	if(LL_USART_IsActiveFlag_ORE(UART4))
+	{
+		LL_USART_ClearFlag_ORE(UART4);
+	}
+
+	if(LL_USART_IsActiveFlag_PE(UART4))
+	{
+		LL_USART_ClearFlag_PE(UART4);
 	}
   /* USER CODE END UART4_IRQn 0 */
   /* USER CODE BEGIN UART4_IRQn 1 */

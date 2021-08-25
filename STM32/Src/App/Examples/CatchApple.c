@@ -116,7 +116,7 @@ void CatchApple(TargetType_t Target)
 	//Arm retraction.
 	GetOpenLoopClawPosition(&rotationAngle, &axialLength, &zAxisHeight);
 
-	for( ; zAxisHeight < ApproachHeight; zAxisHeight++)
+	for( ; zAxisHeight < RetractionHeight; zAxisHeight++)
 	{
 		SetOpenLoopClawPosition(rotationAngle, axialLength, zAxisHeight);
 		SleepMillisecond(5);

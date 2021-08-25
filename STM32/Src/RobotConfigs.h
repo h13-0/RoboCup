@@ -12,6 +12,9 @@
  * @group: App Configs.
  */
 /***********************Motion Control**********************/
+//DeadZone
+#define ForwardDeadZone               (500)
+#define BackwardDeadZone              (630)
 //Accurary
 #define AngleAccurary         (2.0)   //degree
 #define AngleAdjustTimeLimit  (3000)  //milliseconds
@@ -22,10 +25,13 @@
 
 
 /************************Arm Control************************/
-#define GrabHeight            (245)               //millimeters
-#define ApproachHeight        (GrabHeight + 75)   //millimeters
-#define BaseAxialLength       (110)               //millimeters
-#define ElongationDistance    (55)                //millimeters
+#define GrabHeight            (245)                 //millimeters
+#define ApproachHeight        (GrabHeight + 75)     //millimeters
+#define RetractionHeight      (ApproachHeight + 50) //millimeters
+#define BaseAxialLength       (110)                 //millimeters
+#define ElongationDistance    (55)                  //millimeters
+#define WashAppleHeight       (330)                 //millimeters
+#define WashAppleAxialLength  (245)                 //millimeters
 
 /*************************Arm Config************************/
 //List of available arm types.

@@ -8,7 +8,7 @@
 #ifndef PLATFORM_MOTOR_MOTOR_H_
 #define PLATFORM_MOTOR_MOTOR_H_
 
-#include <stdio.h>
+#include <stdint.h>
 
 /**
  * @brief:  Get the max value of pwm.

@@ -31,6 +31,25 @@ int App(void)
 
 	ConnectToBluetoothDevice();
 
+	for(uint8_t i = 0; i < 10; i++)
+	{
+		TurnTo(Left);
+		SleepMillisecond(1000);
+	}
+
+	for(uint8_t i = 0; i < 10; i++)
+	{
+		TurnTo(Right);
+		SleepMillisecond(1000);
+	}
+
+	while(1);
+
+	//KeepAngle();
+
+	//KeepDistance(500);
+
+	/*
 	while(1);
 
 	ClosureClaw();
@@ -42,13 +61,14 @@ int App(void)
 	CatchApple(RightTarget);
 
 	while(1);
+	*/
 
 	//Go to the refrigerator.
 	StraightUntill(325 + 150);
 
 	TurnTo(Left);
 
-	StraightUntill(375 + 150);
+	StraightUntill(1750 - 150);
 
 	TurnTo(Right);
 
@@ -56,11 +76,11 @@ int App(void)
 
 	TurnTo(Left);
 
-	StraightUntill(600);
+	StraightUntill(500);
 
 	TurnTo(Left);
 
-	StraightUntill(1550);
+	StraightUntill(1600 - 150);
 
 	//Arrival refrigerator.
 	//Current posture: ¡ü
@@ -79,13 +99,31 @@ int App(void)
 
 	TurnTo(Left);
 
-	StraightUntill(1350);
+	StraightUntill(450);
 
 	//Arrival pool.
 	//Current posture: ¡ý
 	WashApple();
 
 	//Go to the desk.
+	StraightUntill(400);
 
+	TurnTo(Right);
+
+	StraightUntill(1750 - 150);
+
+	TurnTo(Right);
+
+	StraightUntill(1500);
+
+	TurnTo(Left);
+
+	StraightUntill(500);
+
+	TurnTo(Left);
+
+	StraightUntill(2150);
+
+	while(1);
 
 }

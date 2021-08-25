@@ -6,21 +6,11 @@
  */
 
 #include "Motor.h"
+#include "RobotConfigs.h"
 #include "MotorPorts.h"
-
-#if defined(STM32F103xC) || defined(STM32F103xD) || defined(STM32F103xE)
-#include "stm32f1xx.h"
-#endif
 
 //Maximum PWM output value(Value of AutoReload Register + 1)
 #define MAXPWMVALUE (1000)
-
-/**
- * @configs:
- *		deadZone:
- *			Loaded:  335
- */
-static const uint16_t deadZone = 335;
 
 /**
  * @brief:  Get the max value of pwm.
@@ -28,7 +18,7 @@ static const uint16_t deadZone = 335;
  */
 __attribute__((always_inline)) inline uint16_t GetMaxValueOfPWM(void)
 {
-	return MAXPWMVALUE - deadZone;
+	return MAXPWMVALUE - ForwardDeadZone;
 }
 
 /**
@@ -37,9 +27,9 @@ __attribute__((always_inline)) inline uint16_t GetMaxValueOfPWM(void)
  */
 void SetLeftMotorPWM(int16_t pwmValue) {
 	if (pwmValue > 0) {
-		if(pwmValue < GetMaxValueOfPWM())
+		if(pwmValue < MAXPWMVALUE - ForwardDeadZone)
 		{
-			setChannel1Value(pwmValue + deadZone);
+			setChannel1Value(pwmValue + ForwardDeadZone);
 			setChannel2Value(0);
 		}else {
 			setChannel1Value(MAXPWMVALUE);
@@ -49,10 +39,10 @@ void SetLeftMotorPWM(int16_t pwmValue) {
 			setChannel1Value(0);
 			setChannel2Value(0);
 	} else {
-		if(pwmValue > (- GetMaxValueOfPWM()))
+		if(pwmValue > BackwardDeadZone - MAXPWMVALUE)
 		{
 			setChannel1Value(0);
-			setChannel2Value(- pwmValue + deadZone);
+			setChannel2Value(- pwmValue + BackwardDeadZone);
 		}else{
 			setChannel1Value(0);
 			setChannel2Value(MAXPWMVALUE);
@@ -67,9 +57,9 @@ void SetLeftMotorPWM(int16_t pwmValue) {
 void SetRightMotorPWM(int16_t pwmValue)
 {
 	if (pwmValue > 0) {
-		if(pwmValue < GetMaxValueOfPWM())
+		if(pwmValue < MAXPWMVALUE - ForwardDeadZone)
 		{
-			setChannel3Value(pwmValue + deadZone);
+			setChannel3Value(pwmValue + ForwardDeadZone);
 			setChannel4Value(0);
 		}else {
 			setChannel3Value(MAXPWMVALUE);
@@ -79,10 +69,10 @@ void SetRightMotorPWM(int16_t pwmValue)
 			setChannel3Value(0);
 			setChannel4Value(0);
 	} else {
-		if(pwmValue > (- GetMaxValueOfPWM()))
+		if(pwmValue > BackwardDeadZone - MAXPWMVALUE)
 		{
 			setChannel3Value(0);
-			setChannel4Value(- pwmValue + deadZone);
+			setChannel4Value(- pwmValue + BackwardDeadZone);
 		}else{
 			setChannel3Value(0);
 			setChannel4Value(MAXPWMVALUE);

@@ -131,7 +131,7 @@ void MotionControlInit(void)
 	anglePID.integration = 1.8;
 	anglePID.differention = 4.2;
 	anglePID.setpoint = 0.0;
-	anglePID.maxAbsOutput = GetMaxValueOfPWM() * 0.4;
+	anglePID.maxAbsOutput = GetMaxValueOfPWM() * 0.5;
 
 	//Extend functions config.
 	anglePID.configs.autoResetIntegration = enable;
@@ -143,12 +143,12 @@ void MotionControlInit(void)
 	forwardPID.integration = 0.0;
 	forwardPID.differention = 0.0;
 	forwardPID.setpoint = 0.0;
-	forwardPID.maxAbsOutput = GetMaxValueOfPWM() * 0.6;
+	forwardPID.maxAbsOutput = GetMaxValueOfPWM() * 0.7;
 
 	//Extend functions config.
 	forwardPID.configs.autoResetIntegration = disable;
 	forwardPID.configs.limitIntegration = enable;
-	forwardPID.maximumAbsValueOfIntegrationOutput = 200.0;
+	forwardPID.maximumAbsValueOfIntegrationOutput = forwardPID.maxAbsOutput;
 #elif(Roughness == Rough)
 	//angle PID configs.
 	anglePID.proportion = 7.5;
@@ -177,6 +177,72 @@ void MotionControlInit(void)
 }
 
 /**
+ * @brief: Calculate the minimum difference between the TargetYaw and the CurrentYaw.
+ * @param:
+ * 		CurrentYaw: Current yaw in range: (-180, 180)
+ * 		TargetYaw:  Target yaw in range: (-180, 180)
+ * @example:
+ * 		calculateYawError(40, 0)     -> -40
+ * 		calculateYawError(40, -40)   -> -80
+ * 		calculateYawError(-40, 40)   -> 80
+ * 		calculateYawError(-180, 180) -> 0
+ * @note:   Clockwise is positive.
+ */
+static float calculateYawError(float CurrentYaw, float TargetYaw)
+{
+	float error = 0;
+	//Preprocess parameters.
+	while(CurrentYaw > 180)
+	{
+		CurrentYaw -= 360;
+	}
+
+	while(CurrentYaw < -180)
+	{
+		CurrentYaw += 360;
+	}
+
+	while(TargetYaw > 180)
+	{
+		TargetYaw -= 360;
+	}
+
+	while(TargetYaw < -180)
+	{
+		TargetYaw += 360;
+	}
+
+	//baseError = TargetYaw - CurrentYaw
+	//Then baseError in (-360, 360).
+	//baseError in (-360, -180) -> clockwise
+	//baseError in (-180, 0)    -> antiClockwise
+	//baseError in (0, 180)     -> closkwise
+	//baseError in (180, 360)   -> antiClockwise
+	//if(clockwiseError > antiClockwiseError)
+	if(((TargetYaw - CurrentYaw < 180.0) && (TargetYaw - CurrentYaw > 0.0)) || (TargetYaw - CurrentYaw < - 180.0))
+	{
+		//Turn clockwise, error < 0.
+		//if(Cross ¡À180 degrees)
+		if(CurrentYaw > 0 && TargetYaw < 0)
+		{
+			error = CurrentYaw - TargetYaw - 360;
+		} else {
+			error = CurrentYaw - TargetYaw;
+		}
+	} else {
+		//Turn anti-clockwise, error > 0.
+		//if(Cross ¡À180 degrees)
+		if(CurrentYaw < 0 && TargetYaw > 0)
+		{
+			error = CurrentYaw - TargetYaw + 360;
+		} else {
+			error = CurrentYaw - TargetYaw;
+		}
+	}
+	return error;
+}
+
+/**
  * @brief: Turn To ..
  * @param:
  * 		Direction: The direction you want to turn to.
@@ -186,22 +252,33 @@ void TurnTo(direction_t Direction)
 	switch(Direction)
 	{
 	case Left:
-		anglePID.setpoint = ((int)(anglePID.setpoint + 180 - 90) % 360) - 180;
+		anglePID.setpoint -= 90;
 		break;
 
 	case Right:
-		anglePID.setpoint = ((int)(anglePID.setpoint + 180 + 90) % 360) - 180;
+		anglePID.setpoint += 90;
 		break;
 
 	case BackWard:
-		anglePID.setpoint = ((int)(anglePID.setpoint + 180 + 180) % 360) - 180;
+		anglePID.setpoint += 180;
 		break;
 
 	default:
 		return;
 	}
 
+	while(anglePID.setpoint < -180)
+	{
+		anglePID.setpoint += 360;
+	}
+
+	while(anglePID.setpoint > 180)
+	{
+		anglePID.setpoint -= 360;
+	}
+
 	//Keep Angle
+	anglePID._sumError = 0;
 	enableDirectionPID();
 
 	uint32_t startTime = GetCurrentTimeMillisecond();
@@ -212,7 +289,7 @@ void TurnTo(direction_t Direction)
 		SetLeftMotorPWM(pwmBaseOutput + pwmDifference);
 		SetRightMotorPWM(pwmBaseOutput - pwmDifference);
 
-		if((uint16_t)fabs(yaw - anglePID.setpoint) > AngleAccurary)
+		if(fabs(calculateYawError(yaw, anglePID.setpoint) > AngleAccurary))
 		{
 			startStableTime = GetCurrentTimeMillisecond();
 		}
@@ -231,8 +308,6 @@ void TurnTo(direction_t Direction)
 	disableDirectionPID();
 	anglePID._sumError = 0;
 	Brake();
-
-	anglePID._sumError = 0;
 }
 
 void StraightUntill(uint16_t Distance)
@@ -325,39 +400,7 @@ __attribute__((always_inline)) inline void DirectionPIDCalculateHandler(void)
 	if (getDirectionPIDStatus())
 	{
 		yaw = GetYawValue();
-		float error = 0;
-
-		//baseError = anglePID.setPoint - yaw
-		//Then baseError in (-360, 360).
-		//baseError in (-360, -180) -> clockwise
-		//baseError in (-180, 0)    -> antiClockwise
-		//baseError in (0, 180)     -> closkwise
-		//baseError in (180, 360)   -> antiClockwise
-		//if(clockwiseError > antiClockwiseError)
-		if(((anglePID.setpoint - yaw < 180.0) && (anglePID.setpoint - yaw > 0.0)) || (anglePID.setpoint - yaw < - 180.0))
-		{
-			//Turn clockwise, error < 0.
-			//if(Cross ¡À180 degrees)
-			if(yaw > 0 && anglePID.setpoint < 0)
-			{
-				error = yaw - anglePID.setpoint - 360;
-			} else {
-				error = yaw - anglePID.setpoint;
-			}
-		} else {
-			//Turn anti-clockwise, error > 0.
-			//if(Cross ¡À180 degrees)
-			if(yaw < 0 && anglePID.setpoint > 0)
-			{
-				error = yaw - anglePID.setpoint + 360;
-			} else {
-				error = yaw - anglePID.setpoint;
-			}
-		}
-
-		pwmDifference = PosPID_CalcWithCustErrAndDiff(&AnglePID, error, GetYawVelocity());
-		//pwmDifference = PosPID_CalcWithCustErr(&anglePID, error);
-		//pwmDifference = PosPID_Calc(&anglePID, yaw);
+		pwmDifference = PosPID_CalcWithCustErrAndDiff(&AnglePID, calculateYawError(yaw, anglePID.setpoint), GetYawVelocity());
 	}
 }
 

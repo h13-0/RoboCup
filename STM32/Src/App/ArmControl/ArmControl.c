@@ -462,34 +462,3 @@ void ReleaseClaw(void)
 {
 	ClawGrab(0);
 }
-
-/**
- * @brief: Wash Apple
- */
-void WashApple(void)
-{
-	for(uint8_t angle = 0; angle < 180; angle++)
-	{
-		ClawRotate(angle);
-		SleepMillisecond(5);
-	}
-
-	for(uint8_t angle = 180; angle > 0; angle--)
-	{
-		ClawRotate(angle);
-		SleepMillisecond(5);
-	}
-
-	for(uint8_t angle = 0; angle < 180; angle++)
-	{
-		ClawRotate(angle);
-		SleepMillisecond(5);
-	}
-
-	for(uint8_t angle = 180; angle > 0; angle--)
-	{
-		ClawRotate(angle);
-		SleepMillisecond(5);
-	}
-}
-
