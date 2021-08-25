@@ -108,3 +108,12 @@ __attribute__((always_inline)) inline void GetAppleCoordinates(Coordinates_t *Co
 {
 	*Coordinates = appleCoordinates;
 }
+
+/**
+ * @brief: Get the coordinates of target.
+ * @param: Pointer of coordinates.
+ */
+__attribute__((always_inline)) inline void GetTargetCoordinates(Coordinates_t *Coordinates)
+{
+
+}

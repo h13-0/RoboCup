@@ -4,6 +4,7 @@
  *  Created on: 2021Äê5ÔÂ29ÈÕ
  *      Author: h13
  */
+#include "ArmControl.h"
 #include "App.h"
 #include "RobotConfigs.h"
 #include "Examples.h"
@@ -21,7 +22,6 @@
 #include "MotionControl.h"
 
 //Arm Control
-#include "ArmControl.h"
 
 int App(void)
 {
@@ -30,6 +30,8 @@ int App(void)
 	AllInit();
 
 	ConnectToBluetoothDevice();
+
+	while(1);
 
 	for(uint8_t i = 0; i < 10; i++)
 	{

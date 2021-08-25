@@ -24,4 +24,15 @@ void TimerHandler(void);
  */
 void LVGLHandler(void);
 
+#if(ArmType == LiftingPlatform)
+
+/**
+ * @brief: Timer for Stepper motor pulse.
+ * @note:
+ * 		**Call frequency: 1000Hz.**
+ */
+void StepperTimerInterruptHandler(void);
+
+#endif
+
 #endif /* APP_TIMER_TIMER_H_ */

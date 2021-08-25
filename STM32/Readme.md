@@ -200,8 +200,8 @@ PC11 = RX
 接口: UART5
 | STM32功能 | 映射引脚 | 蓝牙串口引脚   |
 | --------- | ------- | -------------- |
-| Power     |         |                |
-| Power     | GND     |                |
+| Power     | 5V      | VCC            |
+| Power     | GND     | GND            |
 | UART5 TX  | PC12    | RX             |
 | UART5 RX  | PD2     | TX             |
 | GPIO      | PC0     | EN(仅限于HC05) |
@@ -217,9 +217,14 @@ AT+UART=115200,0,0
 
 #### 焊接后STM32对蓝牙初始化命令
 上电EN默认低电平, 进入普通模式。
-每条AT指令前需要使EN为高进入普通AT模式, 波特率为115200
+每条AT指令前需要使EN为高进入普通AT模式, 波特率为115200。
 ```
-
+AT+ROLE=1
+AT+CLASS=0
+AT+INQM=1,9,48
+AT+CMODE=1
+AT+PSWD="2020"
+AT+PAIR=0019,09,0314B9,20
 ```
 
 

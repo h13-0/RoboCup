@@ -5,8 +5,8 @@
  *      Author: h13
  */
 
-#ifndef APP_DEBUG_PIDADJUST_PIDADJUST_H_
-#define APP_DEBUG_PIDADJUST_PIDADJUST_H_
+#ifndef APP_DEBUG_PARAMETERADJUST_PARAMETERADJUST_H_
+#define APP_DEBUG_PARAMETERADJUST_PARAMETERADJUST_H_
 
 #ifdef DEBUG
 #include <stdint.h>
@@ -25,4 +25,4 @@ void PIDAdjustHandler(char *data, uint8_t len);
 
 #endif
 
-#endif /* APP_DEBUG_PIDADJUST_PIDADJUST_H_ */
+#endif /* APP_DEBUG_PARAMETERADJUST_PARAMETERADJUST_H_ */

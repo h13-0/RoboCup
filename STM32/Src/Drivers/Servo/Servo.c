@@ -4,8 +4,8 @@
  *  Created on: 2021Äê6ÔÂ4ÈÕ
  *      Author: h13
  */
-
 #include "Servo.h"
+#include "RobotConfigs.h"
 #include "ServoPorts.h"
 #include "RobotConfigs.h"
 
@@ -22,10 +22,14 @@ void CalibrationAllServo(void)
 	SetServo1_Time(50);
 	SetServo2_Time(250);
 	SetServo3_Time(150);
+
+#if(ArmType == MechanicalArm)
 	SetServo4_Time(50);
 	SetServo5_Time(250);
+#endif
 }
 
+#if(ArmType == MechanicalArm)
 /**
  * @brief: Rotate the arm node.
  * @param: Angle, Rotation range: [0, 180]
@@ -102,6 +106,66 @@ void ArmNode3_Rotate(float Angle)
 	SetServo3_Time(150 - (Angle / 180.0) * 200.0 * Node3_ServoProportion);
 }
 
+#else
+/**
+ * @brief: Rotate the arm node.
+ * @param: Angle, Rotation range: [0, 180]
+ */
+void ArmNode0_Rotate(float Angle)
+{
+	Angle += Node0_ServoOffset;
+
+	if(Angle > Node0_ServoMaximumRotationAngle)
+	{
+		Angle = 180;
+	} else if(Angle < Node0_ServoMinimumRotationAngle)
+	{
+		Angle = 0;
+	}
+
+	SetServo0_Time(50 + (Angle / 180.0) * 200.0 * Node0_ServoProportion);
+}
+
+/**
+ * @brief: Rotate the arm node.
+ * @param: Angle, Rotation range: [0, 180]
+ */
+void ArmNode1_Rotate(float Angle)
+{
+	Angle += Node1_ServoOffset;
+
+	if(Angle > Node1_ServoMaximumRotationAngle)
+	{
+		Angle = 180;
+	} else if(Angle < Node1_ServoMinimumRotationAngle)
+	{
+		Angle = 0;
+	}
+
+	SetServo1_Time(50 + (Angle / 180.0) * 200.0 * Node1_ServoProportion);
+}
+
+/**
+ * @brief: Rotate the arm node.
+ * @param: Angle, Rotation range: [0, 180]
+ */
+void ArmNode2_Rotate(float Angle)
+{
+	Angle += Node2_ServoOffset;
+
+	if(Angle > Node2_ServoMaximumRotationAngle)
+	{
+		Angle = 180;
+	} else if(Angle < Node2_ServoMinimumRotationAngle)
+	{
+		Angle = 0;
+	}
+
+	SetServo2_Time(250 - (Angle / 180.0) * 200.0 * Node2_ServoProportion);
+}
+
+#endif
+
 /**
  * @brief: Rotate the claw.
  * @param: Angle, Rotation range: [0, 180]
@@ -116,7 +180,7 @@ void ClawRotate(float Angle)
 		Angle = 0;
 	}
 
-	SetServo4_Time(50 + (Angle / 180.0) * 200.0);
+	SetServo2_Time(50 + (Angle / 180.0) * 200.0);
 }
 
 /**
@@ -134,5 +198,5 @@ void ClawGrab(float Angle)
 	{
 		Angle = 0;
 	}
-	SetServo5_Time(50 + (Angle / 180.0) * 200.0);
+	SetServo3_Time(50 + (Angle / 180.0) * 200.0);
 }

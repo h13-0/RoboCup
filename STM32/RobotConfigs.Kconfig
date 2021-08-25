@@ -1,5 +1,0 @@
-mainmenu "RoboCup 2021 STM32 Project"
-
-menu "Test"
-
-endmenu

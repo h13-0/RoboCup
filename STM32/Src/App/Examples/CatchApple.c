@@ -4,10 +4,10 @@
  *  Created on: 2021Äê8ÔÂ14ÈÕ
  *      Author: h13
  */
+#include "ArmControl.h"
 #include "CatchApple.h"
 #include "RobotConfigs.h"
 //Arm Control
-#include "ArmControl.h"
 #include "ImageProcessingModule.h"
 
 //TODO: Bug entering preparation posture¡£
@@ -86,7 +86,7 @@ void CatchApple(TargetType_t Target)
 	}
 
 	//Aim at apple.
-	AimAtApple(10, 20000);
+	AimAt(Apple, 20000);
 
 	//Catch apple.
 	GetOpenLoopClawPosition(&rotationAngle, &axialLength, &zAxisHeight);

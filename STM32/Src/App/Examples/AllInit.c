@@ -6,6 +6,7 @@
  */
 
 #include <AllInit.h>
+#include "ArmControl.h"
 #include "ports.h"
 
 #include "Drivers.h"
@@ -17,7 +18,6 @@
 #include "MotionControl.h"
 
 //Arm Control
-#include "ArmControl.h"
 
 /**
  * @brief: Init all modules and peripherals.

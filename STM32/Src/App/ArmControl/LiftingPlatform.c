@@ -1,38 +1,33 @@
 /*
- * ArmControl.h
+ * LiftingPlatform.c
  *
  *  Created on: 2021Äê8ÔÂ25ÈÕ
  *      Author: h13
  */
+#include "RobotConfigs.h"
 
-#ifndef APP_ARMCONTROL_ARMCONTROL_H_
-#define APP_ARMCONTROL_ARMCONTROL_H_
+#if(ArmType == LiftingPlatform)
+#include "ArmControl.h"
 
-#include <stdint.h>
-#include "ports.h"
+#include "PID.h"
+
+#ifdef DEBUG
+PositionPID_t X_AxisPID = { 0 };
+PositionPID_t Y_AxisPID = { 0 };
+#define xAxisPID X_AxisPID
+#define yAxisPID Y_AxisPID
+#else
+static PositionPID_t xAxisPID = { 0 };
+static PositionPID_t yAxisPID = { 0 };
+#endif
 
 /**
  * @brief: Init arm control of the robot.
  */
-void ArmControlInit(void);
-
-/**
- * @brief: Closure the claw.
- * @TODO:  Use current to judge whether it is firmly grasped.
- */
-void ClosureClaw(void);
-
-/**
- * @brief: Release the claw.
- */
-void ReleaseClaw(void);
-
-typedef enum
+void ArmControlInit(void)
 {
-	ArmControlOK = 0,
-	TooFar,
-	TargetValueIsInvalid,
-} ArmControlResult_t;
+
+}
 
 /**
  * @brief: Set claw position in **Polar coordinates** in Open loop control system.
@@ -41,19 +36,19 @@ typedef enum
  * 		AxialLength:   The length of the axis relative to zero in millimeters.
  * 		Z_AxisHeight:  The height above the ground in millimeters.
  */
-ArmControlResult_t SetOpenLoopClawPosition(uint16_t RotationAngle, uint16_t AxialLength, uint16_t Z_AxisHeight);
+ArmControlResult_t SetOpenLoopClawPosition(uint16_t RotationAngle, uint16_t AxialLength, uint16_t Z_AxisHeight)
+{
+	return ArmControlOK;
+}
 
 /**
  * @brief: Get claw position in **Polar coordinates** in Open loop control system.
  * @param: Pointer of parameters.
  */
-void GetOpenLoopClawPosition(float *RotationAngle, float *AxialLength, float *Z_AxisHeight);
-
-typedef enum
+void GetOpenLoopClawPosition(float *RotationAngle, float *AxialLength, float *Z_AxisHeight)
 {
-	Apple,
-	Target,
-} Target_t;
+
+}
 
 /**
  * @brief: Aim the mechanical claw at Target.
@@ -63,6 +58,9 @@ typedef enum
  * @note:
  * 		When using open-loop control, the `RelativeZ_AxisHeight` does not take effect.
  */
-void AimAt(Target_t AimTarget, mtime_t TimeOut);
+void AimAt(Target_t AimTarget, mtime_t TimeOut)
+{
 
-#endif /* APP_ARMCONTROL_ARMCONTROL_H_ */
+}
+
+#endif

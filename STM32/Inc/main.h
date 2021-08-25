@@ -70,6 +70,50 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define GPIO_Output____HC05_EN_Pin LL_GPIO_PIN_3
+#define GPIO_Output____HC05_EN_GPIO_Port GPIOC
+#define TIM2_CH1____RightEncoder_CHA_Pin LL_GPIO_PIN_0
+#define TIM2_CH1____RightEncoder_CHA_GPIO_Port GPIOA
+#define TIM2_CH2____RightEncoder_CHB_Pin LL_GPIO_PIN_1
+#define TIM2_CH2____RightEncoder_CHB_GPIO_Port GPIOA
+#define GPIO_EXIT4____Z_AxisLimitSensor_Pin LL_GPIO_PIN_4
+#define GPIO_EXIT4____Z_AxisLimitSensor_GPIO_Port GPIOA
+#define GPIO_EXIT5____AL_AxisLimitSensor_Pin LL_GPIO_PIN_5
+#define GPIO_EXIT5____AL_AxisLimitSensor_GPIO_Port GPIOA
+#define TIM3_CH1____Motor_D0_Pin LL_GPIO_PIN_6
+#define TIM3_CH1____Motor_D0_GPIO_Port GPIOA
+#define TIM3_CH2____Motor_D1_Pin LL_GPIO_PIN_7
+#define TIM3_CH2____Motor_D1_GPIO_Port GPIOA
+#define GPIO_Output____SSD1283_CS_Pin LL_GPIO_PIN_4
+#define GPIO_Output____SSD1283_CS_GPIO_Port GPIOC
+#define GPIO_Output____SSD1283_DC_Pin LL_GPIO_PIN_5
+#define GPIO_Output____SSD1283_DC_GPIO_Port GPIOC
+#define TIM3_CH3____Motor_D2_Pin LL_GPIO_PIN_0
+#define TIM3_CH3____Motor_D2_GPIO_Port GPIOB
+#define TIM3_CH4____Motor_D3_Pin LL_GPIO_PIN_1
+#define TIM3_CH4____Motor_D3_GPIO_Port GPIOB
+#define GPIO_Output____SSD1283_RST_Pin LL_GPIO_PIN_2
+#define GPIO_Output____SSD1283_RST_GPIO_Port GPIOB
+#define GPIO_Output____Z_AxisStepperSTEP_Pin LL_GPIO_PIN_12
+#define GPIO_Output____Z_AxisStepperSTEP_GPIO_Port GPIOB
+#define GPIO_Output____Z_AxisStepperDIR_Pin LL_GPIO_PIN_13
+#define GPIO_Output____Z_AxisStepperDIR_GPIO_Port GPIOB
+#define GPIO_Output____AL_AxisStepperSTEP_Pin LL_GPIO_PIN_14
+#define GPIO_Output____AL_AxisStepperSTEP_GPIO_Port GPIOB
+#define GPIO_Output____AL_AxisStepperDIR_Pin LL_GPIO_PIN_15
+#define GPIO_Output____AL_AxisStepperDIR_GPIO_Port GPIOB
+#define TIM8_CH1____LeftEncoder_CHA_Pin LL_GPIO_PIN_6
+#define TIM8_CH1____LeftEncoder_CHA_GPIO_Port GPIOC
+#define TIM8_CH2____LeftEncoder_CHB_Pin LL_GPIO_PIN_7
+#define TIM8_CH2____LeftEncoder_CHB_GPIO_Port GPIOC
+#define TIM1_CH1____Servo0_Pin LL_GPIO_PIN_8
+#define TIM1_CH1____Servo0_GPIO_Port GPIOA
+#define TIM1_CH2____Servo1_Pin LL_GPIO_PIN_9
+#define TIM1_CH2____Servo1_GPIO_Port GPIOA
+#define TIM1_CH3____Servo2_Pin LL_GPIO_PIN_10
+#define TIM1_CH3____Servo2_GPIO_Port GPIOA
+#define TIM1_CH4____Servo3_Pin LL_GPIO_PIN_11
+#define TIM1_CH4____Servo3_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

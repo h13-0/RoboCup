@@ -8,6 +8,8 @@
 #ifndef PLATFORM_SERVO_SERVO_H_
 #define PLATFORM_SERVO_SERVO_H_
 
+#include "RobotConfigs.h"
+
 /**
  * @brief: Control servos movement to the calibration point to facilitate mechanical calibration.
  */
@@ -31,11 +33,15 @@ void ArmNode1_Rotate(float Angle);
  */
 void ArmNode2_Rotate(float Angle);
 
+#if(ArmType == MechanicalArm)
+
 /**
  * @brief: Rotate the arm node.
  * @param: Angle, Rotation range: [0, 180]
  */
 void ArmNode3_Rotate(float Angle);
+
+#endif
 
 /**
  * @brief: Rotate the claw.
@@ -50,6 +56,5 @@ void ClawRotate(float Angle);
  * 		When grasping an apple, it is recommended that the maximum rotation angle be less than `MaximumRotationAngleOfGraspingApple`.
  */
 void ClawGrab(float Angle);
-
 
 #endif /* PLATFORM_SERVO_SERVO_H_ */

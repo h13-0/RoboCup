@@ -8,6 +8,8 @@
 #ifndef PLATFORM_INTERRUPTS_TIMERINTERRUPTS_TIMERINTERRUPTS_H_
 #define PLATFORM_INTERRUPTS_TIMERINTERRUPTS_TIMERINTERRUPTS_H_
 
+#include "RobotConfigs.h"
+
 /**
  * @brief: Timer Interrupt Handler.
  * @note:
@@ -23,5 +25,16 @@ void TimerInterruptHandler(void);
  * 		**Call frequency: 30Hz.**
  */
 void LVGLInterruptHandler(void);
+
+#if(ArmType == LiftingPlatform)
+
+/**
+ * @brief: Timer for Stepper motor pulse.
+ * @note:
+ * 		**Call frequency: 1000Hz.**
+ */
+void StepperMotorTimerInterruptHandler(void);
+
+#endif
 
 #endif /* PLATFORM_INTERRUPTS_TIMERINTERRUPTS_TIMERINTERRUPTS_H_ */

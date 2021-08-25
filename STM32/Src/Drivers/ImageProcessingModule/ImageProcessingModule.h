@@ -61,4 +61,6 @@ typedef struct
  */
 void GetAppleCoordinates(Coordinates_t *Coordinates);
 
+void GetTargetCoordinates(Coordinates_t *Coordinates);
+
 #endif /* DRIVERS_IMAGEPROCESSINGMODULE_IMAGEPROCESSINGMODULE_H_ */

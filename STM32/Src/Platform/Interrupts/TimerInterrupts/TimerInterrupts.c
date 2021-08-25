@@ -31,3 +31,17 @@ __attribute__((always_inline)) inline void LVGLInterruptHandler(void)
 	LVGLHandler();
 }
 
+#if(ArmType == LiftingPlatform)
+
+/**
+ * @brief: Timer for Stepper motor pulse.
+ * @note:
+ * 		**Call frequency: 1000Hz.**
+ */
+__attribute__((always_inline)) inline void StepperMotorTimerInterruptHandler(void)
+{
+	StepperTimerInterruptHandler();
+}
+
+#endif
+

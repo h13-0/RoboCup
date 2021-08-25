@@ -8,6 +8,8 @@
 #ifndef PLATFORM_SERVOPORTS_SERVOPORTS_H_
 #define PLATFORM_SERVOPORTS_SERVOPORTS_H_
 
+#include "RobotConfigs.h"
+
 #include <stdint.h>
 
 /**
@@ -28,8 +30,12 @@ void SetServo2_Time(uint16_t HighLevelTime);
 
 void SetServo3_Time(uint16_t HighLevelTime);
 
+#if(ArmType == MechanicalArm)
+
 void SetServo4_Time(uint16_t HighLevelTime);
 
 void SetServo5_Time(uint16_t HighLevelTime);
+
+#endif
 
 #endif /* PLATFORM_SERVOPORTS_SERVOPORTS_H_ */
