@@ -24,4 +24,8 @@
 
 #include "Bluetooth.h"
 
+#include "Stepper.h"
+
+#include "Encoder.h"
+
 #endif /* DRIVERS_DRIVERS_H_ */

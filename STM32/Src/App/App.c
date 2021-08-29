@@ -4,9 +4,9 @@
  *  Created on: 2021Äê5ÔÂ29ÈÕ
  *      Author: h13
  */
-#include "ArmControl.h"
 #include "App.h"
 #include "RobotConfigs.h"
+#include "ArmControl.h"
 #include "Examples.h"
 
 #include <stdio.h>
@@ -31,40 +31,6 @@ int App(void)
 
 	ConnectToBluetoothDevice();
 
-	while(1);
-
-	for(uint8_t i = 0; i < 10; i++)
-	{
-		TurnTo(Left);
-		SleepMillisecond(1000);
-	}
-
-	for(uint8_t i = 0; i < 10; i++)
-	{
-		TurnTo(Right);
-		SleepMillisecond(1000);
-	}
-
-	while(1);
-
-	//KeepAngle();
-
-	//KeepDistance(500);
-
-	/*
-	while(1);
-
-	ClosureClaw();
-
-	PlaceApple();
-
-	SleepMillisecond(3000);
-
-	CatchApple(RightTarget);
-
-	while(1);
-	*/
-
 	//Go to the refrigerator.
 	StraightUntill(325 + 150);
 
@@ -82,7 +48,7 @@ int App(void)
 
 	TurnTo(Left);
 
-	StraightUntill(1600 - 150);
+	StraightUntill(1600 - 300);
 
 	//Arrival refrigerator.
 	//Current posture: ¡ü
@@ -97,7 +63,7 @@ int App(void)
 
 	TurnTo(Left);
 
-	StraightUntill(650);
+	StraightUntill(500);
 
 	TurnTo(Left);
 
@@ -108,7 +74,7 @@ int App(void)
 	WashApple();
 
 	//Go to the desk.
-	StraightUntill(400);
+	StraightUntill(1600);
 
 	TurnTo(Right);
 
@@ -124,8 +90,49 @@ int App(void)
 
 	TurnTo(Left);
 
-	StraightUntill(2150);
+	StraightUntill(1950);
+
+	PlaceApple();
+
+	StraightUntill(2300);
+
+	CatchApple(RightTarget);
+
+	//Go to the trash can.
+	//Current posture: ¡ý
+	StraightUntill(325 + 150);
+
+	TurnTo(Left);
+
+	StraightUntill(2000 - 150);
+
+	TurnTo(Right);
+
+	StraightUntill(3100);
+
+	//Arrive trash can.
+	//Current posture: ¡ý
+	ThrowApple();
+
+	CatchTrashCan();
+
+	SleepMillisecond(500);
+
+	TurnTo(BackWard);
+
+	StraightUntill(300);
+
+	EmptyTrash();
+
+	TurnTo(Left);
+
+	StraightUntill(1650);
+
+	PlaceTrashCan();
+
+	TurnTo(Left);
+
+	StraightUntill(2450);
 
 	while(1);
-
 }

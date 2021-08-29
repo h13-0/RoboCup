@@ -36,6 +36,8 @@ void TurnTo(direction_t Direction);
 /**
  * @brief: Keep Angle To Adjust PID Value.
  */
+_Noreturn void KeepSpeed(void);
+
 _Noreturn void KeepAngle(void);
 
 _Noreturn void KeepDistance(uint16_t Distance);
@@ -50,6 +52,8 @@ void StraightUntill(uint16_t distance);
 /**
  * @group: PID Calculate Handler.
  */
+void SpeedPIDCalculateHandler(void);
+
 void DirectionPIDCalculateHandler(void);
 
 void ForwardPIDCalculateHandler(void);

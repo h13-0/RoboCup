@@ -4,6 +4,8 @@
  *  Created on: 2021Äê6ÔÂ8ÈÕ
  *      Author: h13
  */
+
+#include "RobotConfigs.h"
 #include "ArmControl.h"
 #include "Timer.h"
 
@@ -18,6 +20,7 @@
  */
 __attribute__((always_inline)) inline void TimerHandler(void)
 {
+	SpeedPIDCalculateHandler();
 	DirectionPIDCalculateHandler();
 	ForwardPIDCalculateHandler();
 }
@@ -38,7 +41,7 @@ __attribute__((always_inline)) inline void LVGLHandler(void)
 /**
  * @brief: Timer for Stepper motor pulse.
  * @note:
- * 		**Call frequency: 1000Hz.**
+ * 		**Call frequency: 2000Hz.**
  */
 __attribute__((always_inline)) inline void StepperTimerInterruptHandler(void)
 {

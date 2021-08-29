@@ -326,7 +326,7 @@ void TIM6_IRQHandler(void)
 	{
 		LL_TIM_ClearFlag_UPDATE(TIM6);
 #if(ArmType == LiftingPlatform)
-
+		StepperMotorTimerInterruptHandler();
 #endif
 	}
   /* USER CODE END TIM6_IRQn 0 */

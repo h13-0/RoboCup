@@ -36,9 +36,9 @@ struct ArmControlStatusStructure
 	uint8_t Y_AxisPID_Status : 1;
 };
 
-static float rotationAngle = 0;
-static float axialLength = 0;
-static float zAxisHeight = ArmNode0_Height;
+static uint16_t rotationAngle = 0;
+static uint16_t axialLength = 0;
+static uint16_t zAxisHeight = ArmNode0_Height;
 
 /**
  * @brief: Init arm control of the robot.
@@ -343,7 +343,7 @@ ArmControlResult_t SetOpenLoopClawPosition(uint16_t RotationAngle, uint16_t Axia
  * @brief: Get claw position in **Polar coordinates** in Open loop control system.
  * @param: Pointer of parameters.
  */
-void GetOpenLoopClawPosition(float *RotationAngle, float *AxialLength, float *Z_AxisHeight)
+void GetOpenLoopClawPosition(uint16_t *RotationAngle, uint16_t *AxialLength, uint16_t *Z_AxisHeight)
 {
 	*RotationAngle = rotationAngle;
 	*AxialLength   = axialLength;

@@ -15,35 +15,19 @@
 #include "PID.h"
 #include "ports.h"
 
-/**
- * @group: Configs
- * @param:
- * 		angleAccuracy:   Angle accuracy limit in angle.
- * 		forwardAccuracy: Forward accuracy limit in millimeter.
- * 		stableTimeLimit: Stable Time Limit in milliseconds.
- */
-#define Smooth 0
-#define Normal 1
-#define Rough  2
-
-#define Roughness Normal
-
-#define stableTimeLimit 500
-#if(stableTimeLimit > 12750)
-#error "stableTimeLimit must less than 12750"
-#endif
-
-
 #ifdef DEBUG
-//Share PID Structure with PIDAdjust.c
+//Share PID Structure with ParameterAdjust.c
 PositionPID_t AnglePID;
 PositionPID_t ForwardPID;
-#define anglePID   AnglePID
-#define forwardPID ForwardPID
-
+PositionPID_t LeftSpeedPID, RightSpeedPID;
+#define anglePID      AnglePID
+#define forwardPID    ForwardPID
+#define leftSpeedPID  LeftSpeedPID
+#define rightSpeedPID RightSpeedPID
 #else
 static PositionPID_t anglePID;
 static PositionPID_t forwardPID;
+static PositionPID_t speedPID;
 #endif
 
 /**
@@ -59,12 +43,17 @@ static PositionPID_t forwardPID;
 
 struct motionControlStatusStructure
 {
+	uint8_t speedPID_Status     : 1;
 	uint8_t directionPID_Status : 1;
 	uint8_t forwardPID_Status   : 1;
 };
 
 static struct motionControlStatusStructure status = { 0 };
 
+//Status of speed PID.
+#define enableSpeedPID()              status.speedPID_Status = 1
+#define disableSpeedPID()             status.speedPID_Status = 0
+#define getSpeedPID()                 status.speedPID_Status
 //Status of direction PID.
 #define enableDirectionPID()          status.directionPID_Status = 1
 #define disableDirectionPID()         status.directionPID_Status = 0
@@ -74,6 +63,8 @@ static struct motionControlStatusStructure status = { 0 };
 #define disableForwardPID()           status.forwardPID_Status = 0
 #define getForwardPIDStatus()         status.forwardPID_Status
 
+static int32_t leftSpeed  = 0;
+static int32_t rightSpeed = 0;
 
 /**
  * @group: Direction Variables.
@@ -87,11 +78,10 @@ static float yaw = 0;
 static float distance = 0.0;
 
 /**
- *
+ * @TODO:
  */
-static float pwmDifference = 0;
-static float pwmBaseOutput = 0;
-
+static float speedDifference = 0;
+static float speedBaseOutput = 0;
 
 /**
  * @brief: Init motion control.
@@ -101,79 +91,45 @@ static float pwmBaseOutput = 0;
  */
 void MotionControlInit(void)
 {
-#if(Roughness == Smooth)
+	//speed PID configs.
+	leftSpeedPID.proportion = 0.1;
+	leftSpeedPID.integration = 0.043;
+	leftSpeedPID.differention = 0.0;
+	leftSpeedPID.setpoint = 0.0;
+	leftSpeedPID.maxAbsOutput = GetMaxValueOfPWM();
+
+	leftSpeedPID.configs.autoResetIntegration = disable;
+	leftSpeedPID.configs.limitIntegration = enable;
+	leftSpeedPID.maximumAbsValueOfIntegrationOutput = 600;
+
+	rightSpeedPID = leftSpeedPID;
+
+	//@TODO: Verify that autoResetIntegration needs to be turned off
 	//angle PID configs.
-	anglePID.proportion = 5.0;
-	anglePID.integration = 0.95;
-	anglePID.differention = 2.0;
+	anglePID.proportion = 0.3;
+	anglePID.integration = 0.0;
+	anglePID.differention = 0.0;
 	anglePID.setpoint = 0.0;
-	anglePID.maxAbsOutput = GetMaxValueOfPWM() * 0.3;
+	anglePID.maxAbsOutput = MaxSpeed * 0.3;
 
 	//Extend functions config.
-	anglePID.configs.autoResetIntegration = enable;
+	anglePID.configs.autoResetIntegration = disable;
 	anglePID.configs.limitIntegration = enable;
-	anglePID.maximumAbsValueOfIntegrationOutput = 75.0;
+	anglePID.maximumAbsValueOfIntegrationOutput = MaxSpeed * 0.1;
 
 
-	forwardPID.proportion = -1.0;
+	forwardPID.proportion = -0.07;
 	forwardPID.integration = 0.0;
 	forwardPID.differention = 0.0;
 	forwardPID.setpoint = 0.0;
-	forwardPID.maxAbsOutput = GetMaxValueOfPWM() * 0.5;
-
-	//Extend functions config.
-	forwardPID.configs.autoResetIntegration = enable;
-	forwardPID.configs.limitIntegration = enable;
-	forwardPID.maximumAbsValueOfIntegrationOutput = 200.0;
-#elif(Roughness == Normal)
-	//angle PID configs.
-	anglePID.proportion = 7.5;
-	anglePID.integration = 1.8;
-	anglePID.differention = 4.2;
-	anglePID.setpoint = 0.0;
-	anglePID.maxAbsOutput = GetMaxValueOfPWM() * 0.5;
-
-	//Extend functions config.
-	anglePID.configs.autoResetIntegration = enable;
-	anglePID.configs.limitIntegration = enable;
-	anglePID.maximumAbsValueOfIntegrationOutput = 300.0;
-
-
-	forwardPID.proportion = -1.0;
-	forwardPID.integration = 0.0;
-	forwardPID.differention = 0.0;
-	forwardPID.setpoint = 0.0;
-	forwardPID.maxAbsOutput = GetMaxValueOfPWM() * 0.7;
+	forwardPID.maxAbsOutput = MaxSpeed * 0.7;
 
 	//Extend functions config.
 	forwardPID.configs.autoResetIntegration = disable;
 	forwardPID.configs.limitIntegration = enable;
-	forwardPID.maximumAbsValueOfIntegrationOutput = forwardPID.maxAbsOutput;
-#elif(Roughness == Rough)
-	//angle PID configs.
-	anglePID.proportion = 7.5;
-	anglePID.integration = 1.8;
-	anglePID.differention = 4.2;
-	anglePID.setpoint = 0.0;
-	anglePID.maxAbsOutput = GetMaxValueOfPWM() * 0.5;
+	forwardPID.maximumAbsValueOfIntegrationOutput = MaxSpeed * 0.3;
 
-	//Extend functions config.
-	anglePID.configs.autoResetIntegration = enable;
-	anglePID.configs.limitIntegration = enable;
-	anglePID.maximumAbsValueOfIntegrationOutput = 300.0;
-
-
-	forwardPID.proportion = -1.0;
-	forwardPID.integration = 0.0;
-	forwardPID.differention = 0.0;
-	forwardPID.setpoint = 0.0;
-	forwardPID.maxAbsOutput = GetMaxValueOfPWM() * 0.5;
-
-	//Extend functions config.
-	forwardPID.configs.autoResetIntegration = disable;
-	forwardPID.configs.limitIntegration = enable;
-	forwardPID.maximumAbsValueOfIntegrationOutput = 200.0;
-#endif
+	enableSpeedPID();
 }
 
 /**
@@ -286,15 +242,15 @@ void TurnTo(direction_t Direction)
 
 	while(1)
 	{
-		SetLeftMotorPWM(pwmBaseOutput + pwmDifference);
-		SetRightMotorPWM(pwmBaseOutput - pwmDifference);
+		leftSpeedPID.setpoint = speedBaseOutput + speedDifference;
+		rightSpeedPID.setpoint = speedBaseOutput - speedDifference;
 
-		if(fabs(calculateYawError(yaw, anglePID.setpoint) > AngleAccurary))
+		if(fabs(calculateYawError(yaw, anglePID.setpoint)) > AngleAccurary)
 		{
 			startStableTime = GetCurrentTimeMillisecond();
 		}
 
-		if(GetCurrentTimeMillisecond() - startStableTime > stableTimeLimit)
+		if(GetCurrentTimeMillisecond() - startStableTime > AngleStableTimeThreshold)
 		{
 			break;
 		}
@@ -319,17 +275,24 @@ void StraightUntill(uint16_t Distance)
 	enableForwardPID();
 
 	uint32_t startTime = GetCurrentTimeMillisecond();
+	uint32_t startStableTime = GetCurrentTimeMillisecond();
+
 	while (1)
 	{
-		SetLeftMotorPWM(pwmBaseOutput + pwmDifference);
-		SetRightMotorPWM(pwmBaseOutput - pwmDifference);
+		leftSpeedPID.setpoint = speedBaseOutput + speedDifference;
+		rightSpeedPID.setpoint = speedBaseOutput - speedDifference;
 
 		if((uint16_t)fabs(distance - forwardPID.setpoint) > ForwardAccuracy)
 		{
-			startTime = GetCurrentTimeMillisecond();
+			startStableTime = GetCurrentTimeMillisecond();
 		}
 
-		if(GetCurrentTimeMillisecond() - startTime > stableTimeLimit)
+		if(GetCurrentTimeMillisecond() - startStableTime > ForwardStableTimeThreshold)
+		{
+			break;
+		}
+
+		if(GetCurrentTimeMillisecond() - startTime > ForwardAdjustTimeLimit)
 		{
 			break;
 		}
@@ -350,15 +313,25 @@ void StraightUntill(uint16_t Distance)
  * 		**Blocking function!!!**
  * 		Just for PID Adjust!!!
  */
+void KeepSpeed(void)
+{
+	while(1)
+	{
+		float data[] = { leftSpeed, rightSpeed };
+		LogJustFloat(data, 2);
+		SleepMillisecond(10);
+	}
+}
+
 void KeepAngle(void)
 {
 	enableDirectionPID();
 	while (1)
 	{
-		SetLeftMotorPWM(pwmBaseOutput + pwmDifference);
-		SetRightMotorPWM(pwmBaseOutput - pwmDifference);
+		leftSpeedPID.setpoint = speedBaseOutput + speedDifference;
+		rightSpeedPID.setpoint = speedBaseOutput - speedDifference;
 
-		float data[] = { yaw, anglePID.setpoint, GetYawVelocity(), pwmDifference };
+		float data[] = { yaw, anglePID.setpoint, GetYawVelocity(), speedDifference };
 		LogJustFloat(data, 4);
 
 		SleepMillisecond(10);
@@ -376,9 +349,9 @@ void KeepDistance(uint16_t Distance)
 
 	while(1)
 	{
-		SetLeftMotorPWM(pwmBaseOutput + pwmDifference);
-		SetRightMotorPWM(pwmBaseOutput - pwmDifference);
-		float data[] = { distance, yaw, forwardPID.setpoint, pwmBaseOutput, pwmDifference };
+		leftSpeedPID.setpoint = speedBaseOutput + speedDifference;
+		rightSpeedPID.setpoint = speedBaseOutput - speedDifference;
+		float data[] = { distance, yaw, forwardPID.setpoint, speedBaseOutput, speedDifference };
 		LogJustFloat(data, 5);
 		SleepMillisecond(10);
 	}
@@ -394,21 +367,35 @@ void KeepDistance(uint16_t Distance)
 /**
  * @group: PID Calculate Handler
  */
-//WARNING: **pay attention to the zero point problem**
+__attribute__((always_inline)) inline void SpeedPIDCalculateHandler(void)
+{
+	if(getSpeedPID())
+	{
+		leftSpeed  = GetLeftEncoderSpeed();
+		rightSpeed = GetRightEncoderSpeed();
+
+		float leftPWM = PosPID_Calc(&leftSpeedPID, leftSpeed);
+		float rightPWM = PosPID_Calc(&rightSpeedPID, rightSpeed);
+
+		SetLeftMotorPWM(leftPWM);
+		SetRightMotorPWM(rightPWM);
+	}
+}
+
 __attribute__((always_inline)) inline void DirectionPIDCalculateHandler(void)
 {
-	if (getDirectionPIDStatus())
+	if(getDirectionPIDStatus())
 	{
 		yaw = GetYawValue();
-		pwmDifference = PosPID_CalcWithCustErrAndDiff(&AnglePID, calculateYawError(yaw, anglePID.setpoint), GetYawVelocity());
+		speedDifference = PosPID_CalcWithCustErrAndDiff(&AnglePID, calculateYawError(yaw, anglePID.setpoint), GetYawVelocity());
 	}
 }
 
 __attribute__((always_inline)) inline void ForwardPIDCalculateHandler(void)
 {
-	if (getForwardPIDStatus())
+	if(getForwardPIDStatus())
 	{
 		distance = GetTOF_Distance();
-		pwmBaseOutput = PosPID_Calc(&ForwardPID, distance);
+		speedBaseOutput = PosPID_Calc(&ForwardPID, distance);
 	}
 }

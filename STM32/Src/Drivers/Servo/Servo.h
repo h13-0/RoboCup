@@ -14,47 +14,41 @@
  * @brief: Control servos movement to the calibration point to facilitate mechanical calibration.
  */
 void CalibrationAllServo(void);
-
-/**
- * @brief: Rotate the arm node.
- * @param: Angle, Rotation range: [0, 270]
- */
-void ArmNode0_Rotate(float Angle);
-
-/**
- * @brief: Rotate the arm node.
- * @param: Angle, Rotation range: [0, 180]
- */
-void ArmNode1_Rotate(float Angle);
-
-/**
- * @brief: Rotate the arm node.
- * @param: Angle, Rotation range: [0, 180]
- */
-void ArmNode2_Rotate(float Angle);
-
 #if(ArmType == MechanicalArm)
-
-/**
- * @brief: Rotate the arm node.
- * @param: Angle, Rotation range: [0, 180]
- */
-void ArmNode3_Rotate(float Angle);
-
+typedef enum
+{
+	ArmRotation,
+	ArmElongationNode0,
+	ArmElongationNode1,
+	ArmElongationNode2,
+	ArmClawRotation,
+	ArmClawGrab,
+} ArmNode_t;
+#elif(ArmType == LiftingPlatform)
+typedef enum
+{
+	ArmRotation,
+	ArmElongationNode0,
+	ArmElongationNode1,
+	ArmClawRotation,
+	ArmClawGrab,
+} ArmNode_t;
 #endif
 
 /**
- * @brief: Rotate the claw.
- * @param: Angle, Rotation range: [0, 180]
+ * @brief: Set the rotation angle of the Arm node.
+ * @param:
+ * 		ArmNode_t Node: The arm node to be set.
+ * 		float Angle:    Angle to rotate.
  */
-void ClawRotate(float Angle);
+void SetArmNodeAngle(ArmNode_t *Node, float Angle);
 
 /**
- * @brief: Open or close the claw.
- * @param: Angle, Rotation range: [0, 180]
- * @note:
- * 		When grasping an apple, it is recommended that the maximum rotation angle be less than `MaximumRotationAngleOfGraspingApple`.
+ * @brief:  Get the rotation angle of the Arm node.
+ * @param:
+ * 		ArmNode_t Node: The arm node to get.
+ * @return: Current angle.
  */
-void ClawGrab(float Angle);
+float GetArmNodeAngle(ArmNode_t *Node);
 
 #endif /* PLATFORM_SERVO_SERVO_H_ */

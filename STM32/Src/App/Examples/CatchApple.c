@@ -18,7 +18,7 @@ void CatchApple(TargetType_t Target)
 
 	ClawRotate(0);
 
-	float rotationAngle, axialLength, zAxisHeight;
+	uint16_t rotationAngle, axialLength, zAxisHeight;
 	GetOpenLoopClawPosition(&rotationAngle, &axialLength, &zAxisHeight);
 
 	if(zAxisHeight < ApproachHeight)

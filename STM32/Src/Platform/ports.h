@@ -34,15 +34,13 @@
 #include "BluetoothPorts.h"
 
 /**************************PWM Ports*************************/
+#include "PWM.h"
 //Servo
 #include "ServoPorts.h"
 #include "Servo.h"
 
-//Motor
-#include "MotorPorts.h"
-#include "Motor.h"
-
 /*************************GPIO Ports*************************/
+#include "GPIO.h"
 #include "HC05_GPIO_Ports.h"
 
 /**

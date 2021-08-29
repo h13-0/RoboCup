@@ -9,14 +9,42 @@
 #define DRIVERS_STEPPER_STEPPER_H_
 
 #include "GPIO.h"
+#include "RobotConfigs.h"
+
+#if(ArmType == LiftingPlatform)
+
+#include <stdint.h>
+
+void SteperTimerHandler(void);
+
+typedef enum
+{
+	StepperOK = 0,
+	StepperBufferIsFull = 1,
+} StepperError_t;
 
 typedef struct
 {
 	GPIO_t StepperIO;
-	GPIO_t DirIO;
-
+	GPIO_t DirectionIO;
+	uint32_t CurrentSteps;
+	uint32_t TargetSteps;
 } Stepper_t;
 
-void SteperTimerHandler(void);
+StepperError_t StepperInit(Stepper_t *Stepper);
+
+typedef enum
+{
+	Forward,
+	Backward,
+} Direction_t;
+
+void SetStepperSteps(Stepper_t *Stepper, uint32_t TargetSteps);
+
+void StepperForward(Stepper_t *Stepper, uint32_t Steps);
+
+void StepperBackward(Stepper_t *Stepper, uint32_t Steps);
+
+#endif /* ArmType == LiftingPlatform */
 
 #endif /* DRIVERS_STEPPER_STEPPER_H_ */

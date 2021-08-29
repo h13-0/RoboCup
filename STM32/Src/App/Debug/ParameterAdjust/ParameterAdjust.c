@@ -18,6 +18,7 @@
 #include "ArmControl.h"
 #include "Servo.h"
 
+extern PositionPID_t LeftSpeedPID, RightSpeedPID;
 extern PositionPID_t AnglePID;
 extern PositionPID_t ForwardPID;
 
@@ -35,6 +36,16 @@ extern PositionPID_t Y_AxisPID;
 __attribute__((always_inline)) inline void PIDAdjustHandler(char *data, uint8_t len)
 {
 	//3 Bytes keys:
+	//SpeedPID
+	float floatValue = 0;
+	MatchKeyFloat(data, len, "SP:", 3, floatValue, LeftSpeedPID.proportion = floatValue; RightSpeedPID.proportion = floatValue; return);
+
+	MatchKeyFloat(data, len, "SI:", 3, floatValue, LeftSpeedPID.integration = floatValue; RightSpeedPID.integration = floatValue; return);
+
+	MatchKeyFloat(data, len, "SD:", 3, floatValue, LeftSpeedPID.differention = floatValue; RightSpeedPID.differention = floatValue; return);
+
+	MatchKeyFloat(data, len, "TS:", 3, floatValue, LeftSpeedPID.setpoint = floatValue; RightSpeedPID.setpoint = floatValue; return);
+
 	//AnglePID
 	MatchKeyFloat(data, len, "AP:", 3, AnglePID.proportion, return);
 
@@ -54,6 +65,9 @@ __attribute__((always_inline)) inline void PIDAdjustHandler(char *data, uint8_t 
 	MatchKeyFloat(data, len, "TF:", 3, ForwardPID.setpoint, return);
 
 	//4 Bytes keys:
+	//SpeedPID
+	MatchKeyFloat(data, len, "SMI:", 4, floatValue, LeftSpeedPID.maximumAbsValueOfIntegrationOutput = floatValue; RightSpeedPID.maximumAbsValueOfIntegrationOutput = floatValue; return);
+
 	//AnglePID
 	MatchKeyFloat(data, len, "AMI:", 4, AnglePID.maximumAbsValueOfIntegrationOutput, return);
 

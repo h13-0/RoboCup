@@ -12,14 +12,24 @@
  * @group: App Configs.
  */
 /***********************Motion Control**********************/
+/**
+ * @group: Motion control configs.
+ * @param:
+ * 		angleAccuracy:   Angle accuracy limit in angle.
+ * 		forwardAccuracy: Forward accuracy limit in millimeter.
+ * 		stableTimeLimit: Stable Time Limit in milliseconds.
+ */
+#define MaxSpeed                      (27.5)
 //DeadZone
 #define ForwardDeadZone               (500)
-#define BackwardDeadZone              (630)
+#define BackwardDeadZone              (500)
 //Accurary
-#define AngleAccurary         (2.0)   //degree
-#define AngleAdjustTimeLimit  (3000)  //milliseconds
-#define ForwardAccuracy       (20)    //millimeters
-
+#define AngleAccurary                 (2.0)   //degree
+#define AngleAdjustTimeLimit          (3000)  //milliseconds
+#define AngleStableTimeThreshold      (500)   //milliseconds
+#define ForwardAccuracy               (20)    //millimeters
+#define ForwardAdjustTimeLimit        (15000)
+#define ForwardStableTimeThreshold    (500)
 //PID
 
 
@@ -59,25 +69,7 @@
 #define MaximumAxialLength     (411)
 
 /***********************Servos Config***********************/
-#define Node0_ServoMinimumRotationAngle  (0)
-#define Node0_ServoMaximumRotationAngle  (180)
-#define Node0_ServoProportion            (0.867)
-#define Node0_ServoOffset                (0.0)
 
-#define Node1_ServoMinimumRotationAngle  (0)
-#define Node1_ServoMaximumRotationAngle  (180)
-#define Node1_ServoProportion            (0.857)
-#define Node1_ServoOffset                (0.0)
-
-#define Node2_ServoMinimumRotationAngle  (0)
-#define Node2_ServoMaximumRotationAngle  (180)
-#define Node2_ServoProportion            (1.0)//(0.908386)
-#define Node2_ServoOffset                (0.0)//(-1.218346)
-
-#define Node3_ServoMinimumRotationAngle  (-90)
-#define Node3_ServoMaximumRotationAngle  (90)
-#define Node3_ServoProportion            (1.0)
-#define Node3_ServoOffset                (9.0)//(4.4)
 
 #elif(ArmType == LiftingPlatform)
 /***********************Servos Config***********************/
@@ -113,6 +105,113 @@
 /**
  * @group: Module configs
  */
+/**********************H-Bridge Config**********************/
+/**
+ * @configs:Channel reverse settings.
+ * @param:
+ * 		ReverseLeftRight: Switch left and right channels (default: channel 1 -> Left, channel 2 -> Right).
+ * 		ReverseChannel1:  Reverse H-bridge channel 1.
+ * 		ReverseChannel2:  Reverse H-bridge channel 2.
+ */
+#define ReverseLeftRight  0
+#define ReverseChannel1   0
+#define ReverseChannel2   1
+
+#define LeftMotorPWM               { .TIMx = TIM3, .Channel = LL_TIM_CHANNEL_CH1 }
+#define LeftMotorIO                { .Port = GPIOC, .Pin = LL_GPIO_PIN_13 }
+#define RightMotorPWM              { .TIMx = TIM3, .Channel = LL_TIM_CHANNEL_CH2 }
+#define RightMotorIO               { .Port = GPIOC, .Pin = LL_GPIO_PIN_14 }
+#define LeftMotorPWM_Frequence     (1000)
+#define LeftMotorPWM_ReloadValue   (1000)
+#define RightMotorPWM_Frequence    (1000)
+#define RightMotorPWM_ReloadValue  (1000)
+
+/***********************Servos Config***********************/
+#if(ArmType == MechanicalArm)
+#define ArmRotationServo                             { .TIMx = TIM1, .Channel = LL_TIM_CHANNEL_CH1 }
+#define ArmElongationServo0                          { .TIMx = TIM1, .Channel = LL_TIM_CHANNEL_CH2 }
+#define ArmElongationServo1                          { .TIMx = TIM1, .Channel = LL_TIM_CHANNEL_CH3 }
+#define ArmElongationServo2                          { .TIMx = TIM1, .Channel = LL_TIM_CHANNEL_CH4 }
+#define ClawRotationServo                            { .TIMx = TIM2, .Channel = LL_TIM_CHANNEL_CH1 }
+#define ClawGrabServo                                { .TIMx = TIM2, .Channel = LL_TIM_CHANNEL_CH2 }
+
+#define ArmRotationServoPWM_Frequence                (50)
+#define ArmRotationServoPWM_ReloadValue              (1999)
+
+#define ArmElongationServo0_PWM_Frequence            (50)
+#define ArmElongationServo0_PWM_ReloadValue          (1999)
+
+#define ArmElongationServo1_PWM_Frequence            (50)
+#define ArmElongationServo1_PWM_ReloadValue          (1999)
+
+#define ArmElongationServo2_PWM_Frequence            (50)
+#define ArmElongationServo2_PWM_ReloadValue          (1999)
+
+#define ClawRotationServoPWM_Frequence               (50)
+#define ClawRotationServoPWM_ReloadValue             (1999)
+
+#define ClawGrabServoPWM_Frequence                   (50)
+#define ClawRotationServoPWM_ReloadValue             (1999)
+
+#define ArmRotationServoMinimumRotationAngle         (0)
+#define ArmRotationServoMaximumRotationAngle         (180)
+#define ArmRotationServoProportion                   (0.867)
+#define ArmRotationServoOffset                       (0.0)
+
+#define ArmElongationServo0_MinimumRotationAngle     (0)
+#define ArmElongationServo0_MaximumRotationAngle     (180)
+#define ArmElongationServo0_Proportion               (0.857)
+#define ArmElongationServo0_Offset                   (0.0)
+
+#define ArmElongationServo1_MinimumRotationAngle     (0)
+#define ArmElongationServo1_MaximumRotationAngle     (180)
+#define ArmElongationServo1_Proportion               (1.0)//(0.908386)
+#define ArmElongationServo1_Offset                   (0.0)//(-1.218346)
+
+#define ArmElongationServo2_MinimumRotationAngle     (-90)
+#define ArmElongationServo2_MaximumRotationAngle     (90)
+#define ArmElongationServo2_Proportion               (1.0)
+#define ArmElongationServo2_Offset                   (9.0)//(4.4)
+
+#elif(ArmType == LiftingPlatform)
+#define ArmRotationServo                             { .TIMx = TIM1, .Channel = LL_TIM_CHANNEL_CH1 }
+#define ArmElongationServo0                          { .TIMx = TIM1, .Channel = LL_TIM_CHANNEL_CH2 }
+#define ArmElongationServo1                          { .TIMx = TIM1, .Channel = LL_TIM_CHANNEL_CH3 }
+#define ClawRotationServo                            { .TIMx = TIM1, .Channel = LL_TIM_CHANNEL_CH4 }
+#define ClawGrabServo                                { .TIMx = TIM3, .Channel = LL_TIM_CHANNEL_CH3 }
+
+#define ArmRotationServoPWM_Frequence                (50)
+#define ArmRotationServoPWM_ReloadValue              (1999)
+
+#define ArmElongationServo0_PWM_Frequence            (50)
+#define ArmElongationServo0_ReloadValue              (1999)
+
+#define ArmElongationServo1_PWM_Frequence            (50)
+#define ArmElongationServo1_PWM_ReloadValue          (1999)
+
+#define ClawRotationServoPWM_Frequence               (50)
+#define ClawRotationServoPWM_ReloadValue             (1999)
+
+#define ClawGrabServoPWM_Frequence                   (1000)
+#define ClawRotationServoPWM_ReloadValue             (1999)
+
+#define ArmRotationServoMinimumRotationAngle         (0)
+#define ArmRotationServoMaximumRotationAngle         (180)
+#define ArmRotationServoProportion                   (0.867)
+#define ArmRotationServoOffset                       (0.0)
+
+#define ArmElongationServo0_MinimumRotationAngle     (0)
+#define ArmElongationServo0_MaximumRotationAngle     (180)
+#define ArmElongationServo0_Proportion               (0.857)
+#define ArmElongationServo0_Offset                   (0.0)
+
+#define ArmElongationServo1_MinimumRotationAngle     (0)
+#define ArmElongationServo1_MaximumRotationAngle     (180)
+#define ArmElongationServo1_Proportion               (1.0)//(0.908386)
+#define ArmElongationServo1_Offset                   (0.0)//(-1.218346)
+
+#endif
+
 
 /******************Direction Sensor Config******************/
 //List of available models.
@@ -142,9 +241,40 @@
 #define RightTofSensorModel   TF_LunaInI2C_Mode
 #define ClawSuspendedTofModel VL6180X_InI2C_Mode
 
+/**********************Stepper Config**********************/
+#if(ArmType == LiftingPlatform)
+#define StepperNumbers              (2)
+#define Z_AxisStepperStepPort       GPIOB
+#define Z_AxisStepperStepPin        LL_GPIO_PIN_12
+#define Z_AxisStepperDirPort        GPIOB
+#define Z_AxisStepperDirPin         LL_GPIO_PIN_13
+#define AL_AxisStepperStepPort      GPIOB
+#define AL_AxisStepperStepPin       LL_GPIO_PIN_14
+#define AL_AxisStepperDirPort       GPIOB
+#define AL_AxisStepperDirPin        LL_GPIO_PIN_15
+
+#define Z_AxisStepper               { .StepperIO = (GPIO_t){.Port = Z_AxisStepperStepPort, .Pin = Z_AxisStepperStepPin}, .DirectionIO = (GPIO_t){.Port = Z_AxisStepperDirPort, .Pin = Z_AxisStepperDirPin}, .CurrentSteps = 0, .TargetSteps = 0}
+#endif
+
+/**********************Encoder Config**********************/
+#define LeftEncoder
+
+
 /**
  * @group: Platform Configs
  */
+/************************GPIO Configs***********************/
+#define GPIO_Ports_t                GPIO_TypeDef
+#define GPIO_Pin_t                  uint32_t
+
+#define BT05_Port                   GPIOC
+#define BT05_Pin                    LL_GPIO_PIN_3
+
+/************************PWM Configs************************/
+#define TIM_Ports_t                 TIM_TypeDef
+#define TIM_Channel_t               uint32_t
+
+
 /************************I2C Configs************************/
 //I2C address please use 7-bit address.
 #if(MainTofSensorModel == TF_LunaInI2C_Mode) || (MainTofSensorModel == VL6180X_InI2C_Mode)
@@ -172,19 +302,6 @@
 #define LuatPorts                   UART5
 #define BluetoothPorts              UART5
 
-/************************GPIO Configs***********************/
-#define GPIO_Ports_t                GPIO_TypeDef
-#define GPIO_Pin_t                  uint32_t
 
-#define BT05_Port                   GPIOC
-#define BT05_Pin                    LL_GPIO_PIN_3
-#define Z_AxisStepperStepPort       GPIOB
-#define Z_AxisStepperStepPin        LL_GPIO_PIN_12
-#define Z_AxisStepperDirPort        GPIOB
-#define Z_AxisStepperDirPin         LL_GPIO_PIN_13
-#define AL_AxisStepperStepPort      GPIOB
-#define AL_AxisStepperStepPin       LL_GPIO_PIN_14
-#define AL_AxisStepperDirPort       GPIOB
-#define AL_AxisStepperDirPin        LL_GPIO_PIN_15
 
 #endif /* ROBOTCONFIGS_H_ */

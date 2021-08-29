@@ -10,6 +10,8 @@
 
 #include <stdint.h>
 
+void MotorInit(void);
+
 /**
  * @brief:  Get the max value of pwm.
  * @return: MAXPWMVALUE - deadZone.
@@ -20,13 +22,13 @@ uint16_t GetMaxValueOfPWM(void);
  * @brief: Set the left motor PWM.
  * @param: PWM Value, Range: -1000 ~ 1000
  */
-void SetLeftMotorPWM(int16_t pwmValue);
+void SetLeftMotorPWM(int16_t PWM_Value);
 
 /**
  * @brief: Set the Right motor PWM.
  * @param: PWM Value, Range: -1000 ~ 1000
  */
-void SetRightMotorPWM(int16_t pwmValue);
+void SetRightMotorPWM(int16_t PWM_Value);
 
 /**
  * @brief: Brake(Apply electromagnetic damped brakes)

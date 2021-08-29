@@ -442,9 +442,6 @@ static void MX_TIM3_Init(void)
   LL_TIM_OC_EnablePreload(TIM3, LL_TIM_CHANNEL_CH3);
   LL_TIM_OC_Init(TIM3, LL_TIM_CHANNEL_CH3, &TIM_OC_InitStruct);
   LL_TIM_OC_DisableFast(TIM3, LL_TIM_CHANNEL_CH3);
-  LL_TIM_OC_EnablePreload(TIM3, LL_TIM_CHANNEL_CH4);
-  LL_TIM_OC_Init(TIM3, LL_TIM_CHANNEL_CH4, &TIM_OC_InitStruct);
-  LL_TIM_OC_DisableFast(TIM3, LL_TIM_CHANNEL_CH4);
   LL_TIM_SetTriggerOutput(TIM3, LL_TIM_TRGO_RESET);
   LL_TIM_DisableMasterSlaveMode(TIM3);
   /* USER CODE BEGIN TIM3_Init 2 */
@@ -456,19 +453,18 @@ static void MX_TIM3_Init(void)
   PA6   ------> TIM3_CH1
   PA7   ------> TIM3_CH2
   PB0   ------> TIM3_CH3
-  PB1   ------> TIM3_CH4
   */
-  GPIO_InitStruct.Pin = TIM3_CH1____Motor_D0_Pin|TIM3_CH2____Motor_D1_Pin;
+  GPIO_InitStruct.Pin = TIM3_CH1____Motor_D0_Pin|TIM3_CH2____Motor_D2_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  GPIO_InitStruct.Pin = TIM3_CH3____Motor_D2_Pin|TIM3_CH4____Motor_D3_Pin;
+  GPIO_InitStruct.Pin = TIM3_CH3____Servo4_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-  LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  LL_GPIO_Init(TIM3_CH3____Servo4_GPIO_Port, &GPIO_InitStruct);
 
 }
 
@@ -498,7 +494,7 @@ static void MX_TIM6_Init(void)
   /* USER CODE END TIM6_Init 1 */
   TIM_InitStruct.Prescaler = 71;
   TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
-  TIM_InitStruct.Autoreload = 999;
+  TIM_InitStruct.Autoreload = 499;
   LL_TIM_Init(TIM6, &TIM_InitStruct);
   LL_TIM_DisableARRPreload(TIM6);
   LL_TIM_SetTriggerOutput(TIM6, LL_TIM_TRGO_RESET);
@@ -901,20 +897,22 @@ static void MX_GPIO_Init(void)
   LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
-  LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOD);
   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOC);
+  LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOD);
   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOA);
   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
 
   /**/
-  LL_GPIO_ResetOutputPin(GPIOC, GPIO_Output____HC05_EN_Pin|GPIO_Output____SSD1283_CS_Pin|GPIO_Output____SSD1283_DC_Pin);
+  LL_GPIO_ResetOutputPin(GPIOC, GPIO_Output____Motor_D1_Pin|GPIO_Output____Motor_D3_Pin|GPIO_Output____HC05_EN_Pin|GPIO_Output____SSD1283_CS_Pin
+                          |GPIO_Output____SSD1283_DC_Pin);
 
   /**/
   LL_GPIO_ResetOutputPin(GPIOB, GPIO_Output____SSD1283_RST_Pin|GPIO_Output____Z_AxisStepperSTEP_Pin|GPIO_Output____Z_AxisStepperDIR_Pin|GPIO_Output____AL_AxisStepperSTEP_Pin
                           |GPIO_Output____AL_AxisStepperDIR_Pin);
 
   /**/
-  GPIO_InitStruct.Pin = GPIO_Output____HC05_EN_Pin|GPIO_Output____SSD1283_CS_Pin|GPIO_Output____SSD1283_DC_Pin;
+  GPIO_InitStruct.Pin = GPIO_Output____Motor_D1_Pin|GPIO_Output____Motor_D3_Pin|GPIO_Output____HC05_EN_Pin|GPIO_Output____SSD1283_CS_Pin
+                          |GPIO_Output____SSD1283_DC_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
@@ -932,9 +930,6 @@ static void MX_GPIO_Init(void)
   LL_GPIO_AF_SetEXTISource(LL_GPIO_AF_EXTI_PORTA, LL_GPIO_AF_EXTI_LINE4);
 
   /**/
-  LL_GPIO_AF_SetEXTISource(LL_GPIO_AF_EXTI_PORTA, LL_GPIO_AF_EXTI_LINE5);
-
-  /**/
   EXTI_InitStruct.Line_0_31 = LL_EXTI_LINE_4;
   EXTI_InitStruct.LineCommand = ENABLE;
   EXTI_InitStruct.Mode = LL_EXTI_MODE_IT;
@@ -942,17 +937,7 @@ static void MX_GPIO_Init(void)
   LL_EXTI_Init(&EXTI_InitStruct);
 
   /**/
-  EXTI_InitStruct.Line_0_31 = LL_EXTI_LINE_5;
-  EXTI_InitStruct.LineCommand = ENABLE;
-  EXTI_InitStruct.Mode = LL_EXTI_MODE_IT;
-  EXTI_InitStruct.Trigger = LL_EXTI_TRIGGER_RISING;
-  LL_EXTI_Init(&EXTI_InitStruct);
-
-  /**/
   LL_GPIO_SetPinMode(GPIO_EXIT4____Z_AxisLimitSensor_GPIO_Port, GPIO_EXIT4____Z_AxisLimitSensor_Pin, LL_GPIO_MODE_FLOATING);
-
-  /**/
-  LL_GPIO_SetPinMode(GPIO_EXIT5____AL_AxisLimitSensor_GPIO_Port, GPIO_EXIT5____AL_AxisLimitSensor_Pin, LL_GPIO_MODE_FLOATING);
 
 }
 

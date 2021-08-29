@@ -47,7 +47,7 @@ ArmControlResult_t SetOpenLoopClawPosition(uint16_t RotationAngle, uint16_t Axia
  * @brief: Get claw position in **Polar coordinates** in Open loop control system.
  * @param: Pointer of parameters.
  */
-void GetOpenLoopClawPosition(float *RotationAngle, float *AxialLength, float *Z_AxisHeight);
+void GetOpenLoopClawPosition(uint16_t *RotationAngle, uint16_t *AxialLength, uint16_t *Z_AxisHeight);
 
 typedef enum
 {

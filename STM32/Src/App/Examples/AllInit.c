@@ -34,6 +34,8 @@ void AllInit(void)
 
 	BluetoothInit();
 
+	EncoderInit();
+
 	//First run
 #ifdef FirstRun
 	//Init WT101

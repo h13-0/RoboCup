@@ -8,8 +8,11 @@
 
 #if(ArmType == LiftingPlatform)
 #include "ArmControl.h"
-
 #include "PID.h"
+
+#include "Stepper.h"
+
+static Stepper_t zAxisStepper = Z_AxisStepper, axisLengthStepper = { 0 };
 
 #ifdef DEBUG
 PositionPID_t X_AxisPID = { 0 };
@@ -20,6 +23,8 @@ PositionPID_t Y_AxisPID = { 0 };
 static PositionPID_t xAxisPID = { 0 };
 static PositionPID_t yAxisPID = { 0 };
 #endif
+
+static float currentZ_AxisHeight = 0.0, currentAxisLength = 0.0;
 
 /**
  * @brief: Init arm control of the robot.
@@ -38,6 +43,7 @@ void ArmControlInit(void)
  */
 ArmControlResult_t SetOpenLoopClawPosition(uint16_t RotationAngle, uint16_t AxialLength, uint16_t Z_AxisHeight)
 {
+
 	return ArmControlOK;
 }
 
@@ -45,7 +51,7 @@ ArmControlResult_t SetOpenLoopClawPosition(uint16_t RotationAngle, uint16_t Axia
  * @brief: Get claw position in **Polar coordinates** in Open loop control system.
  * @param: Pointer of parameters.
  */
-void GetOpenLoopClawPosition(float *RotationAngle, float *AxialLength, float *Z_AxisHeight)
+void GetOpenLoopClawPosition(uint16_t *RotationAngle, uint16_t *AxialLength, uint16_t *Z_AxisHeight)
 {
 
 }

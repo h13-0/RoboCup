@@ -31,7 +31,7 @@ void LVGLInterruptHandler(void);
 /**
  * @brief: Timer for Stepper motor pulse.
  * @note:
- * 		**Call frequency: 1000Hz.**
+ * 		**Call frequency: 2000Hz.**
  */
 void StepperMotorTimerInterruptHandler(void);
 

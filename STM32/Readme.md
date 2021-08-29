@@ -103,9 +103,9 @@ TIM
 TIM3:   
 ```
 Channel 1 -> PA6 -> D0
-Channel 2 -> PA7 -> D1
-Channel 3 -> PB0 -> D2
-Channel 4 -> PB1 -> D4
+-> PA7 -> D1
+Channel 2 -> PA7 -> D2
+ -> PB1 -> D4
 ```
 H桥真值表:  
 **Output 0**
@@ -120,12 +120,6 @@ H桥真值表:
 | D2   | 1    | 0    | 1    | 0    |
 | D3   | 0    | 1    | 1    | 0    |
 | 状态 | 正转  | 反转 | 刹车 | 悬空 |
-
-### 备用TIM
-TIM8:
-```
-PC6 PC7 PC8 PC9
-```
 
 ## I2C
 I2C需要实现VL6180X数据的读取等。  
