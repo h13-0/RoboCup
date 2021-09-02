@@ -1,0 +1,1 @@
+${Class}:${PredictClassID},${L_Mean},${L_Mode},${A_Mean},${A_Mode},${B_Mean},${B_Mode}

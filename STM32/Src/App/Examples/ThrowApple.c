@@ -13,7 +13,7 @@
 
 void ThrowApple(void)
 {
-	float rotationAngle, axialLength, zAxisHeight;
+	uint16_t rotationAngle, axialLength, zAxisHeight;
 	GetOpenLoopClawPosition(&rotationAngle, &axialLength, &zAxisHeight);
 
 	if(zAxisHeight < ThrowAppleHeight)

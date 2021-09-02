@@ -4,9 +4,9 @@ from Detector.AppleDetector import AppleDetector
 
 class WorkingMode():
     Standby = 0
-    AppleDetectLeft  = 1
-    AppleDetectRight = 2
-    AppleDetectMax   = 3
+    AppleDetectMax   = 1
+    AppleDetectLeft  = 2
+    AppleDetectRight = 3
     TargetDetect     = 4
     FruitDetection   = 5
 
@@ -64,12 +64,14 @@ class MainWorkflow():
         while(packet != None):
             msg = self.__protocol__.GetLine(packet)
 
-            if(msg == "CMD:AppleDetectLeft\r\n"):
+            if(msg == "CMD:Standby\r\n"):
+                self.__currentMode__ = WorkingMode.Standby
+            elif(msg == "CMD:AppleDetectMax\r\n"):
+                self.__currentMode__ = WorkingMode.AppleDetectMax
+            elif(msg == "CMD:AppleDetectLeft\r\n"):
                 self.__currentMode__ = WorkingMode.AppleDetectLeft
             elif(msg == "CMD:AppleDetectRight\r\n"):
                 self.__currentMode__ = WorkingMode.AppleDetectRight
-            elif(msg == "CMD:AppleDetectMax\r\n"):
-                self.__currentMode__ = WorkingMode.AppleDetectMax
             elif(msg == "CMD:TargetDetect\r\n"):
                 self.__currentMode__ = WorkingMode.TargetDetect
             elif(msg == "CMD:FruitDetect\r\n"):

@@ -4,13 +4,13 @@
  *  Created on: 2021Äê6ÔÂ3ÈÕ
  *      Author: h13
  */
-
 #include "Motor.h"
 #include "RobotConfigs.h"
+#include <assert.h>
 #include "Ports.h"
 
-//Maximum PWM output value(Value of AutoReload Register + 1)
-#define MAXPWMVALUE (1000)
+#define PositiveZero (0.001)
+#define NegativeZero (-0.001)
 
 static PWM_t  leftPWM  = LeftMotorPWM;
 static PWM_t  rightPWM = RightMotorPWM;
@@ -18,150 +18,156 @@ static GPIO_t leftIO   = LeftMotorIO;
 static GPIO_t rightIO  = RightMotorIO;
 
 /**
- * @brief:  Get the max value of pwm.
- * @return: MAXPWMVALUE - deadZone.
+ * @brief: Initialize the H-bridge module and PWM peripherals.
  */
-__attribute__((always_inline)) inline uint16_t GetMaxValueOfPWM(void)
-{
-	return MAXPWMVALUE - ForwardDeadZone;
-}
-
 void MotorInit()
 {
-	PWM_Init(&leftPWM, LeftMotorPWM_Frequence, LeftMotorPWM_ReloadValue);
-	PWM_Init(&rightPWM, RightMotorPWM_Frequence, RightMotorPWM_ReloadValue);
+	assert(leftPWM.Frequency == rightPWM.Frequency);
+	PWM_Init(&leftPWM);
+	PWM_Init(&rightPWM);
+}
+
+/**
+ * @brief:  Get the max value of pwm.
+ * @return: 1.0 - deadZone.
+ */
+__attribute__((always_inline)) inline float GetMaxValueOfPWM(void)
+{
+	return 1.0 - ForwardDeadZone;
 }
 
 /**
  * @brief: Set the left motor PWM.
- * @param: PWM Value, Range: -1000 ~ 1000
+ * @param: PWM Value, Range: [-1.0, 1.0]
  */
-void SetLeftMotorPWM(int16_t PWM_Value)
+void SetLeftMotorPWM(float PWM_DutyRatio)
 {
 #if(!ReverseLeftRight)
 #if(ReverseChannel1)
-	PWM_Value = - PWM_Value;
+	PWM_DutyRatio = - PWM_DutyRatio;
 #endif
-	if(PWM_Value > 0)
+	if(PWM_DutyRatio > PositiveZero)
 	{
-		if(PWM_Value < MAXPWMVALUE - ForwardDeadZone)
+		PullDownGPIO(&leftIO);
+		float ratio = PWM_DutyRatio + ForwardDeadZone;
+		if(ratio < 1.0)
 		{
-			PullDownGPIO(&leftIO);
-			SetPWM_HighLevelCompareValue(&leftPWM, PWM_Value + ForwardDeadZone);
+			SetPWM_DutyRatio(&leftPWM, ratio);
 		} else {
 			PullDownGPIO(&leftIO);
-			SetPWM_HighLevelCompareValue(&leftPWM, MAXPWMVALUE);
+			SetPWM_DutyRatio(&leftPWM, 1.0);
 		}
 
-	} else if(PWM_Value < 0)
+	} else if(PWM_DutyRatio < NegativeZero)
 	{
-		if(PWM_Value > BackwardDeadZone - MAXPWMVALUE)
+		PullUpGPIO(&leftIO);
+		float ratio = 1.0 + PWM_DutyRatio - BackwardDeadZone;
+		if(ratio > 0)
 		{
-			PullUpGPIO(&leftIO);
-			SetPWM_HighLevelCompareValue(&leftPWM, MAXPWMVALUE + PWM_Value - BackwardDeadZone);
+			SetPWM_DutyRatio(&leftPWM, ratio);
 		} else {
-			PullUpGPIO(&leftIO);
-			SetPWM_HighLevelCompareValue(&leftPWM, 0);
+			SetPWM_DutyRatio(&leftPWM, 0);
 		}
 	} else {
 		PullDownGPIO(&leftIO);
-		SetPWM_HighLevelCompareValue(&leftPWM, 0);
+		SetPWM_DutyRatio(&leftPWM, 0);
 	}
 #else
 #if(ReverseChannel2)
-	PWM_Value = - PWM_Value;
+	PWM_DutyRatio = - PWM_DutyRatio;
 #endif
-	if(PWM_Value > 0)
+	if(PWM_DutyRatio > PositiveZero)
 	{
-		if(PWM_Value < MAXPWMVALUE - ForwardDeadZone)
+		PullDownGPIO(&rightIO);
+		float ratio = PWM_DutyRatio + ForwardDeadZone;
+		if(ratio < 1.0)
 		{
-			PullDownGPIO(&rightIO);
-			SetPWM_HighLevelCompareValue(&rightPWM, PWM_Value + ForwardDeadZone);
+			SetPWM_DutyRatio(&rightPWM, ratio);
 		} else {
-			PullDownGPIO(&rightIO);
-			SetPWM_HighLevelCompareValue(&rightPWM, MAXPWMVALUE);
+			SetPWM_DutyRatio(&rightPWM, 1.0);
 		}
 
-	} else if(PWM_Value < 0)
+	} else if(PWM_DutyRatio < NegativeZero)
 	{
-		if(PWM_Value > BackwardDeadZone - MAXPWMVALUE)
+		PullUpGPIO(&rightIO);
+		float ratio = 1.0 + PWM_DutyRatio - BackwardDeadZone;
+		if(ratio > 0)
 		{
-			PullUpGPIO(&rightIO);
-			SetPWM_HighLevelCompareValue(&rightPWM, MAXPWMVALUE + PWM_Value - BackwardDeadZone);
+			SetPWM_DutyRatio(&rightPWM, ratio);
 		} else {
-			PullUpGPIO(&rightIO);
-			SetPWM_HighLevelCompareValue(&rightPWM, 0);
+			SetPWM_DutyRatio(&rightPWM, 0);
 		}
 	} else {
 		PullDownGPIO(&rightIO);
-		SetPWM_HighLevelCompareValue(&rightPWM, 0);
+		SetPWM_DutyRatio(&rightPWM, 0);
 	}
 #endif
 }
 
 /**
  * @brief: Set the Right motor PWM.
- * @param: PWM Value, Range: -1000 ~ 1000
+ * @param: PWM Value, Range: [-1.0, 1.0]
  */
-void SetRightMotorPWM(int16_t PWM_Value)
+void SetRightMotorPWM(float PWM_DutyRatio)
 {
 #if(!ReverseLeftRight)
 #if(ReverseChannel2)
-	PWM_Value = - PWM_Value;
+	PWM_DutyRatio = - PWM_DutyRatio;
 #endif
-	if(PWM_Value > 0)
+	if(PWM_DutyRatio > PositiveZero)
 	{
-		if(PWM_Value < MAXPWMVALUE - ForwardDeadZone)
+		PullDownGPIO(&rightIO);
+		float ratio = PWM_DutyRatio + ForwardDeadZone;
+		if(ratio < 1.0)
 		{
-			PullDownGPIO(&rightIO);
-			SetPWM_HighLevelCompareValue(&rightPWM, PWM_Value + ForwardDeadZone);
+			SetPWM_DutyRatio(&rightPWM, ratio);
 		} else {
-			PullDownGPIO(&rightIO);
-			SetPWM_HighLevelCompareValue(&rightPWM, MAXPWMVALUE);
+			SetPWM_DutyRatio(&rightPWM, 1.0);
 		}
 
-	} else if(PWM_Value < 0)
+	} else if(PWM_DutyRatio < NegativeZero)
 	{
-		if(PWM_Value > BackwardDeadZone - MAXPWMVALUE)
+		PullUpGPIO(&rightIO);
+		float ratio = 1.0 + PWM_DutyRatio - BackwardDeadZone;
+		if(ratio > 0)
 		{
-			PullUpGPIO(&rightIO);
-			SetPWM_HighLevelCompareValue(&rightPWM, MAXPWMVALUE + PWM_Value - BackwardDeadZone);
+			SetPWM_DutyRatio(&rightPWM, ratio);
 		} else {
-			PullUpGPIO(&rightIO);
-			SetPWM_HighLevelCompareValue(&rightPWM, 0);
+			SetPWM_DutyRatio(&rightPWM, 0);
 		}
 	} else {
 		PullDownGPIO(&rightIO);
-		SetPWM_HighLevelCompareValue(&rightPWM, 0);
+		SetPWM_DutyRatio(&rightPWM, 0);
 	}
 #else
 #if(ReverseChannel1)
-	PWM_Value = - PWM_Value;
+	PWM_DutyRatio = - PWM_DutyRatio;
 #endif
-	if(PWM_Value > 0)
+	if(PWM_DutyRatio > PositiveZero)
 	{
-		if(PWM_Value < MAXPWMVALUE - ForwardDeadZone)
+		PullDownGPIO(&leftIO);
+		float ratio = PWM_DutyRatio + ForwardDeadZone;
+		if(ratio < 1.0)
 		{
-			PullDownGPIO(&leftIO);
-			SetPWM_HighLevelCompareValue(&leftPWM, PWM_Value + ForwardDeadZone);
+			SetPWM_DutyRatio(&leftPWM, ratio);
 		} else {
 			PullDownGPIO(&leftIO);
-			SetPWM_HighLevelCompareValue(&leftPWM, MAXPWMVALUE);
+			SetPWM_DutyRatio(&leftPWM, 1.0);
 		}
 
-	} else if(PWM_Value < 0)
+	} else if(PWM_DutyRatio < NegativeZero)
 	{
-		if(PWM_Value > BackwardDeadZone - MAXPWMVALUE)
+		PullUpGPIO(&leftIO);
+		float ratio = 1.0 + PWM_DutyRatio - BackwardDeadZone;
+		if(ratio > 0)
 		{
-			PullUpGPIO(&leftIO);
-			SetPWM_HighLevelCompareValue(&leftPWM, MAXPWMVALUE + PWM_Value - BackwardDeadZone);
+			SetPWM_DutyRatio(&leftPWM, ratio);
 		} else {
-			PullUpGPIO(&leftIO);
-			SetPWM_HighLevelCompareValue(&leftPWM, 0);
+			SetPWM_DutyRatio(&leftPWM, 0);
 		}
 	} else {
 		PullDownGPIO(&leftIO);
-		SetPWM_HighLevelCompareValue(&leftPWM, 0);
+		SetPWM_DutyRatio(&leftPWM, 0);
 	}
 #endif
 }
@@ -172,7 +178,7 @@ void SetRightMotorPWM(int16_t PWM_Value)
 void Brake(void)
 {
 	PullUpGPIO(&leftIO);
-	SetPWM_HighLevelCompareValue(&leftPWM, MAXPWMVALUE);
+	SetPWM_DutyRatio(&leftPWM, 1.0);
 	PullUpGPIO(&rightIO);
-	SetPWM_HighLevelCompareValue(&rightPWM, MAXPWMVALUE);
+	SetPWM_DutyRatio(&rightPWM, 1.0);
 }

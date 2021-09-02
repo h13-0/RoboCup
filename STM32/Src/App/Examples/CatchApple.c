@@ -7,6 +7,7 @@
 #include "ArmControl.h"
 #include "CatchApple.h"
 #include "RobotConfigs.h"
+#include "Drivers.h"
 //Arm Control
 #include "ImageProcessingModule.h"
 
@@ -16,7 +17,7 @@ void CatchApple(TargetType_t Target)
 	//Enter the ready position.
 	ReleaseClaw();
 
-	ClawRotate(0);
+	SetArmNodeAngle(ClawRotation, 0);
 
 	uint16_t rotationAngle, axialLength, zAxisHeight;
 	GetOpenLoopClawPosition(&rotationAngle, &axialLength, &zAxisHeight);
@@ -111,7 +112,7 @@ void CatchApple(TargetType_t Target)
 	//Catch.
 	ClosureClaw();
 
-	SleepMillisecond(200);
+	SleepMillisecond(500);
 
 	//Arm retraction.
 	GetOpenLoopClawPosition(&rotationAngle, &axialLength, &zAxisHeight);
@@ -121,6 +122,16 @@ void CatchApple(TargetType_t Target)
 		SetOpenLoopClawPosition(rotationAngle, axialLength, zAxisHeight);
 		SleepMillisecond(5);
 	}
+
+#if(ArmType == MechanicalArm)
+	SmoothRotateArmNode(ArmParallel, -45, 15);
+	SmoothRotateArmNode(ArmElongationNode0, 45, 15);
+	SmoothRotateArmNode(ArmElongationNode1, 0, 15);
+	SmoothRotateArmNode(ArmRotation, 0, 15);
+	SmoothRotateArmNode(ArmParallel, 0, 15);
+	SmoothRotateArmNode(ArmElongationNode0, 0, 15);
+
+#elif(ArmType == LiftingPlatform)
 
 	for( ; axialLength > 0; axialLength --)
 	{
@@ -139,5 +150,6 @@ void CatchApple(TargetType_t Target)
 		SetOpenLoopClawPosition(rotationAngle, axialLength, zAxisHeight);
 		SleepMillisecond(5);
 	}
+#endif
 }
 

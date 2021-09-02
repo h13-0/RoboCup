@@ -10,25 +10,28 @@
 
 #include <stdint.h>
 
+/**
+ * @brief: Initialize the H-bridge module and PWM peripherals.
+ */
 void MotorInit(void);
 
 /**
  * @brief:  Get the max value of pwm.
- * @return: MAXPWMVALUE - deadZone.
+ * @return: 1.0 - ForwardDeadZone.
  */
-uint16_t GetMaxValueOfPWM(void);
+float GetMaxValueOfPWM(void);
 
 /**
  * @brief: Set the left motor PWM.
- * @param: PWM Value, Range: -1000 ~ 1000
+ * @param: PWM Value, Range: [-1.0, 1.0]
  */
-void SetLeftMotorPWM(int16_t PWM_Value);
+void SetLeftMotorPWM(float PWM_DutyRatio);
 
 /**
  * @brief: Set the Right motor PWM.
- * @param: PWM Value, Range: -1000 ~ 1000
+ * @param: PWM Value, Range: [-1.0, 1.0]
  */
-void SetRightMotorPWM(int16_t PWM_Value);
+void SetRightMotorPWM(float PWM_DutyRatio);
 
 /**
  * @brief: Brake(Apply electromagnetic damped brakes)

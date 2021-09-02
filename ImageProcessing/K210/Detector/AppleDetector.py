@@ -1,9 +1,9 @@
 class AppleDetector():
-    def __init__(self, AppleThres = [(36, 71, -52, -9, -21, 39), (57, 92, -72, -44, -8, 38)]):
+    def __init__(self, AppleThres = [(35, 71, -52, -9, -21, 39), (35, 92, 0, -55, 27, 53)]):
         self.__appleThres__ = AppleThres
 
 
-    def Detect(self, img, MinimumSize = 400, NumberOfOutputTargets = 1):
+    def Detect(self, img, MinimumSize = 350, NumberOfOutputTargets = 1):
         appleBlobs = img.find_blobs(self.__appleThres__)
         suitableAppleBlobs = []
         minimumSizeOfBlobs = MinimumSize

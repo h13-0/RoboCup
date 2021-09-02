@@ -20,4 +20,12 @@
 
 #include "WashApple.h"
 
+#include "ThrowApple.h"
+
+#include "CatchTrashCan.h"
+
+#include "EmptyTrash.h"
+
+#include "PlaceTrashCan.h"
+
 #endif /* APP_EXAMPLES_EXAMPLES_H_ */

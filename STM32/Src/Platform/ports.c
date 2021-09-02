@@ -17,6 +17,4 @@ void PortsInit(void)
 	//Init Clock First.
 	ClockInit();
 	I2C_SetPort(&hi2c1);
-	//MotorInit();
-	ServoInit();
 }

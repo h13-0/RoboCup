@@ -24,7 +24,7 @@ static PositionPID_t xAxisPID = { 0 };
 static PositionPID_t yAxisPID = { 0 };
 #endif
 
-static float currentZ_AxisHeight = 0.0, currentAxisLength = 0.0;
+static uint16_t currentZ_AxisHeight = 0.0, currentAxisLength = 0.0;
 
 /**
  * @brief: Init arm control of the robot.

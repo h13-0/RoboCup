@@ -16,12 +16,33 @@
 
 typedef struct
 {
+	uint32_t      Frequency;
+	/********Platform Code********/
 	TIM_Ports_t   *TIMx;
 	TIM_Channel_t Channel;
+	uint32_t      ReloadValue;
 } PWM_t;
 
-void PWM_Init(PWM_t *PWM, float Frequence, uint16_t ReloadValue);
+/**
+ * @brief: Initialize PWM peripherals.
+ * @param: PWM_t *PWM: PWM typedef.
+ */
+void PWM_Init(PWM_t *PWM);
 
-void SetPWM_HighLevelCompareValue(PWM_t *PWM, uint32_t CompareValue);
+/**
+ * @brief: Set PWM high level time.
+ * @param:
+ * 		PWM_t *PWM:                       The PWM peripheral you want set.
+ * 		float HighLevelTimeInMicrosecond: High level time in microsecond.
+ */
+void SetPWM_HighLevelTime(PWM_t *PWM, float HighLevelTimeInMicrosecond);
+
+/**
+ * @brief: Set PWM duty ratio.
+ * @param:
+ *		PWM_t *PWM:      The PWM peripheral you want set.
+ *		float DutyRatio: The duty ratio of PWM. Range: [0, 1]
+ */
+void SetPWM_DutyRatio(PWM_t *PWM, float DutyRatio);
 
 #endif /* PLATFORM_PWM_PWM_H_ */

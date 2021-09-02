@@ -31,6 +31,8 @@ int App(void)
 
 	ConnectToBluetoothDevice();
 
+	KeepSpeed();
+
 	//Go to the refrigerator.
 	StraightUntill(325 + 150);
 

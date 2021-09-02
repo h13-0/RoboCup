@@ -28,4 +28,9 @@
 
 #include "Encoder.h"
 
+/**
+ * @brief: Init all drivers.
+ */
+void DriversInit(void);
+
 #endif /* DRIVERS_DRIVERS_H_ */

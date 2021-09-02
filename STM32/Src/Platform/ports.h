@@ -35,9 +35,6 @@
 
 /**************************PWM Ports*************************/
 #include "PWM.h"
-//Servo
-#include "ServoPorts.h"
-#include "Servo.h"
 
 /*************************GPIO Ports*************************/
 #include "GPIO.h"

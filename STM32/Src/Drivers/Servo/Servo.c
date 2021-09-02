@@ -12,22 +12,35 @@ typedef struct
 {
 	PWM_t PWM;
 	const float MaximumRotationAngle;
-	const float MinimumRotationAngle;
 	const float RotationProportion;
 	const float RotationOffset;
 	float CurrentAngle;
 } Servo_t;
 
-static Servo_t armRotationServo    = { .PWM = (PWM_t)ArmRotationServo, .MaximumRotationAngle = ArmRotationServoMaximumRotationAngle, .MinimumRotationAngle = ArmRotationServoMinimumRotationAngle, .RotationProportion = ArmRotationServoProportion, .RotationOffset = ArmRotationServoOffset, .CurrentAngle = 0.0 };
-static Servo_t armElongationServo0 = { .PWM = (PWM_t)ArmElongationServo0, .MaximumRotationAngle = ArmElongationServo0_MaximumRotationAngle, .MinimumRotationAngle = ArmElongationServo0_MinimumRotationAngle, .RotationProportion = ArmElongationServo0_Proportion, .RotationOffset = ArmElongationServo0_Offset, .CurrentAngle = 0.0 };
-static Servo_t armElongationServo1 = { .PWM = (PWM_t)ArmElongationServo1, .MaximumRotationAngle = ArmElongationServo1_MaximumRotationAngle, .MinimumRotationAngle = ArmElongationServo1_MinimumRotationAngle, .RotationProportion = ArmElongationServo1_Proportion, .RotationOffset = ArmElongationServo1_Offset, .CurrentAngle = 0.0 };
-static Servo_t clawRotationServo   = { .PWM = (PWM_t)ClawRotationServo, .MaximumRotationAngle = 180, .MinimumRotationAngle = 0, .RotationProportion = 1.0, .RotationOffset = 0.0, .CurrentAngle = 0.0 };
-static Servo_t clawGrabServo       = { .PWM = (PWM_t)ClawGrabServo, .MaximumRotationAngle = 180, .MinimumRotationAngle = 0.0, .RotationOffset = 0.0, .CurrentAngle = 0.0 };
+static Servo_t armRotationServo    = { .PWM = (PWM_t)ArmRotationServo,   .MaximumRotationAngle = ArmRotationServoMaximumRotationAngle,   .RotationProportion = ArmRotationServoProportion,   .RotationOffset = ArmRotationServoOffset,   .CurrentAngle = 0.0 };
+static Servo_t armElongationServo  = { .PWM = (PWM_t)ArmElongationServo, .MaximumRotationAngle = ArmElongationServoMaximumRotationAngle, .RotationProportion = ArmElongationServoProportion, .RotationOffset = ArmElongationServoOffset, .CurrentAngle = 0.0 };
+static Servo_t armParallelServo    = { .PWM = (PWM_t)ArmParallelServo,   .MaximumRotationAngle = ArmParallelServoMaximumRotationAngle,   .RotationProportion = ArmParallelServoProportion,   .RotationOffset = ArmParallelServoOffset,   .CurrentAngle = 0.0 };
+static Servo_t clawRotationServo   = { .PWM = (PWM_t)ClawRotationServo,  .MaximumRotationAngle = 180,                                    .RotationProportion = 1.0,                          .RotationOffset = 0.0,                      .CurrentAngle = 0.0 };
+static Servo_t clawGrabServo       = { .PWM = (PWM_t)ClawGrabServo,      .MaximumRotationAngle = 180,                                    .RotationProportion = 1.0,                          .RotationOffset = 0.0,                      .CurrentAngle = 0.0 };
 
 #if(ArmType == MechanicalArm)
 static float node3_Angle = 0;
-static Servo_t armElongationServo2 = { .PWM = (PWM_t)ArmElongationServo2, .MaximumRotationAngle = ArmElongationServo2_MaximumRotationAngle, .MinimumRotationAngle = ArmElongationServo2_MinimumRotationAngle, .RotationProportion = ArmElongationServo2_Proportion, .RotationOffset = ArmElongationServo2_Offset };
+static Servo_t armElongationServo2 = { .PWM = (PWM_t)ArmElongationServo2, .MaximumRotationAngle = ArmElongationServo2_MaximumRotationAngle, .MinimumRotationAngle = ArmElongationServo2_MinimumRotationAngle, .RotationProportion = ArmElongationServo2_Proportion, .MinimumRotationAngle = ArmElongationServo2_Offset };
 #endif
+
+void ServoInit(void)
+{
+#if(ArmType == MechanicalArm)
+
+#elif(ArmType == LiftingPlatform)
+	PWM_Init(&armRotationServo.PWM);
+	PWM_Init(&armElongationServo.PWM);
+	PWM_Init(&armParallelServo.PWM);
+	PWM_Init(&clawRotationServo.PWM);
+	PWM_Init(&clawGrabServo.PWM);
+#endif
+}
+
 
 /**
  * @brief: Control servos movement to the calibration point to facilitate mechanical calibration.
@@ -38,21 +51,40 @@ void CalibrationAllServo(void)
 	SetArmNodeAngle(ArmRotation, 0);
 	SetArmNodeAngle(ArmElongationNode0, 0);
 	SetArmNodeAngle(ArmElongationNode1, 0);
-	SetArmNodeAngle(ArmElongationNode2, 0);
-	SetArmNodeAngle(ArmClawRotation, 0);
-	SetArmNodeAngle(ArmClawGrab, 0);
+	SetArmNodeAngle(ArmParallel, 0);
+	SetArmNodeAngle(ClawRotation, 0);
+	SetArmNodeAngle(ClawGrab, 0);
 #elif(ArmType == LiftingPlatform)
 	SetArmNodeAngle(ArmRotation, 0);
-	SetArmNodeAngle(ArmElongationNode0, 0);
-	SetArmNodeAngle(ArmElongationNode1, 0);
-	SetArmNodeAngle(ArmClawRotation, 0);
-	SetArmNodeAngle(ArmClawGrab, 0);
+	SetArmNodeAngle(ArmElongation, 0);
+	SetArmNodeAngle(ArmParallel, 0);
+	SetArmNodeAngle(ClawRotation, 0);
+	SetArmNodeAngle(ClawGrab, 0);
 #endif
 }
 
-__attribute__((always_inline)) inline static uint16_t calculateServoHighLevelTime(float Frequence, uint16_t ReloadValue, float Angle)
+/**
+ * @brief: Set servo angle.
+ * @param: Angle.
+ */
+__attribute__((always_inline)) inline static void setServoAngle(Servo_t *Servo, float Angle)
 {
-	return Angle * 1000 / Frequence
+	//FinalAngle = ((Angle + Servo -> RotationOffset) * Servo -> RotationProportion)
+	//HighLevelTime = (FinalAngle / Servo -> MaximumRotationAngle) * 2000.0 + 500.0
+	float highLevelTime = (((Angle + Servo -> RotationOffset) * Servo -> RotationProportion) / Servo -> MaximumRotationAngle) * 2000.0 + 500.0;
+
+	if(highLevelTime > 2500.0)
+	{
+		highLevelTime = 2500.0;
+		Servo -> CurrentAngle = Servo -> MaximumRotationAngle;
+	} else if(highLevelTime < 500.0)
+	{
+		highLevelTime = 500.0;
+		Servo -> CurrentAngle = 0.0;
+	} else {
+		Servo -> CurrentAngle = Angle;
+	}
+	SetPWM_HighLevelTime(&(Servo -> PWM), highLevelTime);
 }
 
 /**
@@ -61,111 +93,89 @@ __attribute__((always_inline)) inline static uint16_t calculateServoHighLevelTim
  * 		ArmNode_t Node: The arm node to be set.
  * 		float Angle:    Angle to rotate.
  */
-void SetArmNodeAngle(ArmNode_t *Node, float Angle)
+void SetArmNodeAngle(ArmNode_t Node, float Angle)
 {
-	float finalAngle = 0;
 	switch(Node)
 	{
 	case ArmRotation:
-		finalAngle = Angle + armRotationServo.RotationOffset;
-		if(finalAngle > armRotationServo.MaximumRotationAngle)
-		{
-			finalAngle = maximumAngle;
-			Angle = armRotationServo.MaximumRotationAngle - armRotationServo.RotationOffset;
-		} else if(Angle < armRotationServo.MinimumRotationAngle)
-		{
-			finalAngle = minimumAngle;
-			Angle = armRotationServo.MinimumRotationAngle - armRotationServo.RotationOffset;
-		}
-
-		setServoAngle(&armRotationServo.PWM, finalAngle);
-		armRotationServo.CurrentAngle = Angle;
+		setServoAngle(&armRotationServo, Angle);
 		break;
 
-	case ArmElongationNode0:
-		finalAngle = Angle + armElongationServo0.RotationOffset;
-		if(finalAngle > armElongationServo0.MaximumRotationAngle)
-		{
-			finalAngle = maximumAngle;
-			Angle = armElongationServo0.MaximumRotationAngle - armElongationServo0.RotationOffset;
-		} else if(Angle < armElongationServo0.MinimumRotationAngle)
-		{
-			finalAngle = minimumAngle;
-			Angle = armElongationServo0.MinimumRotationAngle - armElongationServo0.RotationOffset;
-		}
-
-		setServoAngle(&armElongationServo0.PWM, finalAngle);
-		armElongationServo0.CurrentAngle = Angle;
+	case ArmElongation:
+		setServoAngle(&armElongationServo, Angle);
 		break;
 
-	case ArmElongationNode1:
-		finalAngle = Angle + armElongationServo1.RotationOffset;
-		if(finalAngle > armElongationServo1.MaximumRotationAngle)
-		{
-			finalAngle = maximumAngle;
-			Angle = armElongationServo1.MaximumRotationAngle - armElongationServo1.RotationOffset;
-		} else if(Angle < armElongationServo1.MinimumRotationAngle)
-		{
-			finalAngle = minimumAngle;
-			Angle = armElongationServo1.MinimumRotationAngle - armElongationServo1.RotationOffset;
-		}
-
-		setServoAngle(&armElongationServo1.PWM, finalAngle);
-		armElongationServo1.CurrentAngle = Angle;
+	case ArmParallel:
+		setServoAngle(&armParallelServo, Angle);
 		break;
 
 #if(ArmType == MechanicalArm)
-	case ArmElongationNode3:
-		finalAngle = Angle + armElongationServo3.RotationOffset;
-		if(finalAngle > armElongationServo3.MaximumRotationAngle)
-		{
-			finalAngle = maximumAngle;
-			Angle = armElongationServo3.MaximumRotationAngle - armElongationServo3.RotationOffset;
-		} else if(Angle < armElongationServo3.MinimumRotationAngle)
-		{
-			finalAngle = minimumAngle;
-			Angle = armElongationServo3.MinimumRotationAngle - armElongationServo3.RotationOffset;
-		}
-
-		setServoAngle(&armElongationServo3.PWM, finalAngle);
-		armElongationServo3.CurrentAngle = Angle;
+	case ArmElongationNode0:
+		setServoAngle(&armElongationServo2, Angle);
 		break;
 #endif
 
-	case ArmClawRotation:
-		finalAngle = Angle + clawRotationServo.RotationOffset;
-		if(finalAngle > armElongationServo0.MaximumRotationAngle)
-		{
-			finalAngle = maximumAngle;
-			Angle = clawRotationServo.MaximumRotationAngle - clawRotationServo.RotationOffset;
-		} else if(Angle < clawRotationServo.MinimumRotationAngle)
-		{
-			finalAngle = minimumAngle;
-			Angle = clawRotationServo.MinimumRotationAngle - clawRotationServo.RotationOffset;
-		}
-
-		setServoAngle(&clawRotationServo.PWM, finalAngle);
-		clawRotationServo.CurrentAngle = Angle;
+	case ClawRotation:
+		setServoAngle(&clawRotationServo, Angle);
 		break;
 
-	case ArmClawGrab:
-		finalAngle = Angle + clawGrabServo.RotationOffset;
-		if(finalAngle > clawGrabServo.MaximumRotationAngle)
-		{
-			finalAngle = maximumAngle;
-			Angle = clawGrabServo.MaximumRotationAngle - clawGrabServo.RotationOffset;
-		} else if(Angle < clawGrabServo.MinimumRotationAngle)
-		{
-			finalAngle = minimumAngle;
-			Angle = clawGrabServo.MinimumRotationAngle - clawGrabServo.RotationOffset;
-		}
-
-		setServoAngle(&clawGrabServo.PWM, finalAngle);
-		clawGrabServo.CurrentAngle = Angle;
+	case ClawGrab:
+		setServoAngle(&clawGrabServo, Angle);
 		break;
 
 	default:
 		break;
+	}
+}
+
+/**
+ * @brief: Smooth rotation arm node.
+ * @param:
+ * 		ArmNode_t Node:                The arm node to be set.
+ * 		float Angle:                   Angle to rotate.
+ * 		mtime_t MillisecondsPerDegree: Milliseconds per degree.
+ */
+void SmoothRotateArmNode(ArmNode_t Node, float Angle, mtime_t MillisecondsPerDegree)
+{
+	Servo_t *servo = NULL;
+	switch(Node)
+	{
+	case ArmRotation:
+		servo = &armRotationServo;
+		break;
+
+	case ArmElongation:
+		servo = &armElongationServo;
+		break;
+
+	case ArmParallel:
+		servo = &armParallelServo;
+		break;
+
+	case ClawRotation:
+		servo = &clawRotationServo;
+		break;
+
+	case ClawGrab:
+		servo = &clawGrabServo;
+
+	default:
+		return;
+	}
+
+	while(Angle != servo -> CurrentAngle)
+	{
+		if(Angle > servo -> CurrentAngle)
+		{
+			servo -> CurrentAngle += 1.0;
+		} else if(Angle < servo -> CurrentAngle)
+		{
+			servo -> CurrentAngle -= 1.0;
+		}
+
+		setServoAngle(servo, servo -> CurrentAngle --);
+
+		SleepMillisecond(MillisecondsPerDegree);
 	}
 }
 
@@ -175,7 +185,7 @@ void SetArmNodeAngle(ArmNode_t *Node, float Angle)
  * 		ArmNode_t Node: The arm node to get.
  * @return: Current angle.
  */
-float GetArmNodeAngle(ArmNode_t *Node)
+float GetArmNodeAngle(ArmNode_t Node)
 {
 	switch(Node)
 	{
@@ -183,19 +193,19 @@ float GetArmNodeAngle(ArmNode_t *Node)
 		return armRotationServo.CurrentAngle;
 		break;
 
-	case ArmElongationNode0:
-		return armElongationServo0.CurrentAngle;
+	case ArmElongation:
+		return armElongationServo.CurrentAngle;
 		break;
 
-	case ArmElongationNode1:
-		return armElongationServo1.CurrentAngle;
+	case ArmParallel:
+		return armParallelServo.CurrentAngle;
 		break;
 
-	case ArmClawRotation:
+	case ClawRotation:
 		return clawRotationServo.CurrentAngle;
 		break;
 
-	case ArmClawGrab:
+	case ClawGrab:
 		return clawGrabServo.CurrentAngle;
 		break;
 
@@ -204,4 +214,3 @@ float GetArmNodeAngle(ArmNode_t *Node)
 		break;
 	}
 }
-

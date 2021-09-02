@@ -6,6 +6,7 @@
  */
 #include "ArmControl.h"
 #include "RobotConfigs.h"
+#include "Servo.h"
 
 /**
  * @brief: Closure the claw.
@@ -13,7 +14,7 @@
  */
 void ClosureClaw(void)
 {
-	ClawGrab(MaximumRotationAngleOfGraspingApple);
+	SetArmNodeAngle(ClawGrab, MaximumRotationAngleOfGraspingApple);
 }
 
 /**
@@ -21,5 +22,5 @@ void ClosureClaw(void)
  */
 void ReleaseClaw(void)
 {
-	ClawGrab(0);
+	SetArmNodeAngle(ClawGrab, 0);
 }

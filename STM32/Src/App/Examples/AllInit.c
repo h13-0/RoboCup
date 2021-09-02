@@ -27,6 +27,8 @@ void AllInit(void)
 	//Init all base peripherals.
 	PortsInit();
 
+	DriversInit();
+
 	//Init Log.
 	LogInit();
 

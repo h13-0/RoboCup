@@ -9,6 +9,7 @@
 #include "RobotConfigs.h"
 
 #include "Ports.h"
+#include "Drivers.h"
 
 /**
  * @brief: Wash Apple
@@ -65,25 +66,25 @@ void WashApple(void)
 
 	for(uint8_t angle = 0; angle < 180; angle++)
 	{
-		ClawRotate(angle);
+		SetArmNodeAngle(ClawRotation, angle);
 		SleepMillisecond(5);
 	}
 
 	for(uint8_t angle = 180; angle > 0; angle--)
 	{
-		ClawRotate(angle);
+		SetArmNodeAngle(ClawRotation, angle);
 		SleepMillisecond(5);
 	}
 
 	for(uint8_t angle = 0; angle < 180; angle++)
 	{
-		ClawRotate(angle);
+		SetArmNodeAngle(ClawRotation, angle);
 		SleepMillisecond(5);
 	}
 
 	for(uint8_t angle = 180; angle > 0; angle--)
 	{
-		ClawRotate(angle);
+		SetArmNodeAngle(ClawRotation, angle);
 		SleepMillisecond(5);
 	}
 

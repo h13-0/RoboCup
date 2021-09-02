@@ -92,15 +92,15 @@ static float speedBaseOutput = 0;
 void MotionControlInit(void)
 {
 	//speed PID configs.
-	leftSpeedPID.proportion = 0.1;
-	leftSpeedPID.integration = 0.043;
-	leftSpeedPID.differention = 0.0;
+	leftSpeedPID.proportion = SpeedPID_Proportion;
+	leftSpeedPID.integration = SpeedPID_Integration;
+	leftSpeedPID.differention = SpeedPID_Differention;
 	leftSpeedPID.setpoint = 0.0;
 	leftSpeedPID.maxAbsOutput = GetMaxValueOfPWM();
 
 	leftSpeedPID.configs.autoResetIntegration = disable;
 	leftSpeedPID.configs.limitIntegration = enable;
-	leftSpeedPID.maximumAbsValueOfIntegrationOutput = 600;
+	leftSpeedPID.maximumAbsValueOfIntegrationOutput = GetMaxValueOfPWM();
 
 	rightSpeedPID = leftSpeedPID;
 
@@ -116,7 +116,6 @@ void MotionControlInit(void)
 	anglePID.configs.autoResetIntegration = disable;
 	anglePID.configs.limitIntegration = enable;
 	anglePID.maximumAbsValueOfIntegrationOutput = MaxSpeed * 0.1;
-
 
 	forwardPID.proportion = -0.07;
 	forwardPID.integration = 0.0;
@@ -369,11 +368,11 @@ void KeepDistance(uint16_t Distance)
  */
 __attribute__((always_inline)) inline void SpeedPIDCalculateHandler(void)
 {
+	leftSpeed  = GetLeftEncoderSpeed();
+	rightSpeed = GetRightEncoderSpeed();
+
 	if(getSpeedPID())
 	{
-		leftSpeed  = GetLeftEncoderSpeed();
-		rightSpeed = GetRightEncoderSpeed();
-
 		float leftPWM = PosPID_Calc(&leftSpeedPID, leftSpeed);
 		float rightPWM = PosPID_Calc(&rightSpeedPID, rightSpeed);
 

@@ -9,6 +9,9 @@
 #define PLATFORM_SERVO_SERVO_H_
 
 #include "RobotConfigs.h"
+#include "Ports.h"
+
+void ServoInit(void);
 
 /**
  * @brief: Control servos movement to the calibration point to facilitate mechanical calibration.
@@ -20,18 +23,18 @@ typedef enum
 	ArmRotation,
 	ArmElongationNode0,
 	ArmElongationNode1,
-	ArmElongationNode2,
-	ArmClawRotation,
-	ArmClawGrab,
+	ArmParallel,
+	ClawRotation,
+	ClawGrab,
 } ArmNode_t;
 #elif(ArmType == LiftingPlatform)
 typedef enum
 {
 	ArmRotation,
-	ArmElongationNode0,
-	ArmElongationNode1,
-	ArmClawRotation,
-	ArmClawGrab,
+	ArmElongation,
+	ArmParallel,
+	ClawRotation,
+	ClawGrab,
 } ArmNode_t;
 #endif
 
@@ -41,7 +44,16 @@ typedef enum
  * 		ArmNode_t Node: The arm node to be set.
  * 		float Angle:    Angle to rotate.
  */
-void SetArmNodeAngle(ArmNode_t *Node, float Angle);
+void SetArmNodeAngle(ArmNode_t Node, float Angle);
+
+/**
+ * @brief: Smooth rotation arm node.
+ * @param:
+ * 		ArmNode_t Node:                The arm node to be set.
+ * 		float Angle:                   Angle to rotate.
+ * 		mtime_t MillisecondsPerDegree: Milliseconds per degree.
+ */
+void SmoothRotateArmNode(ArmNode_t Node, float Angle, mtime_t MillisecondsPerDegree);
 
 /**
  * @brief:  Get the rotation angle of the Arm node.
@@ -49,6 +61,6 @@ void SetArmNodeAngle(ArmNode_t *Node, float Angle);
  * 		ArmNode_t Node: The arm node to get.
  * @return: Current angle.
  */
-float GetArmNodeAngle(ArmNode_t *Node);
+float GetArmNodeAngle(ArmNode_t Node);
 
 #endif /* PLATFORM_SERVO_SERVO_H_ */

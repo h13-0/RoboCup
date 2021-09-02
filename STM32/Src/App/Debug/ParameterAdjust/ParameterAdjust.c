@@ -17,6 +17,7 @@
 
 #include "ArmControl.h"
 #include "Servo.h"
+#include "Motor.h"
 
 extern PositionPID_t LeftSpeedPID, RightSpeedPID;
 extern PositionPID_t AnglePID;
@@ -88,17 +89,12 @@ __attribute__((always_inline)) inline void PIDAdjustHandler(char *data, uint8_t 
 	MatchKeyFloat(data, len, "ZA:", 3, Z_AxisHeight, SetOpenLoopClawPosition(RotationAngle, AxialLength, Z_AxisHeight); return);
 
 	float angle = 0;
-	MatchKeyFloat(data, len, "N1:", 3, angle, ArmNode1_Rotate(angle); return);
-	MatchKeyFloat(data, len, "N2:", 3, angle, ArmNode2_Rotate(angle); return);
-
-#if(ArmType == MechanicalArm)
-	MatchKeyFloat(data, len, "N3:", 3, angle, ArmNode3_Rotate(angle); return);
-#endif
-
-	MatchKeyFloat(data, len, "CG:", 3, angle, ClawGrab(angle); return);
+	MatchKeyFloat(data, len, "ARN:", 4, angle, SetArmNodeAngle(ArmRotation, angle); return);
+	MatchKeyFloat(data, len, "AEN:", 4, angle, SetArmNodeAngle(ArmElongation, angle); return);
+	MatchKeyFloat(data, len, "APN:", 4, angle, SetArmNodeAngle(ArmParallel, angle); return);
 
 	float speed = 0;
-	MatchKeyFloat(data, len, "sp:", 3, speed, SetLeftMotorPWM(speed); SetRightMotorPWM(speed); return);
+	MatchKeyFloat(data, len, "MSP:", 4, speed, SetLeftMotorPWM(speed); SetRightMotorPWM(speed); return);
 }
 
 #endif

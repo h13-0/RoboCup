@@ -9,3 +9,6 @@ ImageProcessing/OpenMV/CascadeClassifier/Background
 /OpenMV/CascadeClassifier/Resized/Apple
 /OpenMV/CascadeClassifier/Source/Apple
 /OpenMV/CascadeClassifier/Background
+/mobilenet
+/yolo/yoloV4Tiny/backup/
+*.weights
