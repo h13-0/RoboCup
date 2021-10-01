@@ -12,21 +12,6 @@
 static uint16_t distance;
 #define BUFFERLENGTH  24
 
-static void getDistanceHandler(char* data);
-
-/**
- * @brief: TOF Serial Handler.
- * @param: data.
- */
-__attribute__((always_inline)) inline void TOF_Handler(uint8_t data)
-{
-	static char buffer[BUFFERLENGTH] = { '\0' };
-	static uint8_t length = 0;
-	static char* bufferPtr = buffer;
-	//GeneratePraiseWithSuffixMethod(data, "\r\n", 2, bufferPtr, BUFFERLENGTH, length, if(length == 17) { getDistanceHandler(bufferPtr); });
-	GeneratePraiseWithSuffixMethod(data, "\r\n", 2, bufferPtr, BUFFERLENGTH, length, if(length == 19) { getDistanceHandler(bufferPtr); });
-}
-
 static __attribute__((always_inline)) inline void getDistanceHandler(char* data)
 {
 	//Check leading character.
@@ -81,6 +66,19 @@ static __attribute__((always_inline)) inline void getDistanceHandler(char* data)
 			distance = tempDistance;
 		}
 	}
+}
+
+/**
+ * @brief: TOF Serial Handler.
+ * @param: data.
+ */
+__attribute__((always_inline)) inline void TOF_Handler(uint8_t data)
+{
+	static char buffer[BUFFERLENGTH] = { '\0' };
+	static uint8_t length = 0;
+	static char* bufferPtr = buffer;
+	//GeneratePraiseWithSuffixMethod(data, "\r\n", 2, bufferPtr, BUFFERLENGTH, length, if(length == 17) { getDistanceHandler(bufferPtr); });
+	GeneratePraiseWithSuffixMethod(data, "\r\n", 2, bufferPtr, BUFFERLENGTH, length, if(length == 19) { getDistanceHandler(bufferPtr); });
 }
 
 /**

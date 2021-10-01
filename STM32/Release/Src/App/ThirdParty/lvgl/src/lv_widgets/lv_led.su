@@ -1,8 +1,0 @@
-lv_led.c:232:17:lv_led_signal	16	static
-lv_led.c:193:24:lv_led_design	160	static
-lv_led.c:54:12:lv_led_create	24	static
-lv_led.c:108:6:lv_led_set_bright	16	static
-lv_led.c:129:6:lv_led_on	8	static
-lv_led.c:140:6:lv_led_off	8	static
-lv_led.c:151:6:lv_led_toggle	8	static
-lv_led.c:171:9:lv_led_get_bright	8	static

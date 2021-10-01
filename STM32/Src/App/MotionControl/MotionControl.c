@@ -63,6 +63,7 @@ static struct motionControlStatusStructure status = { 0 };
 #define disableForwardPID()           status.forwardPID_Status = 0
 #define getForwardPIDStatus()         status.forwardPID_Status
 
+float leftPWM = 0, rightPWM = 0;
 static int32_t leftSpeed  = 0;
 static int32_t rightSpeed = 0;
 
@@ -106,18 +107,18 @@ void MotionControlInit(void)
 
 	//@TODO: Verify that autoResetIntegration needs to be turned off
 	//angle PID configs.
-	anglePID.proportion = 0.3;
-	anglePID.integration = 0.0;
-	anglePID.differention = 0.0;
+	anglePID.proportion = 0.6;
+	anglePID.integration = 0.12;
+	anglePID.differention = 0.10;
 	anglePID.setpoint = 0.0;
-	anglePID.maxAbsOutput = MaxSpeed * 0.3;
+	anglePID.maxAbsOutput = fmax(13.5, MaxSpeed * 0.5);
 
 	//Extend functions config.
 	anglePID.configs.autoResetIntegration = disable;
 	anglePID.configs.limitIntegration = enable;
 	anglePID.maximumAbsValueOfIntegrationOutput = MaxSpeed * 0.1;
 
-	forwardPID.proportion = -0.07;
+	forwardPID.proportion = -0.14;
 	forwardPID.integration = 0.0;
 	forwardPID.differention = 0.0;
 	forwardPID.setpoint = 0.0;
@@ -316,8 +317,8 @@ void KeepSpeed(void)
 {
 	while(1)
 	{
-		float data[] = { leftSpeed, rightSpeed };
-		LogJustFloat(data, 2);
+		float data[] = { leftSpeed, rightSpeed, leftPWM, rightPWM };
+		LogJustFloat(data, 4);
 		SleepMillisecond(10);
 	}
 }
@@ -330,8 +331,8 @@ void KeepAngle(void)
 		leftSpeedPID.setpoint = speedBaseOutput + speedDifference;
 		rightSpeedPID.setpoint = speedBaseOutput - speedDifference;
 
-		float data[] = { yaw, anglePID.setpoint, GetYawVelocity(), speedDifference };
-		LogJustFloat(data, 4);
+		float data[] = { yaw, anglePID.setpoint, GetYawVelocity(), speedDifference, leftPWM, rightPWM };
+		LogJustFloat(data, 6);
 
 		SleepMillisecond(10);
 	}
@@ -373,8 +374,8 @@ __attribute__((always_inline)) inline void SpeedPIDCalculateHandler(void)
 
 	if(getSpeedPID())
 	{
-		float leftPWM = PosPID_Calc(&leftSpeedPID, leftSpeed);
-		float rightPWM = PosPID_Calc(&rightSpeedPID, rightSpeed);
+		leftPWM = PosPID_Calc(&leftSpeedPID, leftSpeed);
+		rightPWM = PosPID_Calc(&rightSpeedPID, rightSpeed);
 
 		SetLeftMotorPWM(leftPWM);
 		SetRightMotorPWM(rightPWM);

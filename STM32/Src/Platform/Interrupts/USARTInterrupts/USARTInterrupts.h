@@ -8,6 +8,7 @@
 #ifndef PLATFORM_INTERRUPTS_USARTINTERRUPTS_USARTINTERRUPTS_H_
 #define PLATFORM_INTERRUPTS_USARTINTERRUPTS_USARTINTERRUPTS_H_
 
+#include "RobotConfigs.h"
 #include <stdint.h>
 
 /**
@@ -22,7 +23,9 @@ void SerialDebugInterruptHandler(uint8_t data);
  */
 void TOF_InterruptHandler(uint8_t data);
 
+#if(DirectionSensorModel == WT101_InSerialMode)
 void WT101_InterruptHandler(uint8_t data);
+#endif
 
 void ImageProcessingModuleInterruptHandler(uint8_t data);
 

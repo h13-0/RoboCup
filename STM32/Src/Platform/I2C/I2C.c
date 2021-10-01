@@ -11,7 +11,7 @@
 #if(STM_I2C_LIB_TYPE == HAL)
 
 #define I2C_RETRY   3
-#define I2C_TIMEOUT 1000
+#define I2C_TIMEOUT 300
 
 static I2C_HandleTypeDef *i2cPort = NULL;
 

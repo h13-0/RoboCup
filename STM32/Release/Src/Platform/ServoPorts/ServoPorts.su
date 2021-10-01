@@ -1,7 +1,0 @@
-ServoPorts.c:19:6:ServoInit	0	static
-ServoPorts.c:36:6:SetServo0Time	0	static
-ServoPorts.c:41:6:SetServo1Time	0	static
-ServoPorts.c:46:6:SetServo2Time	0	static
-ServoPorts.c:51:6:SetServo3Time	0	static
-ServoPorts.c:56:6:SetServo4Time	0	static
-ServoPorts.c:61:6:SetServo5Time	0	static

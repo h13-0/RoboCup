@@ -24,8 +24,7 @@
  * @group: Additional APIs.
  */
 /*************************USART Ports************************/
-//WT101
-#include "WT101Ports.h"
+#include "USART.h"
 //Debug
 #include "DebugPorts.h"
 //Image Processing Module

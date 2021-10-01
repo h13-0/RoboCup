@@ -8,13 +8,18 @@
 #ifndef DRIVERS_WT101_WT101_H_
 #define DRIVERS_WT101_WT101_H_
 
+#include "RobotConfigs.h"
 #include <stdint.h>
+
+#if(DirectionSensorModel == WT101_InSerialMode)
 
 /**
  * @brief: WT101 Serial Handler.
  * @param: data.
  */
 void WT101_Handler(uint8_t data);
+
+#endif
 
 /**
  * @brief: Reset yaw value to zero.

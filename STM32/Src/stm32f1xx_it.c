@@ -230,35 +230,6 @@ void USART1_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles USART2 global interrupt.
-  */
-void USART2_IRQHandler(void)
-{
-  /* USER CODE BEGIN USART2_IRQn 0 */
-	if(LL_USART_IsActiveFlag_RXNE(USART2))
-	{
-		uint8_t data = LL_USART_ReceiveData8(USART2);
-		LL_USART_ClearFlag_RXNE(USART2);
-
-		WT101_InterruptHandler(data);
-	}
-
-	if(LL_USART_IsActiveFlag_ORE(USART2))
-	{
-		LL_USART_ClearFlag_ORE(USART2);
-	}
-
-	if(LL_USART_IsActiveFlag_PE(USART2))
-	{
-		LL_USART_ClearFlag_PE(USART2);
-	}
-  /* USER CODE END USART2_IRQn 0 */
-  /* USER CODE BEGIN USART2_IRQn 1 */
-
-  /* USER CODE END USART2_IRQn 1 */
-}
-
-/**
   * @brief This function handles USART3 global interrupt.
   */
 void USART3_IRQHandler(void)
@@ -267,8 +238,6 @@ void USART3_IRQHandler(void)
 	if(LL_USART_IsActiveFlag_RXNE(USART3))
 	{
 		uint8_t data = LL_USART_ReceiveData8(USART3);
-		LL_USART_ClearFlag_RXNE(USART3);
-
 		TOF_InterruptHandler(data);
 	}
 

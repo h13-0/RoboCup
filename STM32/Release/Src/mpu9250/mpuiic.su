@@ -1,5 +1,0 @@
-mpuiic.c:17:6:MPU_Set_IIC_Port	0	static
-mpuiic.c:29:9:MPU_Write_Byte	48	static
-mpuiic.c:52:9:MPU_Read_Byte	48	static
-mpuiic.c:69:9:MPU_Write_Len	40	static
-mpuiic.c:92:9:MPU_Read_Len	40	static

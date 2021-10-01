@@ -1,2 +1,0 @@
-SerialPrintf.c:7:5:__io_putchar	0	static
-SerialPrintf.c:22:6:SetSerialPrintfTarget	0	static

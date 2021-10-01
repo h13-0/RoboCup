@@ -6,8 +6,9 @@
  */
 
 #include "ports.h"
+#include "RobotConfigs.h"
 
-extern I2C_HandleTypeDef hi2c1;
+extern I2C_HandleTypeDef I2C_Port;
 
 /**
  * @brief: Initialize all base peripherals.
@@ -16,5 +17,5 @@ void PortsInit(void)
 {
 	//Init Clock First.
 	ClockInit();
-	I2C_SetPort(&hi2c1);
+	I2C_SetPort(&I2C_Port);
 }

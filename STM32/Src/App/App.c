@@ -29,9 +29,33 @@ int App(void)
 	//Current posture: ¡ý
 	AllInit();
 
-	ConnectToBluetoothDevice();
+	//CalibrationAllServo();
 
-	KeepSpeed();
+	ConnectToBluetoothDevice();
+/*
+	while(1)
+	{
+		float data = GetTOF_Distance();
+		LogJustFloat(&data, 1);
+	}
+*/
+	KeepDistance(500);
+
+	Stepper_t zAxisStepper = Z_AxisStepper;
+	StepperInit(&zAxisStepper);
+
+	while(1)
+	{
+		StepperForward(&zAxisStepper, 500);
+		SleepMillisecond(1000);
+		StepperBackward(&zAxisStepper, 500);
+		SleepMillisecond(1000);
+	}
+
+	//while(1);
+	//KeepSpeed();
+	//KeepAngle();
+	//KeepDistance(500);
 
 	//Go to the refrigerator.
 	StraightUntill(325 + 150);
@@ -58,7 +82,7 @@ int App(void)
 
 	//TODO: Identify fruit.
 	//Catch apple.
-	CatchApple(MaximumTarget);
+	//CatchApple(MaximumTarget);
 
 	//Go to the pool.
 	StraightUntill(400);
@@ -73,7 +97,7 @@ int App(void)
 
 	//Arrival pool.
 	//Current posture: ¡ý
-	WashApple();
+	//WashApple();
 
 	//Go to the desk.
 	StraightUntill(1600);
@@ -94,11 +118,11 @@ int App(void)
 
 	StraightUntill(1950);
 
-	PlaceApple();
+	//PlaceApple();
 
 	StraightUntill(2300);
 
-	CatchApple(RightTarget);
+	//CatchApple(RightTarget);
 
 	//Go to the trash can.
 	//Current posture: ¡ý
@@ -114,9 +138,9 @@ int App(void)
 
 	//Arrive trash can.
 	//Current posture: ¡ý
-	ThrowApple();
+	//ThrowApple();
 
-	CatchTrashCan();
+	//CatchTrashCan();
 
 	SleepMillisecond(500);
 
@@ -124,13 +148,13 @@ int App(void)
 
 	StraightUntill(300);
 
-	EmptyTrash();
+	//EmptyTrash();
 
 	TurnTo(Left);
 
 	StraightUntill(1650);
 
-	PlaceTrashCan();
+	//PlaceTrashCan();
 
 	TurnTo(Left);
 

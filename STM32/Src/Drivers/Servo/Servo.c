@@ -20,7 +20,7 @@ typedef struct
 static Servo_t armRotationServo    = { .PWM = (PWM_t)ArmRotationServo,   .MaximumRotationAngle = ArmRotationServoMaximumRotationAngle,   .RotationProportion = ArmRotationServoProportion,   .RotationOffset = ArmRotationServoOffset,   .CurrentAngle = 0.0 };
 static Servo_t armElongationServo  = { .PWM = (PWM_t)ArmElongationServo, .MaximumRotationAngle = ArmElongationServoMaximumRotationAngle, .RotationProportion = ArmElongationServoProportion, .RotationOffset = ArmElongationServoOffset, .CurrentAngle = 0.0 };
 static Servo_t armParallelServo    = { .PWM = (PWM_t)ArmParallelServo,   .MaximumRotationAngle = ArmParallelServoMaximumRotationAngle,   .RotationProportion = ArmParallelServoProportion,   .RotationOffset = ArmParallelServoOffset,   .CurrentAngle = 0.0 };
-static Servo_t clawRotationServo   = { .PWM = (PWM_t)ClawRotationServo,  .MaximumRotationAngle = 180,                                    .RotationProportion = 1.0,                          .RotationOffset = 0.0,                      .CurrentAngle = 0.0 };
+static Servo_t clawRotationServo   = { .PWM = (PWM_t)ClawRotationServo,  .MaximumRotationAngle = 180,                                    .RotationProportion = 1.0,                          .RotationOffset = ClawRotationServoOffset,  .CurrentAngle = 0.0 };
 static Servo_t clawGrabServo       = { .PWM = (PWM_t)ClawGrabServo,      .MaximumRotationAngle = 180,                                    .RotationProportion = 1.0,                          .RotationOffset = 0.0,                      .CurrentAngle = 0.0 };
 
 #if(ArmType == MechanicalArm)
@@ -31,7 +31,12 @@ static Servo_t armElongationServo2 = { .PWM = (PWM_t)ArmElongationServo2, .Maxim
 void ServoInit(void)
 {
 #if(ArmType == MechanicalArm)
-
+	PWM_Init(&armRotationServo.PWM);
+	PWM_Init(&armElongationServo.PWM);
+	PWM_Init(&armElongationServo2.PWM);
+	PWM_Init(&armParallelServo.PWM);
+	PWM_Init(&clawRotationServo.PWM);
+	PWM_Init(&clawGrabServo.PWM);
 #elif(ArmType == LiftingPlatform)
 	PWM_Init(&armRotationServo.PWM);
 	PWM_Init(&armElongationServo.PWM);
@@ -59,19 +64,20 @@ void CalibrationAllServo(void)
 	SetArmNodeAngle(ArmElongation, 0);
 	SetArmNodeAngle(ArmParallel, 0);
 	SetArmNodeAngle(ClawRotation, 0);
-	SetArmNodeAngle(ClawGrab, 0);
+	SetArmNodeAngle(ClawGrab, 180);
 #endif
 }
 
 /**
  * @brief: Set servo angle.
  * @param: Angle.
+ * @note:  Clockwise is positive.
  */
 __attribute__((always_inline)) inline static void setServoAngle(Servo_t *Servo, float Angle)
 {
 	//FinalAngle = ((Angle + Servo -> RotationOffset) * Servo -> RotationProportion)
 	//HighLevelTime = (FinalAngle / Servo -> MaximumRotationAngle) * 2000.0 + 500.0
-	float highLevelTime = (((Angle + Servo -> RotationOffset) * Servo -> RotationProportion) / Servo -> MaximumRotationAngle) * 2000.0 + 500.0;
+	float highLevelTime = 2500 - (((Angle + Servo -> RotationOffset) * Servo -> RotationProportion) / Servo -> MaximumRotationAngle) * 2000.0;
 
 	if(highLevelTime > 2500.0)
 	{

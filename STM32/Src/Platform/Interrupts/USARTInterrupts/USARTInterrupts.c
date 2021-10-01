@@ -5,6 +5,8 @@
  *      Author: h13
  */
 #include "USARTInterrupts.h"
+#include "RobotConfigs.h"
+
 #include "SKTOF.h"
 #include "WT101.h"
 #include "Debug.h"
@@ -28,10 +30,12 @@ __attribute__((always_inline)) inline void TOF_InterruptHandler(uint8_t data)
 	TOF_Handler(data);
 }
 
+#if(DirectionSensorModel == WT101_InSerialMode)
 __attribute__((always_inline)) inline void WT101_InterruptHandler(uint8_t data)
 {
 	WT101_Handler(data);
 }
+#endif
 
 __attribute__((always_inline)) inline void ImageProcessingModuleInterruptHandler(uint8_t data)
 {

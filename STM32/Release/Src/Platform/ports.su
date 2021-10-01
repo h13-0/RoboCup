@@ -1,3 +1,0 @@
-ports.c:22:9:MPUInit	0	static
-ports.c:31:9:DMPInit	0	static
-ports.c:41:9:MPUGetData	0	static

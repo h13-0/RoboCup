@@ -1,6 +1,0 @@
-lv_objmask.c:206:24:lv_objmask_design	56	static
-lv_objmask.c:312:17:lv_objmask_signal	24	static
-lv_objmask.c:52:12:lv_objmask_create	24	static
-lv_objmask.c:107:21:lv_objmask_add_mask	24	static
-lv_objmask.c:137:6:lv_objmask_update_mask	16	static
-lv_objmask.c:155:6:lv_objmask_remove_mask	16	static

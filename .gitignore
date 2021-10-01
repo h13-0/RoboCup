@@ -5,10 +5,14 @@ ImageProcessing/yolo/datasets
 ImageProcessing/OpenMV/CascadeClassifier/Resized/Apple
 ImageProcessing/OpenMV/CascadeClassifier/Source/Apple
 ImageProcessing/OpenMV/CascadeClassifier/Background
+ImageProcessing/Linux/RoboCupImageProcessing/.vs
+ImageProcessing/Linux/RoboCupImageProcessing/out
 /yolo/datasets
 /OpenMV/CascadeClassifier/Resized/Apple
 /OpenMV/CascadeClassifier/Source/Apple
 /OpenMV/CascadeClassifier/Background
+STM32/Debug
+STM32\Release
 /mobilenet
 /yolo/yoloV4Tiny/backup/
 *.weights

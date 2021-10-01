@@ -19,10 +19,10 @@
  * 		forwardAccuracy: Forward accuracy limit in millimeter.
  * 		stableTimeLimit: Stable Time Limit in milliseconds.
  */
-#define MaxSpeed                                     (27.5)  //
+#define MaxSpeed                                     (45)  //
 //DeadZone
-#define ForwardDeadZone                              (0.5)//(0.5)
-#define BackwardDeadZone                             (0.5)//(0.5)
+#define ForwardDeadZone                              (0.5)
+#define BackwardDeadZone                             (0.5)
 //Accurary
 #define AngleAccurary                                (2.0)   //degree
 #define AngleAdjustTimeLimit                         (3000)  //milliseconds
@@ -32,11 +32,9 @@
 #define ForwardStableTimeThreshold                   (500)
 //PID
 //Speed PID
-#define SpeedPID_Proportion                          (0.0001)
-#define SpeedPID_Integration                         (0.000043)
+#define SpeedPID_Proportion                          (0.00005)
+#define SpeedPID_Integration                         (0.000021)
 #define SpeedPID_Differention                        (0.0)
-
-
 
 /************************Arm Control************************/
 #define GrabHeight                                   (245)                 //millimeters
@@ -76,6 +74,7 @@
 
 #elif(ArmType == LiftingPlatform)
 //Arm size configs.
+
 #endif //ArmType
 
 
@@ -110,10 +109,10 @@
  * @note:
  * 		The frequency and resolution of the two PWM channels of the motor must be consistent.
  */
-#define LeftMotorPWM                                 { .Frequency = 1000, .TIMx = TIM3, .Channel = LL_TIM_CHANNEL_CH1, .ReloadValue = 1000 }
-#define LeftMotorIO                                  { .Port = GPIOC, .Pin = LL_GPIO_PIN_13 }
-#define RightMotorPWM                                { .Frequency = 1000, .TIMx = TIM3, .Channel = LL_TIM_CHANNEL_CH2, .ReloadValue = 1000 }
-#define RightMotorIO                                 { .Port = GPIOC, .Pin = LL_GPIO_PIN_14 }
+#define PWM_ChannelD0                                 { .Frequency = 1000, .TIMx = TIM3, .Channel = LL_TIM_CHANNEL_CH1, .ReloadValue = 1000 }
+#define PWM_ChannelD1                                 { .Frequency = 1000, .TIMx = TIM3, .Channel = LL_TIM_CHANNEL_CH2, .ReloadValue = 1000 }
+#define PWM_ChannelD2                                 { .Frequency = 1000, .TIMx = TIM3, .Channel = LL_TIM_CHANNEL_CH3, .ReloadValue = 1000 }
+#define PWM_ChannelD3                                 { .Frequency = 1000, .TIMx = TIM3, .Channel = LL_TIM_CHANNEL_CH4, .ReloadValue = 1000 }
 
 /***********************Servos Config***********************/
 //**When the servo needs to be installed in reverse, please set `Proportion` to - 1.0 and `Offset` to 180.**
@@ -169,7 +168,7 @@
 #define ArmElongationServo                           { .Frequency = 50, .TIMx = TIM1, .Channel = LL_TIM_CHANNEL_CH2, .ReloadValue = 2000 }
 #define ArmParallelServo                             { .Frequency = 50, .TIMx = TIM1, .Channel = LL_TIM_CHANNEL_CH3, .ReloadValue = 2000 }
 #define ClawRotationServo                            { .Frequency = 50, .TIMx = TIM1, .Channel = LL_TIM_CHANNEL_CH4, .ReloadValue = 2000 }
-#define ClawGrabServo                                { .Frequency = 50, .TIMx = TIM3, .Channel = LL_TIM_CHANNEL_CH3, .ReloadValue = 2000 }
+#define ClawGrabServo                                { .Frequency = 50, .TIMx = TIM5, .Channel = LL_TIM_CHANNEL_CH3, .ReloadValue = 2000 }
 
 #define ArmRotationServoMaximumRotationAngle         (180)
 #define ArmRotationServoProportion                   (0.867)
@@ -177,26 +176,31 @@
 
 #define ArmElongationServoMaximumRotationAngle       (180)
 #define ArmElongationServoProportion                 (0.857)
-#define ArmElongationServoOffset                     (0.0)
+#define ArmElongationServoOffset                     (5.0)
 
 #define ArmParallelServoMaximumRotationAngle         (180)
 #define ArmParallelServoProportion                   (1.0)
-#define ArmParallelServoOffset                       (0.0)
+#define ArmParallelServoOffset                       (6.0)
+
+#define ClawRotationServoOffset                      (10.0)
 #endif
 
 /******************Direction Sensor Config******************/
 //List of available models.
 #define WT101_InSerialMode                           0
-//#define WT101_InI2C_Mode                           1
+#define WT101_InI2C_Mode                             1
 //#define MPU9250_InI2C_Mode                         2      //Not recommended.
 
 //Model selection.
-#define DirectionSensorModel                         WT101_InSerialMode
+#define DirectionSensorModel                         WT101_InI2C_Mode
 
+#if(DirectionSensorModel == WT101_InSerialMode)
+//UART Configs.
+#define WT101_Ports                                  USART2
+#else
 //I2C Configs.
 //I2C address please use 7-bit address.
-#if(DirectionSensorModel == WT101_InI2C_Mode)
-#define WT101_I2C_Address                            0x50
+#define WT101_I2C_Address                            (0x50)
 #endif
 
 /*********************TOF Sensor Config*********************/
@@ -250,6 +254,7 @@
 
 
 /************************I2C Configs************************/
+#define I2C_Port                                     hi2c1
 //I2C address please use 7-bit address.
 #if(MainTofSensorModel == TF_LunaInI2C_Mode) || (MainTofSensorModel == VL6180X_InI2C_Mode)
 #define MainTofI2C_Address
@@ -267,15 +272,11 @@
 #define ClawSuspendedTofI2C_Address
 #endif
 
-
-
 /***********************USART Configs***********************/
-#define DebugPorts                  USART1
-#define WT101_Ports                 USART2
-#define ImageProcessingModulePorts  UART4
-#define LuatPorts                   UART5
-#define BluetoothPorts              UART5
-
-
+#define USART_t                                      USART_TypeDef*
+#define DebugPorts                                   USART1
+#define ImageProcessingModulePorts                   UART4
+#define LuatPorts                                    UART5
+#define BluetoothPorts                               UART5
 
 #endif /* ROBOTCONFIGS_H_ */

@@ -47,6 +47,8 @@ __attribute__((always_inline)) inline void PIDAdjustHandler(char *data, uint8_t 
 
 	MatchKeyFloat(data, len, "TS:", 3, floatValue, LeftSpeedPID.setpoint = floatValue; RightSpeedPID.setpoint = floatValue; return);
 
+	MatchKeyFloat(data, len, "NTS:", 4, floatValue, LeftSpeedPID.setpoint = floatValue; RightSpeedPID.setpoint = - floatValue; return);
+
 	//AnglePID
 	MatchKeyFloat(data, len, "AP:", 3, AnglePID.proportion, return);
 
@@ -75,23 +77,26 @@ __attribute__((always_inline)) inline void PIDAdjustHandler(char *data, uint8_t 
 	//ForwardPID
 	MatchKeyFloat(data, len, "FMI:", 4, ForwardPID.maximumAbsValueOfIntegrationOutput, return);
 
-	//Arm control
+	//Arm Grab PID.
 	MatchKeyFloat(data, len, "XAP:", 4, X_AxisPID.proportion, return);
 	MatchKeyFloat(data, len, "XAI:", 4, X_AxisPID.integration, return);
 
 	MatchKeyFloat(data, len, "YAP:", 4, Y_AxisPID.proportion, return);
 	MatchKeyFloat(data, len, "YAI:", 4, Y_AxisPID.integration, return);
 
-	//Test
+	//Arm Motion Control.
 	static float RotationAngle, AxialLength, Z_AxisHeight;
 	MatchKeyFloat(data, len, "RA:", 3, RotationAngle, SetOpenLoopClawPosition(RotationAngle, AxialLength, Z_AxisHeight); return);
 	MatchKeyFloat(data, len, "AL:", 3, AxialLength, SetOpenLoopClawPosition(RotationAngle, AxialLength, Z_AxisHeight); return);
 	MatchKeyFloat(data, len, "ZA:", 3, Z_AxisHeight, SetOpenLoopClawPosition(RotationAngle, AxialLength, Z_AxisHeight); return);
 
+	//Servos
 	float angle = 0;
 	MatchKeyFloat(data, len, "ARN:", 4, angle, SetArmNodeAngle(ArmRotation, angle); return);
 	MatchKeyFloat(data, len, "AEN:", 4, angle, SetArmNodeAngle(ArmElongation, angle); return);
 	MatchKeyFloat(data, len, "APN:", 4, angle, SetArmNodeAngle(ArmParallel, angle); return);
+	MatchKeyFloat(data, len, "CRN:", 4, angle, SetArmNodeAngle(ClawRotation, angle); return);
+	MatchKeyFloat(data, len, "CGB:", 4, angle, SetArmNodeAngle(ClawGrab, angle); return);
 
 	float speed = 0;
 	MatchKeyFloat(data, len, "MSP:", 4, speed, SetLeftMotorPWM(speed); SetRightMotorPWM(speed); return);
