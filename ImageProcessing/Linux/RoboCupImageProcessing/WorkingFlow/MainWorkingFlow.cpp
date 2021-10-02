@@ -7,12 +7,18 @@
 #include <opencv2/highgui/highgui_c.h>
 
 #include "FruitDetector.hpp"
+#include "Monitor.hpp"
+#include "FrameBufferMonitor.hpp"
+#include "OpenCV_Monitor.hpp"
+
 void RoboCup::MainWorkingFlow::Run()
 {
     using namespace cv;
     using namespace std;
     using namespace h13;
     using namespace RoboCup;
+
+    Monitor *monitor = new OpenCV_Monitor();
 
 #if defined(__linux__)
     FrameBufferMonitor monitor("/dev/fb0");
@@ -23,7 +29,7 @@ void RoboCup::MainWorkingFlow::Run()
     cout << xResolution << " " << yResolution << endl;
 #endif
 
-    FruitDetector detector;
+    FruitDetector detector(configs.GetFruitDetectorSettings());
     //AppleDetector detector;
 
     VideoCapture cap(0);
@@ -53,7 +59,9 @@ void RoboCup::MainWorkingFlow::Run()
             auto end = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double, std::milli> tm = end - start;
             putText(frame, "fps: " + to_string(1000 / tm.count()), Point(0, 24), FONT_HERSHEY_COMPLEX, 1, Scalar(255, 255, 255));
-            monitor.Display("Final", frame);
+            monitor -> Display("Final", frame);
         }
     }
+
+    delete monitor;
 }

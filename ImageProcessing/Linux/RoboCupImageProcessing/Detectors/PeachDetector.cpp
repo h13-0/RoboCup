@@ -34,7 +34,7 @@ std::vector<cv::RotatedRect> RoboCup::PeachDetector::Detect(cv::InputArray Input
 	erode(filterOutout, filterOutout, erodeKernel);
 	dilate(filterOutout, filterOutout, erodeKernel);
 
-	//imshow("erode", filterOutout);
+	imshow("erode", filterOutout);
 
 	vector<vector<Point>> contours;
 	findContours(filterOutout, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
@@ -44,13 +44,11 @@ std::vector<cv::RotatedRect> RoboCup::PeachDetector::Detect(cv::InputArray Input
 	for (unsigned int index = 0; index < contours.size(); index++)
 	{
 		float size = contourArea(contours[index]);
-		cout << size << endl;
 		if (size > 1300)
 		{
 			RotatedRect minRect = minAreaRect(Mat(contours[index]));
 			Size2f rectSize = minRect.size;
 			float lengthWidthRatio = (rectSize.width > rectSize.height) ? (rectSize.height / rectSize.width) : (rectSize.width / rectSize.height);
-			cout << lengthWidthRatio << endl;
 			if (lengthWidthRatio > 0.5)
 			{
 				result.push_back(minRect);

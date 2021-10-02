@@ -41,7 +41,7 @@ std::vector<cv::RotatedRect> RoboCup::AppleDetector::Detect(cv::InputArray Input
 	}
 
 #ifdef _DEBUG
-	//imshow("ApplePositive", filterOutout);
+	imshow("ApplePositive", filterOutout);
 #endif
 
 	if (negativeFilters.size() > 0)
@@ -58,11 +58,11 @@ std::vector<cv::RotatedRect> RoboCup::AppleDetector::Detect(cv::InputArray Input
 	}
 
 	//Corrosion image to eliminate pear and kiwi interference.
-	Mat erodeKernel = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
+	Mat erodeKernel = getStructuringElement(MORPH_ELLIPSE, Size(erodeKernelSize, erodeKernelSize));
 	erode(filterOutout, filterOutout, erodeKernel);
 
 #ifdef _DEBUG
-	//imshow("AppleFinal", filterOutout);
+	imshow("AppleFinal", filterOutout);
 #endif
 
 	//Judge the roundness of the edge to select the apple.
@@ -73,13 +73,12 @@ std::vector<cv::RotatedRect> RoboCup::AppleDetector::Detect(cv::InputArray Input
 	for (unsigned int index = 0; index < contours.size(); index ++)
 	{
 		float size = contourArea(contours[index]);
-		if (size > 1300)
+		if (size > minimumSize)
 		{
 			RotatedRect minRect = minAreaRect(Mat(contours[index]));
 			Size2f rectSize = minRect.size;
 			float lengthWidthRatio = (rectSize.width > rectSize.height) ? (rectSize.height / rectSize.width) : (rectSize.width / rectSize.height);
-			cout << lengthWidthRatio << endl;
-			if (lengthWidthRatio > 0.65)
+			if (lengthWidthRatio > minimunLengthWidthRatio)
 			{
 				result.push_back(minRect);
 				if (outputContoursRequired)

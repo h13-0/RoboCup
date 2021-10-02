@@ -5,9 +5,11 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui_c.h>
 
+#include "Monitor.hpp"
+
 namespace h13
 {
-	class OpenCV_Monitor
+	class OpenCV_Monitor : public RoboCup::Monitor
 	{
 	public:
 		OpenCV_Monitor()
@@ -32,7 +34,10 @@ namespace h13
 			exit = true;
 		};
 
-		void Display(const std::string& Tittle, cv::InputArray InputImage);
+		void Display(const std::string& Tittle, cv::InputArray InputImage)
+		{
+			cv::imshow(Tittle, InputImage);
+		}
 
 	private:
 		std::mutex exitMutex;

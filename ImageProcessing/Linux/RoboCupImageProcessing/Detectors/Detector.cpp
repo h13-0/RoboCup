@@ -37,7 +37,7 @@ void RoboCup::Detector::Filter(cv::InputArray InputHSV_FULL_Image, cv::OutputArr
 		bitwise_or(output, positiveOutput, output);
 	}
 #ifdef _DEBUG
-	//imshow("pos", output);
+	imshow("pos", output);
 #endif
 	if (negativeFilters.size() > 0)
 	{
@@ -53,6 +53,6 @@ void RoboCup::Detector::Filter(cv::InputArray InputHSV_FULL_Image, cv::OutputArr
 		bitwise_and(output, negativeOutout, output);
 	}
 #ifdef _DEBUG
-	//imshow("filter", output);
+	imshow("filter", output);
 #endif
 }

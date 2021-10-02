@@ -27,35 +27,35 @@ std::vector<cv::RotatedRect> RoboCup::PearDetector::Detect(cv::InputArray InputB
 	}
 
 	Mat erodeKernel = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
-
-	vector<RotatedRect> result;
-	vector<vector<Point>> contours;
-	
-	Mat output = Mat::zeros(InputBGR_Image.size(), CV_8UC1);
 	Mat positiveOutput = Mat::zeros(InputBGR_Image.size(), CV_8UC1);
 
 	for (auto filter : positiveFilters)
 	{
-		filter.FilterWithHSV_FULL_Image(hsvImage, positiveOutput);
-		erode(positiveOutput, positiveOutput, erodeKernel);
-		dilate(positiveOutput, positiveOutput, erodeKernel);
+		Mat filterOutput;
+		filter.FilterWithHSV_FULL_Image(hsvImage, filterOutput);
+		erode(filterOutput, filterOutput, erodeKernel);
+		dilate(filterOutput, filterOutput, erodeKernel);
+		bitwise_or(filterOutput, positiveOutput, positiveOutput);
+	}
 
-		findContours(positiveOutput, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
-		for (unsigned int index = 0; index < contours.size(); index++)
+	vector<RotatedRect> result;
+	vector<vector<Point>> contours;
+
+	findContours(positiveOutput, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+	for (unsigned int index = 0; index < contours.size(); index++)
+	{
+		float size = contourArea(contours[index]);
+		if (size > 1000)
 		{
-			float size = contourArea(contours[index]);
-			if (size > 1000)
+			RotatedRect minRect = minAreaRect(Mat(contours[index]));
+			Size2f rectSize = minRect.size;
+			float lengthWidthRatio = (rectSize.width > rectSize.height) ? (rectSize.height / rectSize.width) : (rectSize.width / rectSize.height);
+			if (lengthWidthRatio > 0.5)
 			{
-				RotatedRect minRect = minAreaRect(Mat(contours[index]));
-				Size2f rectSize = minRect.size;
-				float lengthWidthRatio = (rectSize.width > rectSize.height) ? (rectSize.height / rectSize.width) : (rectSize.width / rectSize.height);
-				if (lengthWidthRatio > 0.5)
+				result.push_back(minRect);
+				if (outputContoursRequired)
 				{
-					result.push_back(minRect);
-					if (outputContoursRequired)
-					{
-						drawContours(outputContours, contours, index, Scalar(255), -1);
-					}
+					drawContours(outputContours, contours, index, Scalar(255), -1);
 				}
 			}
 		}

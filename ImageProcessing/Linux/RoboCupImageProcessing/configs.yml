@@ -1,0 +1,113 @@
+# Base settings of application.
+ApplicationSettings:
+  # Select Working Mode
+  ## Available Mode:
+  ## - MainWorkingFlow
+  WorkingMode:
+    MainWorkingFlow
+  
+  #
+  MonitorType:
+    Auto
+
+  # Select video device
+  ## unsigned int or string, CameraID or video stream path/url.
+  VideoDevice:
+    0
+
+# Fruit detector parameters settings.
+# note: These variables only work in the `FruitDetector` mode.
+## Enable: bool, enable or not.
+## QuantityLimit: unsigned int, maximum number of fruits.
+FruitDetectorSettings:
+  AppleDetector:
+    Enable: true
+    QuantityLimit: 4
+    DetectorConfigs:
+      PositiveThresholds:
+      - [70, 102, 50, 255, 79, 255]
+      NegativeThresholds:
+      - [210, 255, 95, 255, 125, 255]
+      - [0, 74, 60, 255, 0, 255]
+      ReflectiveThresholds:
+      - [70, 255, 0, 255, 253, 255]
+      ErodeKernelSize: 5
+      MinimumSize: 1300
+      MinimunLengthWidthRatio: 0.65
+
+  LemonDetector:
+    Enable: true
+    QuantityLimit: 4
+    DetectorConfigs:
+      PositiveThresholds:
+      - [15, 36, 110, 255, 116, 255]
+      - [35, 50, 85, 220, 80, 255]
+      NegativeThresholds:
+      - [12, 24, 101, 255, 150, 255]
+      ReflectiveThresholds:
+      ErodeKernelSize: 5
+      MinimumSize: 1300
+      MinimunLengthWidthRatio: 0.55
+      
+  OrangeDetector:
+    Enable: true
+    QuantityLimit: 4
+    DetectorConfigs:
+      PositiveThresholds:
+      - [3, 26, 106, 255, 0, 255]
+      NegativeThresholds:
+      - [7, 21, 100, 150, 0, 255]
+      ReflectiveThresholds:
+      ErodeKernelSize: 5
+      MinimumSize: 1600
+  
+  BananaDetector:
+    Enable: true
+    QuantityLimit: 4
+    DetectorConfigs:
+      PositiveThresholds:
+      - [26, 55, 60, 175, 174, 255]
+      NegativeThresholds:
+      ReflectiveThresholds:
+      ErodeKernelSize: 5
+      DilateKernelSize: 7
+      MinimumSize: 2000
+      MaximumLengthWidthRatio: 0.5
+    
+  PitayaDetector:
+    Enable: true
+    QuantityLimit: 4
+    
+  PeachDetector:
+    Enable: true
+    QuantityLimit: 4
+    
+  SnowPearDetector:
+    Enable: true
+    QuantityLimit: 4
+    
+  KiwiFruitDetector:
+    Enable: true
+    QuantityLimit: 4
+    
+  PearDetector:
+    Enable: true
+    QuantityLimit: 4
+
+# Target detector parameters settings.
+TargetDetectorSettings:
+  
+# Apple detector parameter settings.
+AppleDetectorSettings:
+  DetectorConfigs:
+    PositiveThresholds:
+    - [70, 102, 50, 255, 79, 255]
+    NegativeThresholds:
+    - [210, 255, 95, 255, 125, 255]
+    - [0, 74, 60, 255, 0, 255]
+    ReflectiveThresholds:
+    - [70, 255, 0, 255, 253, 255]
+    ErodeKernelSize: 5
+    MinimumSize: 1300
+    MinimunLengthWidthRatio: 0.65
+

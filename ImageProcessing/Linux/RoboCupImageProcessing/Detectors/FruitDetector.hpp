@@ -3,9 +3,10 @@
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui_c.h>
-#include "EnumMacros.h"
 
+#include "EnumMacros.h"
 #include "HSV_Filter.hpp"
+#include "FruitDetectorConfigs.hpp"
 
 #include "AppleDetector.hpp"
 #include "LemonDetector.hpp"
@@ -13,8 +14,8 @@
 #include "BananaDetector.hpp"
 #include "PitayaDetector.hpp"
 #include "PeachDetector.hpp"
-
 #include "SnowPearDetector.hpp"
+#include "KiwiFruitDetector.hpp"
 #include "PearDetector.hpp"
 
 namespace RoboCup
@@ -42,7 +43,7 @@ namespace RoboCup
 	class FruitDetector
 	{
 	public:
-		FruitDetector();
+		FruitDetector(const FruitDetectorConfigs& configs);
 		~FruitDetector() { };
 
 		std::vector<RoboCup::Result_t> Detect(cv::InputArray InputBGR_Image) noexcept;
@@ -50,22 +51,16 @@ namespace RoboCup
 	private:
 		static void maskXOR_Operation(cv::InputArray InputImage, cv::InputArray InputMask, cv::OutputArray OutputImage);
 
+		FruitDetectorConfigs configs;
+
 		RoboCup::AppleDetector appleDetector;
 		RoboCup::LemonDetector lemonDetector;
 		RoboCup::OrangeDetector orangeDetector;
 		RoboCup::BananaDetector bananaDetector;
 		RoboCup::PitayaDetector pitayaDetector;
 		RoboCup::PeachDetector peachDetector;
+		RoboCup::KiwiFruitDetector kiwiFruitDetector;
 		RoboCup::SnowPearDetector snowPearDetector;
 		RoboCup::PearDetector pearDetector;
-		/*
-		LemonDetector lemonDetector;
-		OrangeDetector orangeDetector;
-		
-		
-		RoboCup::KiwiFruitDetector kiwiFruitDetector;
-		
-		SnowPearDetector snowPearDetector;
-		*/
 	};
 }

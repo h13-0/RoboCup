@@ -51,7 +51,7 @@ namespace RoboCup
 		/// <param name="NegativeFilters"> Negative Filters. </param>
 		/// <param name="ReflectiveFilters"> Reflective Filters. </param>
 		/// <returns></returns>
-		void GetFilters(std::vector<h13::HSV_Filter>& PositiveFilters, std::vector<h13::HSV_Filter>& NegativeFilters, std::vector<h13::HSV_Filter>& ReflectiveFilters) noexcept
+		void GetFilters(std::vector<h13::HSV_Filter>& PositiveFilters, std::vector<h13::HSV_Filter>& NegativeFilters, std::vector<h13::HSV_Filter>& ReflectiveFilters) const noexcept
 		{
 			PositiveFilters = positiveFilters;
 			NegativeFilters = negativeFilters;

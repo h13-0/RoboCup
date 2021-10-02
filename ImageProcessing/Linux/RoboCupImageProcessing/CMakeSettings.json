@@ -12,7 +12,7 @@
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": ""
-    },
+    }/*,
     {
       "name": "Arm-Debug",
       "generator": "Unix Makefiles",
@@ -30,6 +30,6 @@
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": ""
-    }
+    }*/
   ]
 }
