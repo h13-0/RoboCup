@@ -26,7 +26,7 @@ std::vector<cv::RotatedRect> RoboCup::PearDetector::Detect(cv::InputArray InputB
 		outputContoursRequired = true;
 	}
 
-	Mat erodeKernel = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
+	Mat erodeKernel = getStructuringElement(MORPH_ELLIPSE, Size(erodeKernelSize, erodeKernelSize));
 	Mat positiveOutput = Mat::zeros(InputBGR_Image.size(), CV_8UC1);
 
 	for (auto filter : positiveFilters)
@@ -45,12 +45,12 @@ std::vector<cv::RotatedRect> RoboCup::PearDetector::Detect(cv::InputArray InputB
 	for (unsigned int index = 0; index < contours.size(); index++)
 	{
 		float size = contourArea(contours[index]);
-		if (size > 1000)
+		if (size > minimumSize)
 		{
 			RotatedRect minRect = minAreaRect(Mat(contours[index]));
 			Size2f rectSize = minRect.size;
 			float lengthWidthRatio = (rectSize.width > rectSize.height) ? (rectSize.height / rectSize.width) : (rectSize.width / rectSize.height);
-			if (lengthWidthRatio > 0.5)
+			if (lengthWidthRatio > minimumLengthWidthRatio)
 			{
 				result.push_back(minRect);
 				if (outputContoursRequired)

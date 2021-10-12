@@ -7,37 +7,19 @@
 
 #include "Monitor.hpp"
 
-namespace h13
+namespace RoboCup
 {
-	class OpenCV_Monitor : public RoboCup::Monitor
+	class OpenCV_Monitor : public Monitor
 	{
 	public:
-		OpenCV_Monitor()
-		{
-			std::thread refreshThread([this]
-			{
-				while (1)
-				{
-					cv::waitKey(10);
-					std::unique_lock<std::mutex> lock(exitMutex);
-					if (this -> exit)
-					{
-						break;
-					}
-				}
-			});
-			refreshThread.detach();
-		};
-		~OpenCV_Monitor()
-		{ 
-			std::unique_lock<std::mutex> lock(exitMutex);
-			exit = true;
-		};
+		OpenCV_Monitor() { };
+		~OpenCV_Monitor() { };
 
-		void Display(const std::string& Tittle, cv::InputArray InputImage)
+		void Display(const std::string& Title, cv::InputArray InputImage)
 		{
-			cv::imshow(Tittle, InputImage);
-		}
+			cv::imshow(Title, InputImage);
+			cv::waitKey(1);
+		};
 
 	private:
 		std::mutex exitMutex;

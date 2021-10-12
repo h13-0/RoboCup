@@ -3,15 +3,68 @@
 #define GLOG_NO_ABBREVIATED_SEVERITIES 
 #include <glog/logging.h>
 
-RoboCup::FruitDetectorConfigs::FruitDetectorConfigs(const YAML::Node& Node)
+RoboCup::FruitDetectorConfigs::FruitDetectorConfigs(const YAML::Node& Node) noexcept
 {
-	isAppleDetectorEnabled = GetBoolValue(Node["AppleDetector"]["Enable"], true);
+	isAppleDetectorEnabled = GetBoolValue(Node["AppleDetector"]["Enable"], isAppleDetectorEnabled);
 	if (isAppleDetectorEnabled)
 	{
-		appleDetectorQuantityLimit = GetIntegerValue(Node["AppleDetector"]["QuantityLimit"], 4);
+		appleDetectorQuantityLimit = GetIntegerValue(Node["AppleDetector"]["QuantityLimit"], appleDetectorQuantityLimit);
 		appleDetectorConfigs = AppleDetectorConfigs(Node["AppleDetector"]["DetectorConfigs"]);
 	}
 	
+	isBananaDetectorEnabled = GetBoolValue(Node["BananaDetector"]["Enable"], isBananaDetectorEnabled);
+	if (isBananaDetectorEnabled)
+	{
+		bananaDetectorQuantityLimit = GetIntegerValue(Node["BananaDetector"]["QuantityLimit"], bananaDetectorQuantityLimit);
+		bananaDetectorConfigs = BananaDetectorConfigs(Node["BananaDetector"]["DetectorConfigs"]);
+	}
 
+	isKiwiFruitDetectorEnabled = GetBoolValue(Node["KiwiFruitDetector"]["Enable"], isKiwiFruitDetectorEnabled);
+	if (isKiwiFruitDetectorEnabled)
+	{
+		kiwiFruitDetectorQuantityLimit = GetIntegerValue(Node["KiwiFruitDetector"]["QuantityLimit"], kiwiFruitDetectorQuantityLimit);
+		kiwiFruitDetectorConfigs = KiwiFruitDetectorConfigs(Node["KiwiFruitDetector"]["DetectorConfigs"]);
+	}
 
+	isLemonDetectorEnabled = GetBoolValue(Node["LemonDetector"]["Enable"], isLemonDetectorEnabled);
+	if (isLemonDetectorEnabled)
+	{
+		lemonDetectorQuantityLimit = GetIntegerValue(Node["LemonDetector"]["QuantityLimit"], lemonDetectorQuantityLimit);
+		lemonDetectorConfigs = LemonDetectorConfigs(Node["LemonDetector"]["DetectorConfigs"]);
+	}
+
+	isOrangeDetectorEnabled = GetBoolValue(Node["OrangeDetector"]["Enable"], isOrangeDetectorEnabled);
+	if (isOrangeDetectorEnabled)
+	{
+		orangeDetectorQuantityLimit = GetIntegerValue(Node["OrangeDetector"]["QuantityLimit"], orangeDetectorQuantityLimit);
+		orangeDetectorConfigs = OrangeDetectorConfigs(Node["OrangeDetector"]["DetectorConfigs"]);
+	}
+
+	isPeachDetectorEnabled = GetBoolValue(Node["PeachDetector"]["Enable"], isPeachDetectorEnabled);
+	if (isPeachDetectorEnabled)
+	{
+		peachDetectorQuantityLimit = GetIntegerValue(Node["PeachDetector"]["QuantityLimit"], peachDetectorQuantityLimit);
+		peachDetectorConfigs = PeachDetectorConfigs(Node["PeachDetector"]["DetectorConfigs"]);
+	}
+
+	isPearDetectorEnabled = GetBoolValue(Node["PearDetector"]["Enable"], isPearDetectorEnabled);
+	if (isPearDetectorEnabled)
+	{
+		pearDetectorQuantityLimit = GetIntegerValue(Node["PearDetector"]["QuantityLimit"], pearDetectorQuantityLimit);
+		pearDetectorConfigs = PearDetectorConfigs(Node["PearDetector"]["DetectorConfigs"]);
+	}
+
+	isPitayaDetectorEnabled = GetBoolValue(Node["PitayaDetector"]["Enable"], isPitayaDetectorEnabled);
+	if (isPitayaDetectorEnabled)
+	{
+		pitayaDetectorQuantityLimit = GetIntegerValue(Node["PitayaDetector"]["QuantityLimit"], pitayaDetectorQuantityLimit);
+		pitayaDetectorConfigs = PitayaDetectorConfigs(Node["PitayaDetector"]["DetectorConfigs"]);
+	}
+
+	isSnowPearDetectorEnabled = GetBoolValue(Node["SnowPearDetector"]["Enable"], isSnowPearDetectorEnabled);
+	if (isSnowPearDetectorEnabled)
+	{
+		snowPearDetectorQuantityLimit = GetIntegerValue(Node["SnowPearDetector"]["QuantityLimit"], snowPearDetectorQuantityLimit);
+		snowPearDetectorConfigs = SnowPearDetectorConfigs(Node["SnowPearDetector"]["DetectorConfigs"]);
+	}
 }

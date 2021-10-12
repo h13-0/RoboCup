@@ -1,6 +1,7 @@
 #include "BaseConfigs.hpp"
 #include "ConfigParameterInvalid.hpp"
 #include <sstream>
+
 bool RoboCup::BaseConfigs::GetBoolValue(const YAML::Node& Node, bool DefaultValue) const noexcept
 {
 	try {

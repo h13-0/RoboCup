@@ -29,12 +29,9 @@ std::vector<cv::RotatedRect> RoboCup::PeachDetector::Detect(cv::InputArray Input
 	Mat filterOutout;
 	this->Detector::Filter(hsvImage, filterOutout);
 
-	Mat erodeKernel = getStructuringElement(MORPH_ELLIPSE, Size(10, 10));
-	dilate(filterOutout, filterOutout, getStructuringElement(MORPH_ELLIPSE, Size(3, 3)));
+	Mat erodeKernel = getStructuringElement(MORPH_ELLIPSE, Size(erodeKernelSize, erodeKernelSize));
 	erode(filterOutout, filterOutout, erodeKernel);
 	dilate(filterOutout, filterOutout, erodeKernel);
-
-	imshow("erode", filterOutout);
 
 	vector<vector<Point>> contours;
 	findContours(filterOutout, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
@@ -44,12 +41,12 @@ std::vector<cv::RotatedRect> RoboCup::PeachDetector::Detect(cv::InputArray Input
 	for (unsigned int index = 0; index < contours.size(); index++)
 	{
 		float size = contourArea(contours[index]);
-		if (size > 1300)
+		if (size > minimumSize)
 		{
 			RotatedRect minRect = minAreaRect(Mat(contours[index]));
 			Size2f rectSize = minRect.size;
 			float lengthWidthRatio = (rectSize.width > rectSize.height) ? (rectSize.height / rectSize.width) : (rectSize.width / rectSize.height);
-			if (lengthWidthRatio > 0.5)
+			if (lengthWidthRatio > minimumLengthWidthRatio)
 			{
 				result.push_back(minRect);
 				if (outputContoursRequired)

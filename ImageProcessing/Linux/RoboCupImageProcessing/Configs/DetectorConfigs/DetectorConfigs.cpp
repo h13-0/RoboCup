@@ -2,7 +2,8 @@
 #include "ConfigParameterInvalid.hpp"
 #define GLOG_NO_ABBREVIATED_SEVERITIES 
 #include <glog/logging.h>
-void RoboCup::DetectorConfigs::GetThresholds(const YAML::Node& Node, std::vector<h13::HSV_Threshold_t>& PositiveThresholds, std::vector<h13::HSV_Threshold_t>& NegativeThresholds, std::vector<h13::HSV_Threshold_t>& ReflectiveThresholds)
+
+void RoboCup::DetectorConfigs::GetParameters(const YAML::Node& Node, std::vector<h13::HSV_Threshold_t>& PositiveThresholds, std::vector<h13::HSV_Threshold_t>& NegativeThresholds, std::vector<h13::HSV_Threshold_t>& ReflectiveThresholds, float& MinimumSize)
 {
 	using namespace google;
 	try {
@@ -28,4 +29,6 @@ void RoboCup::DetectorConfigs::GetThresholds(const YAML::Node& Node, std::vector
 	{
 		LOG(WARNING) << "Could not convert ReflectiveThresholds to std::vector<h13::HSV_Threshold_t>.";
 	}
+
+	GetFloatValue(Node["MinimumSize"], MinimumSize);
 }

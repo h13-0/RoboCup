@@ -26,19 +26,21 @@ static void SplitEnumArgs(const char* szArgs, std::string Array[], int nMax)
 };
 // This will to define an enum that is wrapped in a namespace of the same name along with ToString(), FromString(), and COUNT
 #define DECLARE_ENUM(ename, ...) \
-    enum ename { __VA_ARGS__, COUNT }; \
-    static std::string _Strings[COUNT]; \
-    static std::string GetLabelString(ename e) { \
-        if (_Strings[0].empty()) { SplitEnumArgs(#__VA_ARGS__, _Strings, COUNT); } \
-            return _Strings[e]; \
-    } \
-    static const char* GetLabelC_Str(ename e) { \
-        if (_Strings[0].empty()) { SplitEnumArgs(#__VA_ARGS__, _Strings, COUNT); } \
-            return _Strings[e].c_str(); \
-    } \
-    static ename FromString(const std::string& strEnum) { \
-        if (_Strings[0].empty()) { SplitEnumArgs(#__VA_ARGS__, _Strings, COUNT); } \
-        for (int i = 0; i < COUNT; i++) { if (_Strings[i] == strEnum) { return (ename)i; } } \
-        return COUNT; \
-    } \
+    namespace ename { \
+        enum ename { __VA_ARGS__, COUNT }; \
+        static std::string _Strings[COUNT]; \
+        static std::string GetLabelString(ename e) { \
+            if (_Strings[0].empty()) { SplitEnumArgs(#__VA_ARGS__, _Strings, COUNT); } \
+                return _Strings[e]; \
+        } \
+        static const char* GetLabelC_Str(ename e) { \
+            if (_Strings[0].empty()) { SplitEnumArgs(#__VA_ARGS__, _Strings, COUNT); } \
+                return _Strings[e].c_str(); \
+        } \
+        static ename FromString(const std::string& strEnum) { \
+            if (_Strings[0].empty()) { SplitEnumArgs(#__VA_ARGS__, _Strings, COUNT); } \
+            for (int i = 0; i < COUNT; i++) { if (_Strings[i] == strEnum) { return (ename)i; } } \
+            return COUNT; \
+        } \
+    }
 

@@ -74,9 +74,35 @@
 
 #elif(ArmType == LiftingPlatform)
 //Arm size configs.
+/**
+ * @param:
+ * 	Z_AxisZeroingStep:
+ * 		Z-axis zeroing method. This parameter determines the number of steps to zero each time.
+ * 		When it is negative, it means zero down.
+ * 		example:
+ * 			Z_AxisZeroingStep == 1 means: When the z-axis looks for zero point, one step up at a time.
+ * 			Z_AxisZeroingStep == -3 means: When the z-axis looks for zero point, three steps down at a time.
+ *
+ * 	Z_AxisZeroingLogicExpression:
+ *
+ */
+#define ArmNode1_Length                              ()
+#define ArmNode2_Length                              (140)
+
+#define Z_AxisMinimumHeight                          (320)
+#define Z_AxisMaximumHeight                          (445)
+#define Z_AxisZeroPoint                              Z_AxisMaximumHeight
+#define Z_AxisZeroingStep                            (1)
+#define Z_AxisZeroingLogicExpression                 ()
+#define Z_AxisZeroingDelayPerStep                    (10)
+
+#define AL_AxisMinimumLength                         ()
+#define AL_AxisMaximumLength                         ()
+#define AL_AxisZeroPoint                             AL_AxisMinimumLength
+#define AL_AxisZeroingLogicExpression                (1)
+#define AL_AxisZeroingDelayPerStep                    (10)
 
 #endif //ArmType
-
 
 /**************Image Processing Module Configs**************/
 #define AppleDetectionAverageFPS                     (18)
@@ -232,10 +258,15 @@
 #define AL_AxisStepperDirPin                         LL_GPIO_PIN_15
 
 #define Z_AxisStepper                                { .StepperIO = (GPIO_t){.Port = Z_AxisStepperStepPort, .Pin = Z_AxisStepperStepPin}, .DirectionIO = (GPIO_t){.Port = Z_AxisStepperDirPort, .Pin = Z_AxisStepperDirPin}, .CurrentSteps = 0, .TargetSteps = 0}
+
+#define Z_AxisStepsPerMillimeter                     (25)
+#define AL_AxisStepsPerMillimeter                    (25)
+
 #endif
 
 /**********************Encoder Config**********************/
-#define LeftEncoder
+#define LeftEncoder                                  { .TimPort = TIM8, .MaximumSpeed = 32678 }
+#define RightEncoder                                 { .TimPort = TIM2, .MaximumSpeed = 32678 }
 
 
 /**

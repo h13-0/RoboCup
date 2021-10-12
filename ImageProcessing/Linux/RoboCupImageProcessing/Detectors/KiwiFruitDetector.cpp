@@ -46,19 +46,14 @@ std::vector<cv::RotatedRect> RoboCup::KiwiFruitDetector::Detect(cv::InputArray I
 		}
 
 		erode(negativeOutout, negativeOutout, getStructuringElement(MORPH_ELLIPSE, Size(8, 8)));
-		imshow("nega", negativeOutout);
 		bitwise_not(negativeOutout, negativeOutout);
 		bitwise_and(filterOutout, negativeOutout, filterOutout);
 	}
-
-	imshow("hsv", hsvImage);
 
 	Mat erodeKernel = getStructuringElement(MORPH_ELLIPSE, Size(10, 10));
 	erode(filterOutout, filterOutout, erodeKernel);
 	
 	dilate(filterOutout, filterOutout, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
-
-	imshow("fout", filterOutout);
 
 	vector<vector<Point>> contours;
 	findContours(filterOutout, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
@@ -67,13 +62,12 @@ std::vector<cv::RotatedRect> RoboCup::KiwiFruitDetector::Detect(cv::InputArray I
 	for (unsigned int index = 0; index < contours.size(); index++)
 	{
 		float size = contourArea(contours[index]);
-		std::cout << size << endl;
-		if (size > 1300)
+		if (size > minimumSize)
 		{
 			RotatedRect minRect = minAreaRect(Mat(contours[index]));
 			Size2f rectSize = minRect.size;
 			float lengthWidthRatio = (rectSize.width > rectSize.height) ? (rectSize.height / rectSize.width) : (rectSize.width / rectSize.height);
-			if (lengthWidthRatio > 0.65)
+			if (lengthWidthRatio > minimunLengthWidthRatio)
 			{
 				result.push_back(minRect);
 				if (outputContoursRequired)

@@ -31,7 +31,11 @@ static uint16_t currentZ_AxisHeight = 0.0, currentAxisLength = 0.0;
  */
 void ArmControlInit(void)
 {
+	while(!Z_AxisZeroingLogicExpression)
+	{
 
+		SleepMillisecond(Z_AxisZeroingDelayPerStep);
+	}
 }
 
 /**
@@ -43,6 +47,10 @@ void ArmControlInit(void)
  */
 ArmControlResult_t SetOpenLoopClawPosition(uint16_t RotationAngle, uint16_t AxialLength, uint16_t Z_AxisHeight)
 {
+
+
+
+
 
 	return ArmControlOK;
 }

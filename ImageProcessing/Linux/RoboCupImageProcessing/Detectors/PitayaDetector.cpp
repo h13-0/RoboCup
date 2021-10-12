@@ -30,7 +30,7 @@ std::vector<cv::RotatedRect> RoboCup::PitayaDetector::Detect(cv::InputArray Inpu
 	Mat filterOutout;
 	this->Detector::Filter(hsvImage, filterOutout);
 
-	Mat erodeKernel = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
+	Mat erodeKernel = getStructuringElement(MORPH_ELLIPSE, Size(erodeKernelSize, erodeKernelSize));
 	erode(filterOutout, filterOutout, erodeKernel);
 
 	vector<vector<Point>> contours;
@@ -40,7 +40,7 @@ std::vector<cv::RotatedRect> RoboCup::PitayaDetector::Detect(cv::InputArray Inpu
 	for (unsigned int index = 0; index < contours.size(); index++)
 	{
 		float size = contourArea(contours[index]);
-		if (size > 3000)
+		if (size > minimumSize)
 		{
 			RotatedRect minRect = minAreaRect(Mat(contours[index]));
 			result.push_back(minRect);

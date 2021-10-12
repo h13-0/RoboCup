@@ -1,14 +1,17 @@
 #include "FrameBufferMonitor.hpp"
 #if defined(__linux__)
 #include <stdexcept>
+#include <chrono>
+#include <thread>
 #include <fstream>
 #include <stdint.h>
 #include <sys/ioctl.h>
-
 #include <linux/fb.h>
 #include <fcntl.h>
+#include <unistd.h>
+#include "ParameterInvalid.hpp"
 
-void h13::FrameBufferMonitor::getFrameBufferInfo(const std::string& TargetFrameBufferFile, uint32_t& BitsPerPixel, uint16_t& X_ResolutionVirtual, uint16_t& Y_ResolutionVirtual)
+void RoboCup::FrameBufferMonitor::getFrameBufferInfo(const std::string& TargetFrameBufferFile, uint32_t& BitsPerPixel, uint16_t& X_ResolutionVirtual, uint16_t& Y_ResolutionVirtual)
 {
     struct fb_var_screeninfo screenInfo;
     int fd = -1;
@@ -21,60 +24,88 @@ void h13::FrameBufferMonitor::getFrameBufferInfo(const std::string& TargetFrameB
             Y_ResolutionVirtual = screenInfo.yres_virtual;
             BitsPerPixel = screenInfo.bits_per_pixel;
         }
+        close(fd);
     }
     else {
-        throw std::runtime_error("Could not find FrameBuffer file: " + TargetFrameBufferFile);
+        throw ParameterInvalid("Could not open FrameBuffer file: " + TargetFrameBufferFile);
     }
 }
 
-h13::FrameBufferMonitor::FrameBufferMonitor(const std::string& TargetFrameBufferFile)
+RoboCup::FrameBufferMonitor::FrameBufferMonitor(const std::string& TargetFrameBufferFile)
 {
     FrameBufferMonitor::getFrameBufferInfo(TargetFrameBufferFile, bitsPerPixel, xResolution, yResolution);
     frameBufferFileStream = std::ofstream(TargetFrameBufferFile.c_str());
 }
 
-h13::FrameBufferMonitor::~FrameBufferMonitor()
+RoboCup::FrameBufferMonitor::~FrameBufferMonitor()
 {
 }
 
-void h13::FrameBufferMonitor::Display(const std::string& Tittle, cv::InputArray InputImage)
+void RoboCup::FrameBufferMonitor::Display(const std::string& Title, cv::InputArray InputImage)
 {
     using namespace cv;
-    if (Tittle == "Final")
+    if (Title == "Final")
     {
-        CV_Assert((InputImage.channels() == 1) || (InputImage.channels() == 3));
-        Mat frameBuffer;
-        float scalingRatio = min(xResolution / InputImage.rows(), yResolution / InputImage.cols());
-        resize(InputImage, frameBuffer, Size(InputImage.rows() * scalingRatio, InputImage.cols() * scalingRatio));
-        int rols = frameBuffer.rows;
-        int cols = frameBuffer.cols;
-
-        std::vector<Mat> splitedBGR;
-        switch (bitsPerPixel)
+        if (InputImage.channels() == 1)
         {
-        case 16:
-            cvtColor(frameBuffer, frameBuffer, COLOR_BGR2BGR565);
-            for (int y = 0; y < cols; y++)
-            {
-                frameBufferFileStream.seekp(y * xResolution * 2);
-                frameBufferFileStream.write(reinterpret_cast<char*>(frameBuffer.ptr(y)), rols * 2);
-            }
-            break;
-
-        case 32:
-            split(frameBuffer, splitedBGR);
-            splitedBGR.push_back(cv::Mat(frameBuffer.size(), CV_8UC1, Scalar(255)));
-            merge(splitedBGR, frameBuffer);
-            for (int y = 0; y < cols; y++)
-            {
-                frameBufferFileStream.seekp(y * xResolution * 4);
-                frameBufferFileStream.write(reinterpret_cast<char*>(frameBuffer.ptr(y)), rols * 4);
-            }
-            break;
-
-        default:
-            break;
+            std::unique_lock<std::mutex> lock(bufferMutex);
+            cvtColor(InputImage, buffer, COLOR_GRAY2BGR);
         }
+        else if(InputImage.channels() == 3) {
+            std::unique_lock<std::mutex> lock(bufferMutex);
+            buffer = InputImage.getMat().clone();
+        }
+        else {
+            throw ParameterInvalid("Only 3-channel and 1-channel images are supported.");
+        }
+
+        Refresh(1);
     }
 }
+
+void RoboCup::FrameBufferMonitor::Refresh(int MillisecondsToDelay)
+{
+    using namespace cv;
+
+    Mat frame;
+    {
+        std::unique_lock<std::mutex> lock(bufferMutex);
+        frame = buffer.clone();
+    }
+
+    float scalingRatio = min(xResolution / frame.rows, yResolution / frame.cols);
+    resize(frame, frame, Size(frame.rows * scalingRatio, frame.cols * scalingRatio));
+    int rols = frame.rows;
+    int cols = frame.cols;
+
+    std::vector<Mat> splitedBGR;
+    switch (bitsPerPixel)
+    {
+    case 16:
+        cvtColor(frame, frame, COLOR_BGR2BGR565);
+        for (int y = 0; y < cols; y++)
+        {
+            frameBufferFileStream.seekp(y * xResolution * 2);
+            frameBufferFileStream.write(reinterpret_cast<char*>(frame.ptr(y)), rols * 2);
+        }
+        break;
+
+    case 32:
+        split(frame, splitedBGR);
+        splitedBGR.push_back(cv::Mat(frame.size(), CV_8UC1, Scalar(255)));
+        merge(splitedBGR, frame);
+        for (int y = 0; y < cols; y++)
+        {
+            frameBufferFileStream.seekp(y * xResolution * 4);
+            frameBufferFileStream.write(reinterpret_cast<char*>(frame.ptr(y)), rols * 4);
+        }
+        break;
+
+    default:
+        break;
+    }
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(MillisecondsToDelay));
+}
+
 #endif

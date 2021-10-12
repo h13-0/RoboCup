@@ -69,17 +69,13 @@ std::vector<cv::RotatedRect> RoboCup::SnowPearDetector::Detect(cv::InputArray In
 		}
 	}
 	dilate(reflectiveOutout, reflectiveOutout, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
-	imshow("ref", reflectiveOutout);
 
 	//dilate(filterOutout, filterOutout, erodeKernel);
-
-	imshow("ero", positiveFilterOutout);
 
 	Mat filterOutout = positiveFilterOutout.clone();
 	dilate(filterOutout, filterOutout, getStructuringElement(MORPH_ELLIPSE, Size(27, 27)));
 	bitwise_and(filterOutout, reflectiveOutout, filterOutout);
 	bitwise_or(filterOutout, positiveFilterOutout, filterOutout);
-	imshow("fto", filterOutout);
 	//fil = bitwise and ero
 	//filterOutout = positiveFilterOutout.clone();
 
@@ -91,16 +87,16 @@ std::vector<cv::RotatedRect> RoboCup::SnowPearDetector::Detect(cv::InputArray In
 	for (unsigned int index = 0; index < contours.size(); index++)
 	{
 		float size = contourArea(contours[index]);
-		//cout << size << endl;
-		if (size > 900)
+		if (size > minimumSize)
 		{
 			RotatedRect minRect = minAreaRect(Mat(contours[index]));
 			Size2f rectSize = minRect.size;
 			float lengthWidthRatio = (rectSize.width > rectSize.height) ? (rectSize.height / rectSize.width) : (rectSize.width / rectSize.height);
 
-			if (lengthWidthRatio > 0.50)
+			if (lengthWidthRatio > minimumLengthWidthRatio)
 			{
-				if ((contourArea(contours[index]) < 15000) && contourArea(contours[index]) > 2200)
+				float cArea = contourArea(contours[index]);
+				if ((cArea < maximumContourArea) && cArea > minimumContourArea)
 				{
 					result.push_back(minRect);
 					if (outputContoursRequired)

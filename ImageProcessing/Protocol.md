@@ -9,11 +9,11 @@
 ### STM32 -> Module:
 #### 命令
 Key = `CMD`  
-Type = char*  
+Type = string  
 | Key | Value             | 作用              |
 | --- | ----------------- | ---------------- |
 | CMD | `AppleDetectLeft` | 检测左侧水果      |
-| CMD | `FruitDetect`     | 检测水果数量和种类 |
+| CMD | `FruitDetection`  | 检测水果数量和种类 |
 | CMD | `TargetDetect`    | 检测靶标位置       |
 
 ### Module -> STM32:

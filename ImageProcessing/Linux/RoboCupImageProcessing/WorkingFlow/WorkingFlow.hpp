@@ -6,12 +6,14 @@ namespace RoboCup
 	class WorkingFlow
 	{
 	public:
-		WorkingFlow(const Configs &Configs) : configs(Configs) { };
-		~WorkingFlow() { };
-
-		virtual void Run(void) = 0;
-
-	protected:
-		Configs configs;
+		WorkingFlow(const Configs &Configs) { };
+		virtual ~WorkingFlow() { };
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name=""></param>
+		/// <returns></returns>
+		virtual int Run(void) = 0;
 	};
 }

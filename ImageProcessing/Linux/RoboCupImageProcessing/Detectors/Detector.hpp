@@ -34,7 +34,7 @@ namespace RoboCup
 			}
 		};
 
-		~Detector() {};
+		virtual ~Detector() { };
 
 		/// <summary>
 		/// Detect target and return location.

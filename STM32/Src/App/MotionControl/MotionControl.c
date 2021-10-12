@@ -129,7 +129,7 @@ void MotionControlInit(void)
 	forwardPID.configs.limitIntegration = enable;
 	forwardPID.maximumAbsValueOfIntegrationOutput = MaxSpeed * 0.3;
 
-	enableSpeedPID();
+	//enableSpeedPID();
 }
 
 /**
@@ -282,7 +282,7 @@ void StraightUntill(uint16_t Distance)
 		leftSpeedPID.setpoint = speedBaseOutput + speedDifference;
 		rightSpeedPID.setpoint = speedBaseOutput - speedDifference;
 
-		if((uint16_t)fabs(distance - forwardPID.setpoint) > ForwardAccuracy)
+		if(abs(distance - forwardPID.setpoint) > ForwardAccuracy)
 		{
 			startStableTime = GetCurrentTimeMillisecond();
 		}

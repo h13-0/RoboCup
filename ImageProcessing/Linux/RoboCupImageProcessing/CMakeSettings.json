@@ -12,14 +12,27 @@
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": ""
-    }/*,
+    },
     {
-      "name": "Arm-Debug",
+      "name": "Windows-Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "cmakeExecutable": "cmake",
+      "inheritEnvironments": [ "msvc_x64" ],
+      "rsyncCommandArgs": "-t --delete --delete-excluded",
+      "buildRoot": "${projectDir}\\out\\build\\${name}",
+      "installRoot": "${projectDir}\\out\\install\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": ""
+    },
+    {
+      "name": "Linux-x64-Debug",
       "generator": "Unix Makefiles",
       "configurationType": "Debug",
       "cmakeExecutable": "cmake",
-      "inheritEnvironments": [ "linux_arm" ],
-      "remoteMachineName": "-1273082912;192.168.253.120 (username=orangepi, port=22, authentication=Password)",
+      "inheritEnvironments": [ "linux_x64" ],
+      "remoteMachineName": "-1525040772;192.168.28.136 (username=root, port=22, authentication=Password)",
       "remoteCMakeListsRoot": "$HOME/.vs/${projectDirName}/${workspaceHash}/src",
       "remoteBuildRoot": "$HOME/.vs/${projectDirName}/${workspaceHash}/out/build/${name}",
       "remoteInstallRoot": "$HOME/.vs/${projectDirName}/${workspaceHash}/out/install/${name}",
@@ -30,6 +43,6 @@
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": ""
-    }*/
+    }
   ]
 }

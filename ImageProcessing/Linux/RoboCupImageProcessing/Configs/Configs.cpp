@@ -12,17 +12,22 @@ void RoboCup::Configs::GenerateDefaultConfigFiles(const std::string& PathOfConfi
 	using namespace YAML;
 }
 
-RoboCup::FruitDetectorConfigs RoboCup::Configs::GetFruitDetectorSettings()
+RoboCup::FruitDetectorConfigs RoboCup::Configs::GetFruitDetectorSettings() const
 {
 	return FruitDetectorConfigs(configs["FruitDetectorSettings"]);
 }
 
-RoboCup::TargetDetectorConfigs RoboCup::Configs::GetTargetDetectorSettings()
+RoboCup::TargetDetectorConfigs RoboCup::Configs::GetTargetDetectorSettings() const
 {
 	return TargetDetectorConfigs(configs["TargetDetectorSettings"]);
 }
 
-RoboCup::AppleDetectorConfigs RoboCup::Configs::GetAppleDetectorSettings()
+RoboCup::AppleDetectorConfigs RoboCup::Configs::GetAppleDetectorSettings() const
 {
 	return AppleDetectorConfigs(configs["AppleDetectorSettings"]);
+}
+
+RoboCup::ApplicationConfigs RoboCup::Configs::GetApplicationConfigs() const
+{
+	return ApplicationConfigs(configs["ApplicationSettings"]);
 }

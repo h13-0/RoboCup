@@ -34,18 +34,42 @@ namespace RoboCup
 
 	typedef struct Result
 	{
-		Result(RoboCup::Fruit_t FruitType, cv::RotatedRect Rect)
+		Result(RoboCup::Fruit_t::Fruit_t FruitType, cv::RotatedRect Rect)
 			: FruitType(FruitType), Rect(Rect){ };
-		RoboCup::Fruit_t FruitType;
+		RoboCup::Fruit_t::Fruit_t FruitType;
 		cv::RotatedRect Rect;
 	} Result_t;
 
 	class FruitDetector
 	{
 	public:
-		FruitDetector(const FruitDetectorConfigs& configs);
-		~FruitDetector() { };
+		/// <summary>
+		/// Construct function.
+		/// </summary>
+		/// <param name="configs">Configs.</param>
+		FruitDetector(const FruitDetectorConfigs& configs) noexcept
+			: configs(configs)
+			, appleDetector(configs.GetAppleDetectorConfigs())
+			, lemonDetector(configs.GetLemonDetectorConfigs())
+			, orangeDetector(configs.GetOrangeDetectorConfigs())
+			, bananaDetector(configs.GetBananaDetectorConfigs())
+			, pitayaDetector(configs.GetPitayaDetectorConfigs())
+			, peachDetector(configs.GetPeachDetectorConfigs())
+			, kiwiFruitDetector(configs.GetKiwiFruitDetectorConfigs())
+			, snowPearDetector(configs.GetSnowPearDetectorConfigs())
+			, pearDetector(configs.GetPearDetectorConfigs()) { };
 
+		~FruitDetector() noexcept { };
+
+		/// <summary>
+		/// Detect fruit in BGR Image.
+		/// </summary>
+		/// <param name="Input">BGR Image.</param>
+		/// <note>Identification sequence:
+		/// Apple->Lemon->Orange->Banana->Pitaya
+		///		->Peach->SnowPear->KiwiFruit->Pear
+		/// (Confidence ranking from high to low.) </note>
+		/// <returns>Result in std::vector<RoboCup::Result_t>.</returns>
 		std::vector<RoboCup::Result_t> Detect(cv::InputArray InputBGR_Image) noexcept;
 
 	private:
@@ -53,6 +77,9 @@ namespace RoboCup
 
 		FruitDetectorConfigs configs;
 
+		/// <summary>
+		/// Detectors.
+		/// </summary>
 		RoboCup::AppleDetector appleDetector;
 		RoboCup::LemonDetector lemonDetector;
 		RoboCup::OrangeDetector orangeDetector;

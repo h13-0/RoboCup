@@ -7,6 +7,13 @@ namespace RoboCup
 	class Monitor
 	{
 	public:
-		virtual void Display(const std::string& Tittle, cv::InputArray InputImage) = 0;
+		virtual ~Monitor() { };
+		/// <summary>
+		/// Send a new image to monitor.
+		/// note: Some subclasses will only display images whose title is "Final".
+		/// </summary>
+		/// <param name="Title">Title for image.</param>
+		/// <param name="InputImage">Image.</param>
+		virtual void Display(const std::string& Title, cv::InputArray InputImage) = 0;
 	};
 }

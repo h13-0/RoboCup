@@ -1,24 +1,39 @@
 # Base settings of application.
 ApplicationSettings:
-  # Select Working Mode
-  ## Available Mode:
-  ## - MainWorkingFlow
-  WorkingMode:
-    MainWorkingFlow
-  
-  #
+  # Select monitor type
+  ## Available type
+  ## - Auto, Linux is FrameBuffer and Windows is cv::imshow
+  ## - OpenCV
+  ## - FrameBuffer (Not available in Windows)
   MonitorType:
     Auto
+
+  # Select target framebuffer file
+  ## Not available in Windows.
+  FrameBufferPath:
+    /dev/fb0
 
   # Select video device
   ## unsigned int or string, CameraID or video stream path/url.
   VideoDevice:
     0
 
+  # Select serial device
+  ## Path of serial file(linux) or PortID(Windows, not avaliable).
+  ## Example:
+  ## Linux: /dev/ttyUSB0
+  ## Windows: com3
+  SerialPort:
+    /dev/
+
 # Fruit detector parameters settings.
 # note: These variables only work in the `FruitDetector` mode.
 ## Enable: bool, enable or not.
 ## QuantityLimit: unsigned int, maximum number of fruits.
+## DetectorConfigs: parameters of detector
+### PositiveThresholds: unsigned char[6],
+### NegativeThresholds: unsigned char[6],
+### ReflectiveThresholds: unsigned char[6],
 FruitDetectorSettings:
   AppleDetector:
     Enable: true
@@ -31,8 +46,8 @@ FruitDetectorSettings:
       - [0, 74, 60, 255, 0, 255]
       ReflectiveThresholds:
       - [70, 255, 0, 255, 253, 255]
-      ErodeKernelSize: 5
       MinimumSize: 1300
+      ErodeKernelSize: 5
       MinimunLengthWidthRatio: 0.65
 
   LemonDetector:
@@ -45,8 +60,8 @@ FruitDetectorSettings:
       NegativeThresholds:
       - [12, 24, 101, 255, 150, 255]
       ReflectiveThresholds:
-      ErodeKernelSize: 5
       MinimumSize: 1300
+      ErodeKernelSize: 5
       MinimunLengthWidthRatio: 0.55
       
   OrangeDetector:
@@ -58,8 +73,8 @@ FruitDetectorSettings:
       NegativeThresholds:
       - [7, 21, 100, 150, 0, 255]
       ReflectiveThresholds:
-      ErodeKernelSize: 5
       MinimumSize: 1600
+      ErodeKernelSize: 5
   
   BananaDetector:
     Enable: true
@@ -69,31 +84,77 @@ FruitDetectorSettings:
       - [26, 55, 60, 175, 174, 255]
       NegativeThresholds:
       ReflectiveThresholds:
+      MinimumSize: 2000
       ErodeKernelSize: 5
       DilateKernelSize: 7
-      MinimumSize: 2000
       MaximumLengthWidthRatio: 0.5
     
   PitayaDetector:
     Enable: true
     QuantityLimit: 4
-    
+    DetectorConfigs:
+      PositiveThresholds:
+      - [210, 255, 95, 255, 125, 255]
+      NegativeThresholds:
+      ReflectiveThresholds:
+      MinimumSize: 3000
+      ErodeKernelSize: 5
+      
   PeachDetector:
     Enable: true
     QuantityLimit: 4
+    DetectorConfigs:
+      PositiveThresholds:
+      - [0, 18, 40, 190, 135, 255]
+      - [220, 255, 15, 140, 130, 255]
+      NegativeThresholds:
+      - [9, 202, 0, 61, 0, 255]
+      ReflectiveThresholds:
+      MinimumSize: 1300
+      ErodeKernelSize: 10
+      MaximumLengthWidthRatio: 0.5
     
   SnowPearDetector:
     Enable: true
     QuantityLimit: 4
-    
+    DetectorConfigs:
+      PositiveThresholds:
+      - [40, 75, 21, 100, 80, 255]
+      NegativeThresholds:
+      - [0, 50, 0, 255, 0, 255]
+      ReflectiveThresholds:
+      - [55, 70, 110, 255, 80, 255]
+      MinimumSize: 900
+      MinimumLengthWidthRatio: 0.5
+      MinimumContourArea: 2200
+      MaximumContourArea: 15000
+          
   KiwiFruitDetector:
     Enable: true
     QuantityLimit: 4
-    
+    DetectorConfigs:
+      PositiveThresholds:
+      - [60, 80, 80, 180, 50, 255]
+      - [45, 110, 22, 206, 15, 255]
+      NegativeThresholds:
+      - [0, 51, 0, 26, 0, 255]
+      - [0, 255, 0, 40, 0, 255]
+      ReflectiveThresholds:
+      MinimumSize: 1300
+          
   PearDetector:
     Enable: true
     QuantityLimit: 4
-
+    DetectorConfigs:
+      PositiveThresholds:
+      - [40, 61, 110, 255, 30, 135]
+      - [50, 66, 150, 255, 40, 190]
+      NegativeThresholds:
+      ReflectiveThresholds:
+      MinimumSize: 1000
+      ErodeKernelSize: 5
+      MinimumLengthWidthRatio: 0.5
+      
 # Target detector parameters settings.
 TargetDetectorSettings:
   
@@ -107,7 +168,7 @@ AppleDetectorSettings:
     - [0, 74, 60, 255, 0, 255]
     ReflectiveThresholds:
     - [70, 255, 0, 255, 253, 255]
-    ErodeKernelSize: 5
     MinimumSize: 1300
+    ErodeKernelSize: 5
     MinimunLengthWidthRatio: 0.65
 

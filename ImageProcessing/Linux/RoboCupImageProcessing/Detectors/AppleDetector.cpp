@@ -41,7 +41,8 @@ std::vector<cv::RotatedRect> RoboCup::AppleDetector::Detect(cv::InputArray Input
 	}
 
 #ifdef _DEBUG
-	imshow("ApplePositive", filterOutout);
+	
+	("ApplePositive", filterOutout);
 #endif
 
 	if (negativeFilters.size() > 0)
@@ -62,7 +63,8 @@ std::vector<cv::RotatedRect> RoboCup::AppleDetector::Detect(cv::InputArray Input
 	erode(filterOutout, filterOutout, erodeKernel);
 
 #ifdef _DEBUG
-	imshow("AppleFinal", filterOutout);
+	
+	("AppleFinal", filterOutout);
 #endif
 
 	//Judge the roundness of the edge to select the apple.
@@ -78,7 +80,7 @@ std::vector<cv::RotatedRect> RoboCup::AppleDetector::Detect(cv::InputArray Input
 			RotatedRect minRect = minAreaRect(Mat(contours[index]));
 			Size2f rectSize = minRect.size;
 			float lengthWidthRatio = (rectSize.width > rectSize.height) ? (rectSize.height / rectSize.width) : (rectSize.width / rectSize.height);
-			if (lengthWidthRatio > minimunLengthWidthRatio)
+			if (lengthWidthRatio > minimumLengthWidthRatio)
 			{
 				result.push_back(minRect);
 				if (outputContoursRequired)

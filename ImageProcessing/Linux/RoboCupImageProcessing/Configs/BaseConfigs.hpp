@@ -9,6 +9,7 @@ namespace RoboCup
 	class BaseConfigs
 	{
 	public:
+		virtual ~BaseConfigs() { };
 		bool GetBoolValue(const YAML::Node& Node, bool DefaultValue) const noexcept;
 		std::string GetStringValue(const YAML::Node& Node, const std::string& DefalutValue) const noexcept;
 		int GetIntegerValue(const YAML::Node& Node, int DefauleValue) const noexcept;

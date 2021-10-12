@@ -8,8 +8,8 @@
 #include "RobotConfigs.h"
 #include "EncoderPorts.h"
 
-static DoublePhaseEncoder_t leftEncoder = {.TimPort = TIM8, .MaximumSpeed = 1000};
-static DoublePhaseEncoder_t rightEncoder = {.TimPort = TIM2, .MaximumSpeed = 1000};
+static DoublePhaseEncoder_t leftEncoder = LeftEncoder;
+static DoublePhaseEncoder_t rightEncoder = RightEncoder;
 
 void EncoderInit(void)
 {

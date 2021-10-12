@@ -12,7 +12,7 @@ namespace RoboCup
 	public:
 		DetectorConfigs(void) = default;
 		DetectorConfigs(const YAML::Node& Node) { };
-		~DetectorConfigs() { };
+		virtual ~DetectorConfigs() { };
 
 		std::vector<h13::HSV_Threshold_t> GetPositiveThresholds(void) const noexcept
 		{
@@ -29,11 +29,17 @@ namespace RoboCup
 			return reflectiveThresholds;
 		};
 
+		float GetMinimumSize(void) const noexcept
+		{
+			return minimumSize;
+		};
+
 	protected:
-		void GetThresholds(const YAML::Node& Node, std::vector<h13::HSV_Threshold_t>& PositiveThresholds, std::vector<h13::HSV_Threshold_t>& NegativeThresholds, std::vector<h13::HSV_Threshold_t>& ReflectiveThresholds);
+		void GetParameters(const YAML::Node& Node, std::vector<h13::HSV_Threshold_t>& PositiveThresholds, std::vector<h13::HSV_Threshold_t>& NegativeThresholds, std::vector<h13::HSV_Threshold_t>& ReflectiveThresholds, float& MinimumSize);
 
 		std::vector<h13::HSV_Threshold_t> positiveThresholds;
 		std::vector<h13::HSV_Threshold_t> negativeThresholds;
 		std::vector<h13::HSV_Threshold_t> reflectiveThresholds;
+		float minimumSize;
 	};
 }

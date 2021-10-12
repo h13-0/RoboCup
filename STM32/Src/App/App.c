@@ -29,6 +29,10 @@ int App(void)
 	//Current posture: ¡ý
 	AllInit();
 
+	while(1);
+
+	//KeepSpeed();
+
 	//CalibrationAllServo();
 
 	ConnectToBluetoothDevice();
