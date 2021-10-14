@@ -11,6 +11,7 @@
 
 #include "MotionControl.h"
 #include "Stepper.h"
+#include "DF_PlayerMini.h"
 
 /**
  * @brief: Timer Interrupt Handler.
@@ -26,14 +27,13 @@ __attribute__((always_inline)) inline void TimerHandler(void)
 }
 
 /**
- * @brief: Timer for LVGL.
+ * @brief: Timer for LVGL and Voice queue.
  * @note:
- * 		Responsible for refreshing UI.
  * 		**Call frequency: 30Hz.**
  */
-__attribute__((always_inline)) inline void LVGLHandler(void)
+__attribute__((always_inline)) inline void UI_VoiceTimerHandler(void)
 {
-
+	DF_PlayerVoiceQueueTimerHandler();
 }
 
 #if(ArmType == LiftingPlatform)

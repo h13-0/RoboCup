@@ -20,10 +20,19 @@ typedef struct
 	GPIO_Pin_t    Pin;
 } GPIO_t;
 
-void PullUpGPIO(GPIO_t *GPIO);
+typedef enum
+{
+	Output,
+	Input,
+	//Interrupt
+} GPIO_Function_t;
 
-void PullDownGPIO(GPIO_t *GPIO);
+void GPIO_Init(GPIO_t *GPIO, GPIO_Function_t Function);
 
-//ReadGPIO_State();
+void GPIO_PullUp(GPIO_t *GPIO);
+
+void GPIO_PullDown(GPIO_t *GPIO);
+
+uint32_t GPIO_ReadLevel(GPIO_t *GPIO);
 
 #endif /* PLATFORM_GPIO_GPIO_H_ */

@@ -28,13 +28,13 @@ void SteperTimerHandler(void)
 		{
 			if(steppers[i] -> CurrentSteps < steppers[i] -> TargetSteps)
 			{
-				PullUpGPIO(&(steppers[i] -> DirectionIO));
-				PullUpGPIO(&(steppers[i] -> StepperIO));
+				GPIO_PullUp(&(steppers[i] -> DirectionIO));
+				GPIO_PullUp(&(steppers[i] -> StepperIO));
 				steppers[i] -> CurrentSteps ++;
 			} else if(steppers[i] -> CurrentSteps > steppers[i] -> TargetSteps) {
 
-				PullDownGPIO(&(steppers[i] -> DirectionIO));
-				PullUpGPIO(&(steppers[i] -> StepperIO));
+				GPIO_PullDown(&(steppers[i] -> DirectionIO));
+				GPIO_PullUp(&(steppers[i] -> StepperIO));
 				steppers[i] -> CurrentSteps --;
 			}
 		}
@@ -44,11 +44,11 @@ void SteperTimerHandler(void)
 		{
 			if(steppers[i] -> CurrentSteps < steppers[i] -> TargetSteps)
 			{
-				PullUpGPIO(&(steppers[i] -> DirectionIO));
-				PullDownGPIO(&(steppers[i] -> StepperIO));
+				GPIO_PullUp(&(steppers[i] -> DirectionIO));
+				GPIO_PullDown(&(steppers[i] -> StepperIO));
 			} else if(steppers[i] -> CurrentSteps > steppers[i] -> TargetSteps) {
-				PullDownGPIO(&(steppers[i] -> DirectionIO));
-				PullDownGPIO(&(steppers[i] -> StepperIO));
+				GPIO_PullDown(&(steppers[i] -> DirectionIO));
+				GPIO_PullDown(&(steppers[i] -> StepperIO));
 			}
 		}
 	}
@@ -56,7 +56,9 @@ void SteperTimerHandler(void)
 
 StepperError_t StepperInit(Stepper_t *Stepper)
 {
-	if(currentStepperNumbers < StepperNumbers - 1)
+	GPIO_Init(&Stepper -> StepperIO, Output);
+	GPIO_Init(&Stepper -> DirectionIO, Output);
+	if(currentStepperNumbers < StepperNumbers)
 	{
 		steppers[currentStepperNumbers] = Stepper;
 		currentStepperNumbers ++;
@@ -71,12 +73,12 @@ void SetStepperSteps(Stepper_t *Stepper, uint32_t TargetSteps)
 	Stepper -> TargetSteps = TargetSteps;
 }
 
-void StepperForward(Stepper_t *Stepper, uint32_t Steps)
+void StepperForward(Stepper_t *Stepper, int32_t Steps)
 {
 	Stepper -> TargetSteps += Steps;
 }
 
-void StepperBackward(Stepper_t *Stepper, uint32_t Steps)
+void StepperBackward(Stepper_t *Stepper, int32_t Steps)
 {
 	Stepper -> TargetSteps -= Steps;
 }

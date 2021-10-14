@@ -766,7 +766,7 @@ static void MX_UART5_Init(void)
   /* USER CODE BEGIN UART5_Init 1 */
 
   /* USER CODE END UART5_Init 1 */
-  USART_InitStruct.BaudRate = 115200;
+  USART_InitStruct.BaudRate = 9600;
   USART_InitStruct.DataWidth = LL_USART_DATAWIDTH_8B;
   USART_InitStruct.StopBits = LL_USART_STOPBITS_1;
   USART_InitStruct.Parity = LL_USART_PARITY_NONE;
@@ -921,6 +921,11 @@ static void MX_GPIO_Init(void)
   /**/
   LL_GPIO_ResetOutputPin(GPIOB, GPIO_Output____SSD1283_RST_Pin|GPIO_Output____Z_AxisStepperSTEP_Pin|GPIO_Output____Z_AxisStepperDIR_Pin|GPIO_Output____AL_AxisStepperSTEP_Pin
                           |GPIO_Output____AL_AxisStepperDIR_Pin);
+
+  /**/
+  GPIO_InitStruct.Pin = GPIO_Input____DF_Player_Mini_Busy_Pin;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_FLOATING;
+  LL_GPIO_Init(GPIO_Input____DF_Player_Mini_Busy_GPIO_Port, &GPIO_InitStruct);
 
   /**/
   GPIO_InitStruct.Pin = GPIO_Output____HC05_EN_Pin|GPIO_Output____SSD1283_CS_Pin|GPIO_Output____SSD1283_DC_Pin;

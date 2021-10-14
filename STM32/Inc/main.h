@@ -70,6 +70,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define GPIO_Input____DF_Player_Mini_Busy_Pin LL_GPIO_PIN_2
+#define GPIO_Input____DF_Player_Mini_Busy_GPIO_Port GPIOC
 #define GPIO_Output____HC05_EN_Pin LL_GPIO_PIN_3
 #define GPIO_Output____HC05_EN_GPIO_Port GPIOC
 #define TIM2_CH1____RightEncoder_CHA_Pin LL_GPIO_PIN_0

@@ -19,10 +19,10 @@
  * 		forwardAccuracy: Forward accuracy limit in millimeter.
  * 		stableTimeLimit: Stable Time Limit in milliseconds.
  */
-#define MaxSpeed                                     (45)  //
+#define MaxSpeed                                     (2500)  //
 //DeadZone
-#define ForwardDeadZone                              (0.5)
-#define BackwardDeadZone                             (0.5)
+#define ForwardDeadZone                              (0.275)
+#define BackwardDeadZone                             (0.275)
 //Accurary
 #define AngleAccurary                                (2.0)   //degree
 #define AngleAdjustTimeLimit                         (3000)  //milliseconds
@@ -32,8 +32,8 @@
 #define ForwardStableTimeThreshold                   (500)
 //PID
 //Speed PID
-#define SpeedPID_Proportion                          (0.00005)
-#define SpeedPID_Integration                         (0.000021)
+#define SpeedPID_Proportion                          (0.00000123)
+#define SpeedPID_Integration                         (0.0000005159)
 #define SpeedPID_Differention                        (0.0)
 
 /************************Arm Control************************/
@@ -86,21 +86,21 @@
  * 	Z_AxisZeroingLogicExpression:
  *
  */
-#define ArmNode1_Length                              ()
 #define ArmNode2_Length                              (140)
+#define ArmNode3_Length                              (140)
 
 #define Z_AxisMinimumHeight                          (320)
 #define Z_AxisMaximumHeight                          (445)
 #define Z_AxisZeroPoint                              Z_AxisMaximumHeight
 #define Z_AxisZeroingStep                            (1)
-#define Z_AxisZeroingLogicExpression                 ()
+#define Z_AxisZeroingLogicExpression                 (1)
 #define Z_AxisZeroingDelayPerStep                    (10)
 
-#define AL_AxisMinimumLength                         ()
-#define AL_AxisMaximumLength                         ()
+#define AL_AxisMinimumLength                         (80)
+#define AL_AxisMaximumLength                         (215)
 #define AL_AxisZeroPoint                             AL_AxisMinimumLength
 #define AL_AxisZeroingLogicExpression                (1)
-#define AL_AxisZeroingDelayPerStep                    (10)
+#define AL_AxisZeroingDelayPerStep                   (10)
 
 #endif //ArmType
 
@@ -196,7 +196,7 @@
 #define ClawRotationServo                            { .Frequency = 50, .TIMx = TIM1, .Channel = LL_TIM_CHANNEL_CH4, .ReloadValue = 2000 }
 #define ClawGrabServo                                { .Frequency = 50, .TIMx = TIM5, .Channel = LL_TIM_CHANNEL_CH3, .ReloadValue = 2000 }
 
-#define ArmRotationServoMaximumRotationAngle         (180)
+#define ArmRotationServoMaximumRotationAngle         (270)
 #define ArmRotationServoProportion                   (0.867)
 #define ArmRotationServoOffset                       (0.0)
 
@@ -211,6 +211,10 @@
 #define ClawRotationServoOffset                      (10.0)
 #endif
 
+
+/**
+ * @group: Driver configs
+ */
 /******************Direction Sensor Config******************/
 //List of available models.
 #define WT101_InSerialMode                           0
@@ -257,10 +261,11 @@
 #define AL_AxisStepperDirPort                        GPIOB
 #define AL_AxisStepperDirPin                         LL_GPIO_PIN_15
 
-#define Z_AxisStepper                                { .StepperIO = (GPIO_t){.Port = Z_AxisStepperStepPort, .Pin = Z_AxisStepperStepPin}, .DirectionIO = (GPIO_t){.Port = Z_AxisStepperDirPort, .Pin = Z_AxisStepperDirPin}, .CurrentSteps = 0, .TargetSteps = 0}
+#define Z_AxisStepper                                { .StepperIO = (GPIO_t){ .Port = Z_AxisStepperStepPort, .Pin = Z_AxisStepperStepPin }, .DirectionIO = (GPIO_t){ .Port = Z_AxisStepperDirPort, .Pin = Z_AxisStepperDirPin}, .CurrentSteps = 0, .TargetSteps = 0 }
+#define AL_AxisStepper                               { .StepperIO = (GPIO_t){ .Port = AL_AxisStepperStepPort, .Pin = AL_AxisStepperStepPin }, .DirectionIO = (GPIO_t){ .Port = AL_AxisStepperDirPort, .Pin = AL_AxisStepperDirPin}, .CurrentSteps = 0, .TargetSteps = 0 }
 
 #define Z_AxisStepsPerMillimeter                     (25)
-#define AL_AxisStepsPerMillimeter                    (25)
+#define AL_AxisStepsPerMillimeter                    (6.25)
 
 #endif
 
@@ -268,6 +273,13 @@
 #define LeftEncoder                                  { .TimPort = TIM8, .MaximumSpeed = 32678 }
 #define RightEncoder                                 { .TimPort = TIM2, .MaximumSpeed = 32678 }
 
+
+/*******************Voice Module Config********************/
+#define VoicePlayerBusyPort                          GPIOC
+#define VoicePlayerBusyPin                           LL_GPIO_PIN_2
+#define VoiceDeviceNumber                            (1)
+#define VoiceQueueSize                               (32)
+#define VoicePlayer                                  { .VoiceQueue = { 0 }, .USART_Port = UART5, .BusyIO = (GPIO_t){ .Port = VoicePlayerBusyPort, .Pin = VoicePlayerBusyPin } }
 
 /**
  * @group: Platform Configs

@@ -41,9 +41,9 @@ typedef enum
 
 void SetStepperSteps(Stepper_t *Stepper, uint32_t TargetSteps);
 
-void StepperForward(Stepper_t *Stepper, uint32_t Steps);
+void StepperForward(Stepper_t *Stepper, int32_t Steps);
 
-void StepperBackward(Stepper_t *Stepper, uint32_t Steps);
+void StepperBackward(Stepper_t *Stepper, int32_t Steps);
 
 #endif /* ArmType == LiftingPlatform */
 

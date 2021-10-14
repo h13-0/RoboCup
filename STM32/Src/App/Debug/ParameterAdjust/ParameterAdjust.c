@@ -39,11 +39,11 @@ __attribute__((always_inline)) inline void PIDAdjustHandler(char *data, uint8_t 
 	//3 Bytes keys:
 	//SpeedPID
 	float floatValue = 0;
-	MatchKeyFloat(data, len, "SP:", 3, floatValue, LeftSpeedPID.proportion = floatValue; RightSpeedPID.proportion = floatValue; return);
+	MatchKeyFloat(data, len, "SP:", 3, floatValue, LeftSpeedPID.proportion = floatValue; RightSpeedPID.proportion = floatValue * 0.000001; return);
 
-	MatchKeyFloat(data, len, "SI:", 3, floatValue, LeftSpeedPID.integration = floatValue; RightSpeedPID.integration = floatValue; return);
+	MatchKeyFloat(data, len, "SI:", 3, floatValue, LeftSpeedPID.integration = floatValue; RightSpeedPID.integration = floatValue * 0.000001; return);
 
-	MatchKeyFloat(data, len, "SD:", 3, floatValue, LeftSpeedPID.differention = floatValue; RightSpeedPID.differention = floatValue; return);
+	MatchKeyFloat(data, len, "SD:", 3, floatValue, LeftSpeedPID.differention = floatValue; RightSpeedPID.differention = floatValue * 0.000001; return);
 
 	MatchKeyFloat(data, len, "TS:", 3, floatValue, LeftSpeedPID.setpoint = floatValue; RightSpeedPID.setpoint = floatValue; return);
 

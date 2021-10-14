@@ -186,6 +186,7 @@ static IntersectType_t calculateIntersectionPoint(Circle_t Circles[], Point_t Po
  * 		RotationAngle: The Angle of rotation relative to the zero position. Range: [0, 180]
  * 		AxialLength:   The length of the axis relative to zero in millimeters.
  * 		Z_AxisHeight:  The height above the ground in millimeters.
+ * @note: The known problem is the program remains mathematically optimized.(but it works!)
  */
 ArmControlResult_t SetOpenLoopClawPosition(uint16_t RotationAngle, uint16_t AxialLength, uint16_t Z_AxisHeight)
 {

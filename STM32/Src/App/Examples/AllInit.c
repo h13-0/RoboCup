@@ -6,7 +6,7 @@
  */
 
 #include <AllInit.h>
-#include "ArmControl.h"
+
 #include "ports.h"
 
 #include "Drivers.h"
@@ -16,8 +16,10 @@
 #include "lvgl.h"
 //Motion Control
 #include "MotionControl.h"
-
 //Arm Control
+#include "ArmControl.h"
+//Voice Player
+#include "VoicePlayer.h"
 
 /**
  * @brief: Init all modules and peripherals.
@@ -53,4 +55,6 @@ void AllInit(void)
 	MotionControlInit();
 
 	ArmControlInit();
+
+	VoicePlayerInit();
 }

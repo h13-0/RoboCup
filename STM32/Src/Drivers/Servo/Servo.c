@@ -63,7 +63,7 @@ void CalibrationAllServo(void)
 	SetArmNodeAngle(ArmRotation, 0);
 	SetArmNodeAngle(ArmElongation, 0);
 	SetArmNodeAngle(ArmParallel, 0);
-	SetArmNodeAngle(ClawRotation, 0);
+	SetArmNodeAngle(ClawRotation, 180);
 	SetArmNodeAngle(ClawGrab, 180);
 #endif
 }

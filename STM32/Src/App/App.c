@@ -29,9 +29,9 @@ int App(void)
 	//Current posture: ¡ý
 	AllInit();
 
-	while(1);
+	//CalibrationAllServo();
 
-	//KeepSpeed();
+	KeepSpeed();
 
 	//CalibrationAllServo();
 
@@ -43,18 +43,6 @@ int App(void)
 		LogJustFloat(&data, 1);
 	}
 */
-	KeepDistance(500);
-
-	Stepper_t zAxisStepper = Z_AxisStepper;
-	StepperInit(&zAxisStepper);
-
-	while(1)
-	{
-		StepperForward(&zAxisStepper, 500);
-		SleepMillisecond(1000);
-		StepperBackward(&zAxisStepper, 500);
-		SleepMillisecond(1000);
-	}
 
 	//while(1);
 	//KeepSpeed();

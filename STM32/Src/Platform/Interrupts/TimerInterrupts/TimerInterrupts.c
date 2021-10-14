@@ -28,7 +28,7 @@ __attribute__((always_inline)) inline void TimerInterruptHandler(void)
  */
 __attribute__((always_inline)) inline void LVGLInterruptHandler(void)
 {
-	LVGLHandler();
+	UI_VoiceTimerHandler();
 }
 
 #if(ArmType == LiftingPlatform)
