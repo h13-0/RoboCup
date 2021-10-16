@@ -114,6 +114,51 @@ namespace RoboCup
 			return isSnowPearDetectorEnabled;
 		};
 
+		int GetAppleDetectorQuantityLimit(void) const noexcept
+		{
+			return appleDetectorQuantityLimit;
+		};
+
+		int GetBananaDetectorQuantityLimit(void) const noexcept
+		{
+			return bananaDetectorQuantityLimit;
+		};
+
+		int GetKiwiFruitDetectorQuantityLimit(void) const noexcept
+		{
+			return kiwiFruitDetectorQuantityLimit;
+		};
+
+		int GetLemonDetectorQuantityLimit(void) const noexcept
+		{
+			return lemonDetectorQuantityLimit;
+		};
+
+		int GetOrangeDetectorQuantityLimit(void) const noexcept
+		{
+			return orangeDetectorQuantityLimit;
+		};
+
+		int GetPeachDetectorQuantityLimit(void) const noexcept
+		{
+			return peachDetectorQuantityLimit;
+		};
+
+		int GetPearDetectorQuantityLimit(void) const noexcept
+		{
+			return pearDetectorQuantityLimit;
+		};
+
+		int GetPitayaDetectorQuantityLimit(void) const noexcept
+		{
+			return pitayaDetectorQuantityLimit;
+		};
+
+		int GetSnowPearDetectorQuantityLimit(void) const noexcept
+		{
+			return snowPearDetectorQuantityLimit;
+		};
+
 	private:
 		/// <summary>
 		/// Detector configs.

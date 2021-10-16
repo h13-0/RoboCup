@@ -15,7 +15,7 @@ std::vector<cv::RotatedRect> RoboCup::PearDetector::Detect(cv::InputArray InputB
 		hsvImage = InputHSV_FULL_Image.getMat();
 	}
 	else {
-		this->Detector::ConvertToHSV_FULL(InputBGR_Image, hsvImage);
+		ConvertToHSV_FULL(InputBGR_Image, hsvImage);
 	}
 
 	if (OutputFilledBinaryContours.needed())

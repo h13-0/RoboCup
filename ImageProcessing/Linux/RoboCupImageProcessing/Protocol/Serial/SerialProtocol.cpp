@@ -104,5 +104,6 @@ h13::SerialProtocol::~SerialProtocol()
 
 	serial_close(serial);
 	serial_free(serial);
+	serial = nullptr;
 }
 #endif

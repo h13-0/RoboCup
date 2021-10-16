@@ -11,12 +11,18 @@ RoboCup::FruitDetectorConfigs::FruitDetectorConfigs(const YAML::Node& Node) noex
 		appleDetectorQuantityLimit = GetIntegerValue(Node["AppleDetector"]["QuantityLimit"], appleDetectorQuantityLimit);
 		appleDetectorConfigs = AppleDetectorConfigs(Node["AppleDetector"]["DetectorConfigs"]);
 	}
+	else {
+		appleDetectorQuantityLimit = 0;
+	}
 	
 	isBananaDetectorEnabled = GetBoolValue(Node["BananaDetector"]["Enable"], isBananaDetectorEnabled);
 	if (isBananaDetectorEnabled)
 	{
 		bananaDetectorQuantityLimit = GetIntegerValue(Node["BananaDetector"]["QuantityLimit"], bananaDetectorQuantityLimit);
 		bananaDetectorConfigs = BananaDetectorConfigs(Node["BananaDetector"]["DetectorConfigs"]);
+	}
+	else {
+		bananaDetectorQuantityLimit = 0;
 	}
 
 	isKiwiFruitDetectorEnabled = GetBoolValue(Node["KiwiFruitDetector"]["Enable"], isKiwiFruitDetectorEnabled);
@@ -25,12 +31,18 @@ RoboCup::FruitDetectorConfigs::FruitDetectorConfigs(const YAML::Node& Node) noex
 		kiwiFruitDetectorQuantityLimit = GetIntegerValue(Node["KiwiFruitDetector"]["QuantityLimit"], kiwiFruitDetectorQuantityLimit);
 		kiwiFruitDetectorConfigs = KiwiFruitDetectorConfigs(Node["KiwiFruitDetector"]["DetectorConfigs"]);
 	}
+	else {
+		kiwiFruitDetectorQuantityLimit = 0;
+	}
 
 	isLemonDetectorEnabled = GetBoolValue(Node["LemonDetector"]["Enable"], isLemonDetectorEnabled);
 	if (isLemonDetectorEnabled)
 	{
 		lemonDetectorQuantityLimit = GetIntegerValue(Node["LemonDetector"]["QuantityLimit"], lemonDetectorQuantityLimit);
 		lemonDetectorConfigs = LemonDetectorConfigs(Node["LemonDetector"]["DetectorConfigs"]);
+	}
+	else {
+		lemonDetectorQuantityLimit = 0;
 	}
 
 	isOrangeDetectorEnabled = GetBoolValue(Node["OrangeDetector"]["Enable"], isOrangeDetectorEnabled);
@@ -39,12 +51,18 @@ RoboCup::FruitDetectorConfigs::FruitDetectorConfigs(const YAML::Node& Node) noex
 		orangeDetectorQuantityLimit = GetIntegerValue(Node["OrangeDetector"]["QuantityLimit"], orangeDetectorQuantityLimit);
 		orangeDetectorConfigs = OrangeDetectorConfigs(Node["OrangeDetector"]["DetectorConfigs"]);
 	}
+	else {
+		orangeDetectorQuantityLimit = 0;
+	}
 
 	isPeachDetectorEnabled = GetBoolValue(Node["PeachDetector"]["Enable"], isPeachDetectorEnabled);
 	if (isPeachDetectorEnabled)
 	{
 		peachDetectorQuantityLimit = GetIntegerValue(Node["PeachDetector"]["QuantityLimit"], peachDetectorQuantityLimit);
 		peachDetectorConfigs = PeachDetectorConfigs(Node["PeachDetector"]["DetectorConfigs"]);
+	}
+	else {
+		peachDetectorQuantityLimit = 0;
 	}
 
 	isPearDetectorEnabled = GetBoolValue(Node["PearDetector"]["Enable"], isPearDetectorEnabled);
@@ -53,6 +71,9 @@ RoboCup::FruitDetectorConfigs::FruitDetectorConfigs(const YAML::Node& Node) noex
 		pearDetectorQuantityLimit = GetIntegerValue(Node["PearDetector"]["QuantityLimit"], pearDetectorQuantityLimit);
 		pearDetectorConfigs = PearDetectorConfigs(Node["PearDetector"]["DetectorConfigs"]);
 	}
+	else {
+		pearDetectorQuantityLimit = 0;
+	}
 
 	isPitayaDetectorEnabled = GetBoolValue(Node["PitayaDetector"]["Enable"], isPitayaDetectorEnabled);
 	if (isPitayaDetectorEnabled)
@@ -60,11 +81,17 @@ RoboCup::FruitDetectorConfigs::FruitDetectorConfigs(const YAML::Node& Node) noex
 		pitayaDetectorQuantityLimit = GetIntegerValue(Node["PitayaDetector"]["QuantityLimit"], pitayaDetectorQuantityLimit);
 		pitayaDetectorConfigs = PitayaDetectorConfigs(Node["PitayaDetector"]["DetectorConfigs"]);
 	}
+	else {
+		pitayaDetectorQuantityLimit = 0;
+	}
 
 	isSnowPearDetectorEnabled = GetBoolValue(Node["SnowPearDetector"]["Enable"], isSnowPearDetectorEnabled);
 	if (isSnowPearDetectorEnabled)
 	{
 		snowPearDetectorQuantityLimit = GetIntegerValue(Node["SnowPearDetector"]["QuantityLimit"], snowPearDetectorQuantityLimit);
 		snowPearDetectorConfigs = SnowPearDetectorConfigs(Node["SnowPearDetector"]["DetectorConfigs"]);
+	}
+	else {
+		snowPearDetectorQuantityLimit = 0;
 	}
 }

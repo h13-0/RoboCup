@@ -15,6 +15,7 @@
 RoboCup::MainWorkingFlow::MainWorkingFlow(const Configs& Configs)
     : WorkingFlow(Configs), fruitDetector(FruitDetector(Configs.GetFruitDetectorSettings()))
     , mode(WorkingMode::FruitDetection), appleDetector(AppleDetector(Configs.GetAppleDetectorSettings()))
+    , targetDetector(TargetDetectorConfigs(Configs.GetTargetDetectorSettings()))
 {
     using namespace cv;
     using namespace h13;
@@ -32,7 +33,7 @@ RoboCup::MainWorkingFlow::MainWorkingFlow(const Configs& Configs)
         break;
 
     default:
-        monitor = new OpenCV_Monitor();
+        monitor = nullptr;
         break;
     }
 #else
@@ -69,6 +70,7 @@ RoboCup::MainWorkingFlow::MainWorkingFlow(const Configs& Configs)
         [&](void* DataPtr, int Length)
         {
             std::string cmd((char *)DataPtr, 0, Length);
+            std::unique_lock<std::mutex> lock(modeMutex);
             if (!cmd.compare("AppleDetectMax"))
             {
                 mode = WorkingMode::AppleDetectMax;
@@ -86,8 +88,8 @@ RoboCup::MainWorkingFlow::MainWorkingFlow(const Configs& Configs)
             }
             else if (!cmd.compare("TargetDetect"))
             {
-                mode = WorkingMode::TargetDetect;
-                LOG(INFO) << "Switch to mode: TargetDetect";
+                mode = WorkingMode::TargetDetection;
+                LOG(INFO) << "Switch to mode: TargetDetection";
             }
             else if (!cmd.compare("FruitDetection"))
             {
@@ -136,35 +138,46 @@ int RoboCup::MainWorkingFlow::Run()
 
                 auto start = std::chrono::high_resolution_clock::now();
                 //Dispatch.
-                switch (mode)
+                WorkingMode::WorkingMode _mode;
+                {
+                    std::unique_lock<std::mutex> lock(modeMutex);
+                    _mode = mode;
+                }
+                switch (_mode)
                 {
                 case RoboCup::WorkingMode::WorkingMode::StandBy:
-                    StandBy(frame);
+                    standBy(frame);
                     break;
                 case RoboCup::WorkingMode::WorkingMode::AppleDetectMax:
-                    AppleDetectMax(frame);
+                    appleDetectMax(frame);
                     break;
                 case RoboCup::WorkingMode::WorkingMode::AppleDetectLeft:
-                    AppleDetectLeft(frame);
+                    appleDetectLeft(frame);
                     break;
                 case RoboCup::WorkingMode::WorkingMode::AppleDetectRight:
-                    AppleDetectRight(frame);
+                    appleDetectRight(frame);
                     break;
-                case RoboCup::WorkingMode::WorkingMode::TargetDetect:
-                    TargetDetect(frame);
+                case RoboCup::WorkingMode::WorkingMode::TargetDetection:
+                    targetDetect(frame);
                     break;
                 case RoboCup::WorkingMode::WorkingMode::FruitDetection:
-                    FruitDetection(frame);
+                    fruitDetection(frame);
                     break;
                 default:
                     break;
                 }
                 auto end = std::chrono::high_resolution_clock::now();
                 std::chrono::duration<double, std::milli> tm = end - start;
-                putText(frame, "fps: " + to_string(1000 / tm.count()), Point(0, 24), FONT_HERSHEY_COMPLEX, 1, Scalar(255, 255, 255));
-                putText(frame, "Mode: " + RoboCup::WorkingMode::GetLabelString(mode), Point(0, frame.cols - 24), FONT_HERSHEY_COMPLEX, 1, Scalar(255, 255, 255));
-                monitor->Display("Final", frame);
-                ReportWorkingMode(mode);
+                if (_mode != WorkingMode::StandBy)
+                {
+                    putText(frame, "fps: " + to_string(1000 / tm.count()), Point(0, 24), FONT_HERSHEY_COMPLEX, 1, Scalar(255, 255, 255));
+                }
+                putText(frame, "Mode: " + RoboCup::WorkingMode::GetLabelString(_mode), Point(0, frame.cols - 24), FONT_HERSHEY_COMPLEX, 1, Scalar(255, 255, 255));
+                if (monitor)
+                {
+                    monitor->Display("Final", frame);
+                }
+                reportWorkingMode(_mode);
             }
         }
         else {
@@ -176,31 +189,12 @@ int RoboCup::MainWorkingFlow::Run()
     }
 }
 
-void RoboCup::MainWorkingFlow::StandBy(cv::InputOutputArray InputOutputBGR_Image)
+void RoboCup::MainWorkingFlow::standBy(cv::InputOutputArray InputOutputBGR_Image)
 {
 
 }
 
-void RoboCup::MainWorkingFlow::AppleDetectMax(cv::InputOutputArray InputOutputBGR_Image)
-{
-    using namespace cv;
-    auto results = appleDetector.Detect(InputOutputBGR_Image);
-    for (auto result : results)
-    {
-        Point2f point[4];
-        //result.points(point);
-        result.points(point);
-        Rect rect = result.boundingRect();
-        rectangle(InputOutputBGR_Image, rect, Scalar(0, 255, 0), 2);
-        putText(InputOutputBGR_Image, "Target Apple", Point(rect.x, rect.y - 16), FONT_HERSHEY_COMPLEX, 1, Scalar(0, 255, 0));
-        for (int index = 0; index < 4; index++)
-        {
-            line(InputOutputBGR_Image, point[index], point[(index + 1) % 4], cv::Scalar(255, 0, 0), 2);
-        }
-    }
-}
-
-void RoboCup::MainWorkingFlow::AppleDetectLeft(cv::InputOutputArray InputOutputBGR_Image)
+void RoboCup::MainWorkingFlow::appleDetectMax(cv::InputOutputArray InputOutputBGR_Image)
 {
     using namespace cv;
     auto results = appleDetector.Detect(InputOutputBGR_Image);
@@ -219,7 +213,7 @@ void RoboCup::MainWorkingFlow::AppleDetectLeft(cv::InputOutputArray InputOutputB
     }
 }
 
-void RoboCup::MainWorkingFlow::AppleDetectRight(cv::InputOutputArray InputOutputBGR_Image)
+void RoboCup::MainWorkingFlow::appleDetectLeft(cv::InputOutputArray InputOutputBGR_Image)
 {
     using namespace cv;
     auto results = appleDetector.Detect(InputOutputBGR_Image);
@@ -238,12 +232,43 @@ void RoboCup::MainWorkingFlow::AppleDetectRight(cv::InputOutputArray InputOutput
     }
 }
 
-void RoboCup::MainWorkingFlow::TargetDetect(cv::InputOutputArray InputOutputBGR_Image)
+void RoboCup::MainWorkingFlow::appleDetectRight(cv::InputOutputArray InputOutputBGR_Image)
 {
-
+    using namespace cv;
+    auto results = appleDetector.Detect(InputOutputBGR_Image);
+    for (auto result : results)
+    {
+        Point2f point[4];
+        //result.points(point);
+        result.points(point);
+        Rect rect = result.boundingRect();
+        rectangle(InputOutputBGR_Image, rect, Scalar(0, 255, 0), 2);
+        putText(InputOutputBGR_Image, "Target Apple", Point(rect.x, rect.y - 16), FONT_HERSHEY_COMPLEX, 1, Scalar(0, 255, 0));
+        for (int index = 0; index < 4; index++)
+        {
+            line(InputOutputBGR_Image, point[index], point[(index + 1) % 4], cv::Scalar(255, 0, 0), 2);
+        }
+    }
 }
 
-void RoboCup::MainWorkingFlow::FruitDetection(cv::InputOutputArray InputOutputBGR_Image)
+void RoboCup::MainWorkingFlow::targetDetect(cv::InputOutputArray InputOutputBGR_Image)
+{
+    using namespace std;
+    using namespace cv;
+
+    auto targets = targetDetector.Detect(InputOutputBGR_Image);
+    for (auto target : targets)
+    {
+        Point2f point[4];
+        target.points(point);
+        for (int index = 0; index < 4; index++)
+        {
+            line(InputOutputBGR_Image, point[index], point[(index + 1) % 4], cv::Scalar(0, 0, 255), 2);
+        }
+    }
+}
+
+void RoboCup::MainWorkingFlow::fruitDetection(cv::InputOutputArray InputOutputBGR_Image)
 {
     using namespace std;
     using namespace cv;
@@ -265,19 +290,21 @@ void RoboCup::MainWorkingFlow::FruitDetection(cv::InputOutputArray InputOutputBG
     }
 }
 
-void RoboCup::MainWorkingFlow::ReportWorkingMode(const WorkingMode::WorkingMode& Mode)
+void RoboCup::MainWorkingFlow::reportWorkingMode(const WorkingMode::WorkingMode& Mode)
 {
     protocol->SendPacket("WM", int8_t(Mode));
 }
 
-void RoboCup::MainWorkingFlow::SendAppleCoordinates(const float& X_Coordinates, const float& Y_Coordinates)
+void RoboCup::MainWorkingFlow::sendAppleCoordinates(const float& X_Coordinates, const float& Y_Coordinates)
 {
     protocol->SendPacket("AppCenX", X_Coordinates);
     protocol->SendPacket("AppCenY", Y_Coordinates);
 }
 
-void RoboCup::MainWorkingFlow::SendTargetCoordinates(const float& X_Coordinates, const float& Y_Coordinates)
+void RoboCup::MainWorkingFlow::sendTargetCoordinates(const float& X_Coordinates, const float& Y_Coordinates)
 {
     //protocol->SendPacket("", );
     //protocol->SendPacket("", );
 }
+
+

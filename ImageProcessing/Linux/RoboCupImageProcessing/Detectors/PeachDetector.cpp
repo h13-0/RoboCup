@@ -15,7 +15,7 @@ std::vector<cv::RotatedRect> RoboCup::PeachDetector::Detect(cv::InputArray Input
 		hsvImage = InputHSV_FULL_Image.getMat();
 	}
 	else {
-		this->Detector::ConvertToHSV_FULL(InputBGR_Image, hsvImage);
+		ConvertToHSV_FULL(InputBGR_Image, hsvImage);
 	}
 
 	if (OutputFilledBinaryContours.needed())
@@ -27,7 +27,7 @@ std::vector<cv::RotatedRect> RoboCup::PeachDetector::Detect(cv::InputArray Input
 	}
 
 	Mat filterOutout;
-	this->Detector::Filter(hsvImage, filterOutout);
+	Filter(hsvImage, filterOutout);
 
 	Mat erodeKernel = getStructuringElement(MORPH_ELLIPSE, Size(erodeKernelSize, erodeKernelSize));
 	erode(filterOutout, filterOutout, erodeKernel);

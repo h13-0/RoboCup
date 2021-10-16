@@ -57,13 +57,15 @@ namespace RoboCup
 		/// <param name="Input">BGR Image.</param>
 		/// <note>Identification sequence:
 		/// Apple->Lemon->Orange->Banana->Pitaya
-		///		->Peach->SnowPear->KiwiFruit->Pear
+		///		->Peach->SnowPear->Pear->KiwiFruit
 		/// (Confidence ranking from high to low.) </note>
 		/// <returns>Result in std::vector<RoboCup::Result_t>.</returns>
 		std::vector<RoboCup::Result_t> Detect(cv::InputArray InputBGR_Image) noexcept;
 
 	private:
 		static void maskXOR_Operation(cv::InputArray InputImage, cv::InputArray InputMask, cv::OutputArray OutputImage);
+		static bool rectSizeCompare(const cv::RotatedRect& Rect1, const cv::RotatedRect& Rect2);
+		std::vector<RoboCup::Result_t> checkFruitDetectionResult(const std::vector<RoboCup::Result_t>& Results);
 
 		FruitDetectorConfigs configs;
 

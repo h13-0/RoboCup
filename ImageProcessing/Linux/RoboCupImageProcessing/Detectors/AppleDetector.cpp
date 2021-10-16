@@ -21,7 +21,7 @@ std::vector<cv::RotatedRect> RoboCup::AppleDetector::Detect(cv::InputArray Input
 		hsvImage = InputHSV_FULL_Image.getMat();
 	}
 	else {
-		this->Detector::ConvertToHSV_FULL(InputBGR_Image, hsvImage);
+		ConvertToHSV_FULL(InputBGR_Image, hsvImage);
 	}
 
 	if (OutputFilledBinaryContours.needed())
@@ -33,39 +33,12 @@ std::vector<cv::RotatedRect> RoboCup::AppleDetector::Detect(cv::InputArray Input
 	}
 
 	Mat filterOutout = Mat::zeros(hsvImage.size(), CV_8UC1);
-	for (auto filter : positiveFilters)
-	{
-		Mat positiveOutput;
-		filter.FilterWithHSV_FULL_Image(hsvImage, positiveOutput);
-		bitwise_or(filterOutout, positiveOutput, filterOutout);
-	}
 
-#ifdef _DEBUG
+	Filter(hsvImage, filterOutout);
 	
-	("ApplePositive", filterOutout);
-#endif
-
-	if (negativeFilters.size() > 0)
-	{
-		Mat negativeOutout = Mat::zeros(hsvImage.size(), CV_8UC1);
-		for (auto filter : negativeFilters)
-		{
-			Mat subNegativeOutput;
-			filter.FilterWithHSV_FULL_Image(hsvImage, subNegativeOutput);
-			bitwise_or(negativeOutout, subNegativeOutput, negativeOutout);
-		}
-		bitwise_not(negativeOutout, negativeOutout);
-		bitwise_and(filterOutout, negativeOutout, filterOutout);
-	}
-
 	//Corrosion image to eliminate pear and kiwi interference.
 	Mat erodeKernel = getStructuringElement(MORPH_ELLIPSE, Size(erodeKernelSize, erodeKernelSize));
 	erode(filterOutout, filterOutout, erodeKernel);
-
-#ifdef _DEBUG
-	
-	("AppleFinal", filterOutout);
-#endif
 
 	//Judge the roundness of the edge to select the apple.
 	vector<vector<Point>> contours;

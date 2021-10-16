@@ -10,7 +10,7 @@ namespace RoboCup
 	class PearDetector : public Detector
 	{
 	public:
-		PearDetector(const std::vector<h13::HSV_Threshold_t>& PositiveThresholds = { h13::HSV_Threshold(40, 61, 110, 255, 30, 135), h13::HSV_Threshold(50, 66, 150, 255, 40, 190) },
+		PearDetector(const std::vector<h13::HSV_Threshold_t>& PositiveThresholds = { h13::HSV_Threshold(40, 61, 145, 255, 30, 255), h13::HSV_Threshold(55, 66, 185, 255, 40, 255) },
 			const std::vector<h13::HSV_Threshold_t>& NegativeThresholds = {  }, 
 			float MinimumSize = 1000,
 			int ErodeKernelSize = 5,

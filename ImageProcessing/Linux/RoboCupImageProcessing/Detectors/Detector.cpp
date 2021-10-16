@@ -17,17 +17,17 @@ void RoboCup::Detector::ConvertToHSV_FULL(cv::InputArray InputBGR_Image, cv::Out
 }
 
 /// <summary>
-/// Obtain color patches according to fixedand common methods.
+/// Use positive and negative as masks.
 /// </summary>
 /// <param name="InputHSV_FULL_Image"> Input image in HSV_FULL. </param>
-/// <param name="OutputBinaryImage"> Output image in Binary. </param>
-void RoboCup::Detector::Filter(cv::InputArray InputHSV_FULL_Image, cv::OutputArray OutputBinaryImage)
+/// <param name="OutputBinaryImage"> Output mask in Binary. </param>
+void RoboCup::Detector::Filter(cv::InputArray InputHSV_FULL_Image, cv::OutputArray OutputBinaryMask)
 {
 	using namespace std;
 	using namespace cv;
 
-	OutputBinaryImage.create(InputHSV_FULL_Image.size(), CV_8UC1);
-	Mat output = OutputBinaryImage.getMat();
+	OutputBinaryMask.create(InputHSV_FULL_Image.size(), CV_8UC1);
+	Mat output = OutputBinaryMask.getMat();
 	output.setTo(0);
 
 	for (auto filter : positiveFilters)
@@ -55,4 +55,25 @@ void RoboCup::Detector::Filter(cv::InputArray InputHSV_FULL_Image, cv::OutputArr
 #ifdef _DEBUG
 	imshow("filter", output);
 #endif
+}
+
+/// <summary>
+/// Calculate rect overlap rate.
+/// </summary>
+/// <param name="Rect1"></param>
+/// <param name="Rect2"></param>
+/// <returns>overlap rate.</returns>
+float RoboCup::Detector::calculateRectOverlapRate(const cv::Rect& Rect1, const cv::Rect& Rect2)
+{
+	double x1 = fmax(Rect1.x, Rect2.x);
+	double x2 = fmin(Rect1.x + Rect1.width, Rect2.x + Rect2.width);
+	double y1 = fmax(Rect1.y, Rect2.y);
+	double y2 = fmin(Rect1.y + Rect1.height, Rect2.y + Rect2.height);
+	if ((x2 < x1) || (y2 < y1))
+	{
+		return 0.0f;
+	}
+	else {
+		return ((x2 - x1) * (y2 - y1)) / fmin(Rect1.area(), Rect2.area());
+	}
 }

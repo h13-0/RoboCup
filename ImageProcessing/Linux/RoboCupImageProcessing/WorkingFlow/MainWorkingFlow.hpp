@@ -9,6 +9,7 @@
 #include "WorkingFlow.hpp"
 #include "Monitor.hpp"
 #include "FruitDetector.hpp"
+#include "TargetDetector.hpp"
 #include "Protocol.hpp"
 #include "SerialProtocol.hpp"
 namespace RoboCup
@@ -18,7 +19,7 @@ namespace RoboCup
 		AppleDetectMax,
 		AppleDetectLeft,
 		AppleDetectRight,
-		TargetDetect,
+		TargetDetection,
 		FruitDetection
 	);
 
@@ -36,18 +37,18 @@ namespace RoboCup
 		/// Working method realize.
 		/// </summary>
 		/// <param name="InputOutputBGR_Image">Image in BGR.</param>
-		void StandBy(cv::InputOutputArray InputOutputBGR_Image);
-		void AppleDetectMax(cv::InputOutputArray InputOutputBGR_Image);
-		void AppleDetectLeft(cv::InputOutputArray InputOutputBGR_Image);
-		void AppleDetectRight(cv::InputOutputArray InputOutputBGR_Image);
-		void TargetDetect(cv::InputOutputArray InputOutputBGR_Image);
-		void FruitDetection(cv::InputOutputArray InputOutputBGR_Image);
+		void standBy(cv::InputOutputArray InputOutputBGR_Image);
+		void appleDetectMax(cv::InputOutputArray InputOutputBGR_Image);
+		void appleDetectLeft(cv::InputOutputArray InputOutputBGR_Image);
+		void appleDetectRight(cv::InputOutputArray InputOutputBGR_Image);
+		void targetDetect(cv::InputOutputArray InputOutputBGR_Image);
+		void fruitDetection(cv::InputOutputArray InputOutputBGR_Image);
 
-		void ReportWorkingMode(const WorkingMode::WorkingMode& Mode);
+		void reportWorkingMode(const WorkingMode::WorkingMode& Mode);
 
-		void SendAppleCoordinates(const float& X_Coordinates, const float& Y_Coordinates);
+		void sendAppleCoordinates(const float& X_Coordinates, const float& Y_Coordinates);
 
-		void SendTargetCoordinates(const float& X_Coordinates, const float& Y_Coordinates);
+		void sendTargetCoordinates(const float& X_Coordinates, const float& Y_Coordinates);
 
 		//void SendFruitDetectionResult();
 
@@ -59,11 +60,14 @@ namespace RoboCup
 		cv::VideoCapture capture;
 		FruitDetector fruitDetector;
 		AppleDetector appleDetector;
+		TargetDetector targetDetector;
 
 		/// <summary>
 		/// Base variables.
 		/// </summary>
 		WorkingMode::WorkingMode mode;
+		std::mutex modeMutex;
+
 		bool exit;
 		bool exited;
 		std::condition_variable exitedConditionVariable;

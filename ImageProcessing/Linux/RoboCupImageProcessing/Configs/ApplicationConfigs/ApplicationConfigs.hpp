@@ -11,7 +11,8 @@ namespace RoboCup
 	enum class MonitorType
 	{
 		OpenCV,
-		FrameBuffer
+		FrameBuffer,
+		None
 	};
 
 	enum class VideoDeviceType
@@ -44,8 +45,8 @@ namespace RoboCup
 				frameBufferPath = GetStringValue(Node["FrameBufferPath"], frameBufferPath);
 			}
 			else {
-				LOG(WARNING) << R"(Read configuration node ["ApplicationSettings"]["MonitorType"] failed, using default MonitorType: Auto)";
-				monitorType = MonitorType::FrameBuffer;
+				LOG(WARNING) << R"(Read configuration node ["ApplicationSettings"]["MonitorType"] failed, using MonitorType: None)";
+				monitorType = MonitorType::None;
 				frameBufferPath = GetStringValue(Node["FrameBufferPath"], frameBufferPath);
 			}
 #endif

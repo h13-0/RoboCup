@@ -128,6 +128,19 @@ FruitDetectorSettings:
       MinimumLengthWidthRatio: 0.5
       MinimumContourArea: 2200
       MaximumContourArea: 15000
+  
+  PearDetector:
+    Enable: true
+    QuantityLimit: 4
+    DetectorConfigs:
+      PositiveThresholds:
+      - [40, 61, 145, 255, 30, 255]
+      - [50, 66, 185, 255, 40, 255]
+      NegativeThresholds:
+      ReflectiveThresholds:
+      MinimumSize: 1000
+      ErodeKernelSize: 5
+      MinimumLengthWidthRatio: 0.5
           
   KiwiFruitDetector:
     Enable: true
@@ -141,23 +154,21 @@ FruitDetectorSettings:
       - [0, 255, 0, 40, 0, 255]
       ReflectiveThresholds:
       MinimumSize: 1300
-          
-  PearDetector:
-    Enable: true
-    QuantityLimit: 4
-    DetectorConfigs:
-      PositiveThresholds:
-      - [40, 61, 110, 255, 30, 135]
-      - [50, 66, 150, 255, 40, 190]
-      NegativeThresholds:
-      ReflectiveThresholds:
-      MinimumSize: 1000
-      ErodeKernelSize: 5
-      MinimumLengthWidthRatio: 0.5
       
 # Target detector parameters settings.
 TargetDetectorSettings:
-  
+  DetectorConfigs:
+    PositiveThresholds:
+    - [116, 180, 0, 70, 90, 255]
+    NegativeThresholds:
+    ReflectiveThresholds:
+    - [240, 255, 155, 255, 80, 255]
+    MinimumPositiveSize: 5000
+    MinimumPositiveLengthWidthRatio: 0.4
+    MinimumReflectiveSize: 2000
+    MinimumReflectiveLengthWidthRatio: 0.4
+    MinimumRectOverlapRate: 0.5
+
 # Apple detector parameter settings.
 AppleDetectorSettings:
   DetectorConfigs:

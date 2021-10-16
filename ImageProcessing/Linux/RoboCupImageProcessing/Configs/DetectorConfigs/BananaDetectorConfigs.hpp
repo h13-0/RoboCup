@@ -15,6 +15,7 @@ namespace RoboCup
 			positiveThresholds = { h13::HSV_Threshold(26, 55, 60, 175, 174, 255) };
 			negativeThresholds = { };
 			reflectiveThresholds = { };
+			minimumSize = 2000;
 		};
 
 		/// <summary>

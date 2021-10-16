@@ -71,11 +71,19 @@ namespace RoboCup
 		void ConvertToHSV_FULL(cv::InputArray InputBGR_Image, cv::OutputArray OutputHSV_FULL_Image);
 
 		/// <summary>
-		/// Obtain color patches according to fixedand common methods.
+		/// Use positive and negative as masks.
 		/// </summary>
 		/// <param name="InputHSV_FULL_Image"> Input image in HSV_FULL. </param>
-		/// <param name="OutputBinaryImage"> Output image in Binary. </param>
-		void Filter(cv::InputArray InputHSV_FULL_Image, cv::OutputArray OutputBinaryImage);
+		/// <param name="OutputBinaryImage"> Output mask in Binary. </param>
+		void Filter(cv::InputArray InputHSV_FULL_Image, cv::OutputArray OutputBinaryMask);
+
+		/// <summary>
+		/// Calculate rect overlap rate.
+		/// </summary>
+		/// <param name="Rect1"></param>
+		/// <param name="Rect2"></param>
+		/// <returns>overlap rate.</returns>
+		float calculateRectOverlapRate(const cv::Rect& Rect1, const cv::Rect& Rect2);
 
 		/// <summary>
 		/// Protected variables of detectors.
