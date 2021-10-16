@@ -69,6 +69,51 @@ namespace RoboCup
 			return snowPearDetectorConfigs;
 		};
 
+		bool IsAppleDetectorEnabled(void) const noexcept
+		{
+			return isAppleDetectorEnabled;
+		};
+		
+		bool IsBananaDetectorEnabled(void) const noexcept
+		{
+			return isBananaDetectorEnabled;
+		};
+
+		bool IsKiwiFruitDetectorEnabled(void) const noexcept
+		{
+			return isKiwiFruitDetectorEnabled;
+		};
+
+		bool IsLemonDetectorEnabled(void) const noexcept
+		{
+			return isLemonDetectorEnabled;
+		};
+
+		bool IsOrangeDetectorEnabled(void) const noexcept
+		{
+			return isOrangeDetectorEnabled;
+		};
+
+		bool IsPeachDetectorEnabled(void) const noexcept
+		{
+			return isPeachDetectorEnabled;
+		};
+
+		bool IsPearDetectorEnabled(void) const noexcept
+		{
+			return isPeachDetectorEnabled;
+		};
+
+		bool IsPitayaDetectorEnabled(void) const noexcept
+		{
+			return isPitayaDetectorEnabled;
+		};
+
+		bool IsSnowPearDetectorEnabled(void) const noexcept
+		{
+			return isSnowPearDetectorEnabled;
+		};
+
 	private:
 		/// <summary>
 		/// Detector configs.

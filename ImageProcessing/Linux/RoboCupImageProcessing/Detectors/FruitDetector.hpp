@@ -47,17 +47,7 @@ namespace RoboCup
 		/// Construct function.
 		/// </summary>
 		/// <param name="configs">Configs.</param>
-		FruitDetector(const FruitDetectorConfigs& configs) noexcept
-			: configs(configs)
-			, appleDetector(configs.GetAppleDetectorConfigs())
-			, lemonDetector(configs.GetLemonDetectorConfigs())
-			, orangeDetector(configs.GetOrangeDetectorConfigs())
-			, bananaDetector(configs.GetBananaDetectorConfigs())
-			, pitayaDetector(configs.GetPitayaDetectorConfigs())
-			, peachDetector(configs.GetPeachDetectorConfigs())
-			, kiwiFruitDetector(configs.GetKiwiFruitDetectorConfigs())
-			, snowPearDetector(configs.GetSnowPearDetectorConfigs())
-			, pearDetector(configs.GetPearDetectorConfigs()) { };
+		FruitDetector(const FruitDetectorConfigs& configs) noexcept;
 
 		~FruitDetector() noexcept { };
 

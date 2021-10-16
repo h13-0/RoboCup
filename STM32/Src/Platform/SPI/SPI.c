@@ -46,12 +46,12 @@ inline __attribute__((always_inline)) inline SPI_Error_t SPIWriteByte(uint8_t da
  */
 inline __attribute__((always_inline)) void LCDSetRST(void)
 {
-	LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_5);
+	LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_2);
 }
 
 inline __attribute__((always_inline)) void LCDResetRST(void)
 {
-	LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_5);
+	LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_2);
 }
 
 inline __attribute__((always_inline)) void LCDSetCS(void)

@@ -10,8 +10,7 @@
 
 #include "RobotConfigs.h"
 #include <stdint.h>
-#include "GPIO.h"
-#include "USART.h"
+#include "ports.h"
 
 void DF_PlayerVoiceQueueTimerHandler(void);
 
@@ -27,6 +26,7 @@ typedef struct
 	/******** Private variables ********/
 	uint8_t _playerID;
 	uint8_t _latestVoicePositionInQueue;
+	mtime_t _lastPlayTime;
 } DF_PlayerMini_t;
 
 typedef enum

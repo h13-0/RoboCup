@@ -14,7 +14,7 @@
 
 RoboCup::MainWorkingFlow::MainWorkingFlow(const Configs& Configs)
     : WorkingFlow(Configs), fruitDetector(FruitDetector(Configs.GetFruitDetectorSettings()))
-    , mode(WorkingMode::StandBy), appleDetector(AppleDetector(Configs.GetAppleDetectorSettings()))
+    , mode(WorkingMode::FruitDetection), appleDetector(AppleDetector(Configs.GetAppleDetectorSettings()))
 {
     using namespace cv;
     using namespace h13;
@@ -42,11 +42,19 @@ RoboCup::MainWorkingFlow::MainWorkingFlow(const Configs& Configs)
     switch (appConfigs.GetVideoDeviceType())
     {
     case VideoDeviceType::Camera:
+#if defined(__linux__)
         capture.open(appConfigs.GetCameraID(), cv::CAP_V4L2);
+#else
+        capture.open(appConfigs.GetCameraID());
+#endif
         break;
 
     case VideoDeviceType::VideoStream:
+#if defined(__linux__)
         capture.open(appConfigs.GetVideoStreamPath(), cv::CAP_V4L2);
+#else
+        capture.open(appConfigs.GetVideoStreamPath());
+#endif
         break;
 
     default:

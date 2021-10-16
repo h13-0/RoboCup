@@ -21,20 +21,34 @@
  */
 #define MaxSpeed                                     (2500)  //
 //DeadZone
-#define ForwardDeadZone                              (0.275)
-#define BackwardDeadZone                             (0.275)
+#define ForwardDeadZone                              (0.0)
+#define BackwardDeadZone                             (0.0)
 //Accurary
 #define AngleAccurary                                (2.0)   //degree
-#define AngleAdjustTimeLimit                         (3000)  //milliseconds
+#define AngleAdjustTimeLimit                         (6000)  //milliseconds
 #define AngleStableTimeThreshold                     (500)   //milliseconds
 #define ForwardAccuracy                              (20)    //millimeters
 #define ForwardAdjustTimeLimit                       (15000)
 #define ForwardStableTimeThreshold                   (500)
+#define ForwardTrimDistance                          (50)    //millimeters, under this distance error, the angle loop is closed to improve the approximation speed.
+#define ForwardTrimAngleErrorLimit                   (2.0)   //degree, allowable angle error when fine tuning distance.
+#define ForwardTrimTimeLimit                         (3000)  //milliseconds
+//Motion parameters.
+#define DisktopDistanceBeforeTurn                    (510)   //millimeters
+
 //PID
 //Speed PID
-#define SpeedPID_Proportion                          (0.00000123)
-#define SpeedPID_Integration                         (0.0000005159)
-#define SpeedPID_Differention                        (0.0)
+#define SpeedPID_Proportion                          (0.002500)
+#define SpeedPID_Integration                         (0.000080)
+#define SpeedPID_Differention                        (0.000075)
+//Angle PID
+#define AnglePID_Proportion                          (500.0)
+#define AnglePID_Integration                         (0.0)
+#define AnglePID_Differention                        (20.0)
+//Forward PID
+#define ForwardPID_Proportion                        (-5.0)
+#define ForwardPID_Integration                       (0.0)
+#define ForwardPID_Differention                      (0.0)
 
 /************************Arm Control************************/
 #define GrabHeight                                   (245)                 //millimeters
@@ -279,6 +293,7 @@
 #define VoicePlayerBusyPin                           LL_GPIO_PIN_2
 #define VoiceDeviceNumber                            (1)
 #define VoiceQueueSize                               (32)
+#define BroadcastIntervalMillisecond                 (750)
 #define VoicePlayer                                  { .VoiceQueue = { 0 }, .USART_Port = UART5, .BusyIO = (GPIO_t){ .Port = VoicePlayerBusyPort, .Pin = VoicePlayerBusyPin } }
 
 /**

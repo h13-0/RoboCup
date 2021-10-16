@@ -146,6 +146,8 @@ void SetRightMotorPWM(float PWM_DutyRatio)
  */
 void Brake(void)
 {
+	SetPWM_DutyRatio(&channelD0, 1);
+	SetPWM_DutyRatio(&channelD1, 1);
 	SetPWM_DutyRatio(&channelD2, 1);
 	SetPWM_DutyRatio(&channelD3, 1);
 }

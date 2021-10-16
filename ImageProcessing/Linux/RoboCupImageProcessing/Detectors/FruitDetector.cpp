@@ -14,6 +14,56 @@
 #include "SnowPearDetector.hpp" //90
 #include "KiwiFruitDetector.hpp"
 
+RoboCup::FruitDetector::FruitDetector(const FruitDetectorConfigs& configs) noexcept
+	: configs(configs)
+{ 
+	if (configs.IsAppleDetectorEnabled())
+	{
+		appleDetector = AppleDetector(configs.GetAppleDetectorConfigs());
+	}
+
+	if (configs.IsBananaDetectorEnabled())
+	{
+		bananaDetector = BananaDetector(configs.GetBananaDetectorConfigs());
+	}
+
+	if (configs.IsKiwiFruitDetectorEnabled())
+	{
+		kiwiFruitDetector = KiwiFruitDetector(configs.GetKiwiFruitDetectorConfigs());
+	}
+
+	if (configs.IsLemonDetectorEnabled())
+	{
+		lemonDetector = LemonDetector(configs.GetLemonDetectorConfigs());
+	}
+
+	if (configs.IsOrangeDetectorEnabled())
+	{
+		orangeDetector = OrangeDetector(configs.GetOrangeDetectorConfigs());
+	}
+
+	if (configs.IsPeachDetectorEnabled())
+	{
+		peachDetector = PeachDetector(configs.GetPeachDetectorConfigs());
+	}
+
+	if (configs.IsPearDetectorEnabled())
+	{
+		pearDetector = PearDetector(configs.GetPearDetectorConfigs());
+	}
+
+	if (configs.IsPitayaDetectorEnabled())
+	{
+		pitayaDetector = PitayaDetector(configs.GetPitayaDetectorConfigs());
+	}
+
+	if (configs.IsSnowPearDetectorEnabled())
+	{
+		snowPearDetector = SnowPearDetector(configs.GetSnowPearDetectorConfigs());
+	}
+}
+
+
 /// <summary>
 /// Detect fruit in BGR Image.
 /// </summary>
@@ -51,93 +101,120 @@ std::vector<RoboCup::Result_t> RoboCup::FruitDetector::Detect(cv::InputArray Inp
 	cvtColor(bgrImage, hsvFull_Image, COLOR_BGR2HSV_FULL);
 	
 	//Step 2: Detect Apples.
-	subdetectorResults = appleDetector.Detect(bgrImage, hsvFull_Image, mask);
-	dilate(mask, mask, getStructuringElement(MORPH_ELLIPSE, Size(15, 15)));
-	maskXOR_Operation(hsvFull_Image, mask, hsvFull_Image);
-	maskXOR_Operation(bgrImage, mask, bgrImage);
-	for (auto &result : subdetectorResults)
+	if (configs.IsAppleDetectorEnabled())
 	{
-		finalResults.push_back(RoboCup::Result(RoboCup::Fruit_t::Apple, result));
+		subdetectorResults = appleDetector.Detect(bgrImage, hsvFull_Image, mask);
+		dilate(mask, mask, getStructuringElement(MORPH_ELLIPSE, Size(15, 15)));
+		maskXOR_Operation(hsvFull_Image, mask, hsvFull_Image);
+		maskXOR_Operation(bgrImage, mask, bgrImage);
+		for (auto& result : subdetectorResults)
+		{
+			finalResults.push_back(RoboCup::Result(RoboCup::Fruit_t::Apple, result));
+		}
 	}
 	
 	//Step 3: Detect Lemon.
-	subdetectorResults = lemonDetector.Detect(bgrImage, hsvFull_Image, mask);
-	dilate(mask, mask, getStructuringElement(MORPH_ELLIPSE, Size(20, 20)));
-	maskXOR_Operation(hsvFull_Image, mask, hsvFull_Image);
-	maskXOR_Operation(bgrImage, mask, bgrImage);
-	for (auto &result : subdetectorResults)
+	if (configs.IsLemonDetectorEnabled())
 	{
-		finalResults.push_back(RoboCup::Result(RoboCup::Fruit_t::Lemon, result));
+		subdetectorResults = lemonDetector.Detect(bgrImage, hsvFull_Image, mask);
+		dilate(mask, mask, getStructuringElement(MORPH_ELLIPSE, Size(20, 20)));
+		maskXOR_Operation(hsvFull_Image, mask, hsvFull_Image);
+		maskXOR_Operation(bgrImage, mask, bgrImage);
+		for (auto& result : subdetectorResults)
+		{
+			finalResults.push_back(RoboCup::Result(RoboCup::Fruit_t::Lemon, result));
+		}
 	}
 
 	//Step 4: Detect Orange.
-	subdetectorResults = orangeDetector.Detect(bgrImage, hsvFull_Image, mask);
-	dilate(mask, mask, getStructuringElement(MORPH_ELLIPSE, Size(15, 15)));
-	maskXOR_Operation(hsvFull_Image, mask, hsvFull_Image);
-	maskXOR_Operation(bgrImage, mask, bgrImage);
-	for (auto &result : subdetectorResults)
+	if (configs.IsOrangeDetectorEnabled())
 	{
-		finalResults.push_back(RoboCup::Result(RoboCup::Fruit_t::Orange, result));
+		subdetectorResults = orangeDetector.Detect(bgrImage, hsvFull_Image, mask);
+		dilate(mask, mask, getStructuringElement(MORPH_ELLIPSE, Size(15, 15)));
+		maskXOR_Operation(hsvFull_Image, mask, hsvFull_Image);
+		maskXOR_Operation(bgrImage, mask, bgrImage);
+		for (auto& result : subdetectorResults)
+		{
+			finalResults.push_back(RoboCup::Result(RoboCup::Fruit_t::Orange, result));
+		}
 	}
 
 	//Step 5: Detect Banana.
-	subdetectorResults = bananaDetector.Detect(bgrImage, hsvFull_Image, mask);
-	dilate(mask, mask, getStructuringElement(MORPH_ELLIPSE, Size(10, 10)));
-	maskXOR_Operation(hsvFull_Image, mask, hsvFull_Image);
-	maskXOR_Operation(bgrImage, mask, bgrImage);
-	for (auto &result : subdetectorResults)
+	if (configs.IsBananaDetectorEnabled())
 	{
-		finalResults.push_back(RoboCup::Result(RoboCup::Fruit_t::Banana, result));
+		subdetectorResults = bananaDetector.Detect(bgrImage, hsvFull_Image, mask);
+		dilate(mask, mask, getStructuringElement(MORPH_ELLIPSE, Size(10, 10)));
+		maskXOR_Operation(hsvFull_Image, mask, hsvFull_Image);
+		maskXOR_Operation(bgrImage, mask, bgrImage);
+		for (auto& result : subdetectorResults)
+		{
+			finalResults.push_back(RoboCup::Result(RoboCup::Fruit_t::Banana, result));
+		}
 	}
 
 	//Step 6: Detect Pitaya.
-	subdetectorResults = pitayaDetector.Detect(bgrImage, hsvFull_Image, mask);
-	dilate(mask, mask, getStructuringElement(MORPH_ELLIPSE, Size(10, 10)));
-	maskXOR_Operation(hsvFull_Image, mask, hsvFull_Image);
-	maskXOR_Operation(bgrImage, mask, bgrImage);
-	for (auto &result : subdetectorResults)
+	if (configs.IsPitayaDetectorEnabled())
 	{
-		finalResults.push_back(RoboCup::Result(RoboCup::Fruit_t::Pitaya, result));
+		subdetectorResults = pitayaDetector.Detect(bgrImage, hsvFull_Image, mask);
+		dilate(mask, mask, getStructuringElement(MORPH_ELLIPSE, Size(10, 10)));
+		maskXOR_Operation(hsvFull_Image, mask, hsvFull_Image);
+		maskXOR_Operation(bgrImage, mask, bgrImage);
+		for (auto& result : subdetectorResults)
+		{
+			finalResults.push_back(RoboCup::Result(RoboCup::Fruit_t::Pitaya, result));
+		}
 	}
 
 	//Step 7: Detect Peach.
-	subdetectorResults = peachDetector.Detect(bgrImage, hsvFull_Image, mask);
-	dilate(mask, mask, getStructuringElement(MORPH_ELLIPSE, Size(10, 10)));
-	maskXOR_Operation(hsvFull_Image, mask, hsvFull_Image);
-	maskXOR_Operation(bgrImage, mask, bgrImage);
-	for (auto &result : subdetectorResults)
+	if (configs.IsPeachDetectorEnabled())
 	{
-		finalResults.push_back(RoboCup::Result(RoboCup::Fruit_t::Peach, result));
+		subdetectorResults = peachDetector.Detect(bgrImage, hsvFull_Image, mask);
+		dilate(mask, mask, getStructuringElement(MORPH_ELLIPSE, Size(10, 10)));
+		maskXOR_Operation(hsvFull_Image, mask, hsvFull_Image);
+		maskXOR_Operation(bgrImage, mask, bgrImage);
+		for (auto& result : subdetectorResults)
+		{
+			finalResults.push_back(RoboCup::Result(RoboCup::Fruit_t::Peach, result));
+		}
 	}
 
 	//Step 8: Detect SnowPear.
-	subdetectorResults = snowPearDetector.Detect(bgrImage, hsvFull_Image, mask);
-	dilate(mask, mask, getStructuringElement(MORPH_ELLIPSE, Size(10, 10)));
-	maskXOR_Operation(hsvFull_Image, mask, hsvFull_Image);
-	maskXOR_Operation(bgrImage, mask, bgrImage);
-	for (auto& result : subdetectorResults)
+	if (configs.IsSnowPearDetectorEnabled())
 	{
-		finalResults.push_back(RoboCup::Result(RoboCup::Fruit_t::SnowPear, result));
+		subdetectorResults = snowPearDetector.Detect(bgrImage, hsvFull_Image, mask);
+		dilate(mask, mask, getStructuringElement(MORPH_ELLIPSE, Size(10, 10)));
+		maskXOR_Operation(hsvFull_Image, mask, hsvFull_Image);
+		maskXOR_Operation(bgrImage, mask, bgrImage);
+		for (auto& result : subdetectorResults)
+		{
+			finalResults.push_back(RoboCup::Result(RoboCup::Fruit_t::SnowPear, result));
+		}
 	}
 	
 	//Step 9: Detect KiwiFruit.
-	subdetectorResults = kiwiFruitDetector.Detect(bgrImage, hsvFull_Image, mask);
-	dilate(mask, mask, getStructuringElement(MORPH_ELLIPSE, Size(10, 10)));
-	maskXOR_Operation(hsvFull_Image, mask, hsvFull_Image);
-	maskXOR_Operation(bgrImage, mask, bgrImage);
-	for (auto& result : subdetectorResults)
+	if (configs.IsKiwiFruitDetectorEnabled())
 	{
-		finalResults.push_back(RoboCup::Result(RoboCup::Fruit_t::KiwiFruit, result));
+		subdetectorResults = kiwiFruitDetector.Detect(bgrImage, hsvFull_Image, mask);
+		dilate(mask, mask, getStructuringElement(MORPH_ELLIPSE, Size(10, 10)));
+		maskXOR_Operation(hsvFull_Image, mask, hsvFull_Image);
+		maskXOR_Operation(bgrImage, mask, bgrImage);
+		for (auto& result : subdetectorResults)
+		{
+			finalResults.push_back(RoboCup::Result(RoboCup::Fruit_t::KiwiFruit, result));
+		}
 	}
 
 	//Step 10: Detect Pear.
-	subdetectorResults = pearDetector.Detect(bgrImage, hsvFull_Image, mask);
-	dilate(mask, mask, getStructuringElement(MORPH_ELLIPSE, Size(10, 10)));
-	maskXOR_Operation(hsvFull_Image, mask, hsvFull_Image);
-	maskXOR_Operation(bgrImage, mask, bgrImage);
-	for (auto& result : subdetectorResults)
+	if (configs.IsPearDetectorEnabled())
 	{
-		finalResults.push_back(RoboCup::Result(RoboCup::Fruit_t::Pear, result));
+		subdetectorResults = pearDetector.Detect(bgrImage, hsvFull_Image, mask);
+		dilate(mask, mask, getStructuringElement(MORPH_ELLIPSE, Size(10, 10)));
+		maskXOR_Operation(hsvFull_Image, mask, hsvFull_Image);
+		maskXOR_Operation(bgrImage, mask, bgrImage);
+		for (auto& result : subdetectorResults)
+		{
+			finalResults.push_back(RoboCup::Result(RoboCup::Fruit_t::Pear, result));
+		}
 	}
 
 	return finalResults;

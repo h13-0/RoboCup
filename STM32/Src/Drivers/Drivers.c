@@ -13,4 +13,5 @@ void DriversInit(void)
 {
 	MotorInit();
 	ServoInit();
+	LCDInit();
 }

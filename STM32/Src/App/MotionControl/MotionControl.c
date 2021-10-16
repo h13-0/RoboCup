@@ -52,16 +52,16 @@ static struct motionControlStatusStructure status = { 0 };
 
 //Status of speed PID.
 #define enableSpeedPID()              status.speedPID_Status = 1
-#define disableSpeedPID()             status.speedPID_Status = 0
-#define getSpeedPID()                 status.speedPID_Status
+#define disableSpeedPID()             disableForwardPID(); disableDirectionPID(); status.speedPID_Status = 0; leftSpeedPID._sumError = 0; rightSpeedPID._sumError = 0; Brake();
+#define getSpeedPID_Status()          status.speedPID_Status
 //Status of direction PID.
 #define enableDirectionPID()          status.directionPID_Status = 1
-#define disableDirectionPID()         status.directionPID_Status = 0
-#define getDirectionPIDStatus()       status.directionPID_Status
+#define disableDirectionPID()         status.directionPID_Status = 0; anglePID._sumError = 0; speedDifference = 0
+#define getDirectionPID_Status()      status.directionPID_Status
 //Status of forward PID.
 #define enableForwardPID()            status.forwardPID_Status = 1
-#define disableForwardPID()           status.forwardPID_Status = 0
-#define getForwardPIDStatus()         status.forwardPID_Status
+#define disableForwardPID()           status.forwardPID_Status = 0; forwardPID._sumError = 0; speedBaseOutput = 0
+#define getForwardPID_Status()        status.forwardPID_Status
 
 float leftPWM = 0, rightPWM = 0;
 static int32_t leftSpeed  = 0;
@@ -107,29 +107,29 @@ void MotionControlInit(void)
 
 	//@TODO: Verify that autoResetIntegration needs to be turned off
 	//angle PID configs.
-	anglePID.proportion = 0.6;
-	anglePID.integration = 0.12;
-	anglePID.differention = 0.10;
+	anglePID.proportion = AnglePID_Proportion;
+	anglePID.integration = AnglePID_Integration;
+	anglePID.differention = AnglePID_Differention;
 	anglePID.setpoint = 0.0;
-	anglePID.maxAbsOutput = fmax(13.5, MaxSpeed * 0.5);
+	anglePID.maxAbsOutput = MaxSpeed * 0.3;
 
 	//Extend functions config.
 	anglePID.configs.autoResetIntegration = disable;
 	anglePID.configs.limitIntegration = enable;
 	anglePID.maximumAbsValueOfIntegrationOutput = MaxSpeed * 0.1;
 
-	forwardPID.proportion = -0.14;
-	forwardPID.integration = 0.0;
-	forwardPID.differention = 0.0;
+	forwardPID.proportion = ForwardPID_Proportion;
+	forwardPID.integration = ForwardPID_Integration;
+	forwardPID.differention = ForwardPID_Differention;
 	forwardPID.setpoint = 0.0;
-	forwardPID.maxAbsOutput = MaxSpeed * 0.7;
+	forwardPID.maxAbsOutput = MaxSpeed * 0.70;
 
 	//Extend functions config.
 	forwardPID.configs.autoResetIntegration = disable;
 	forwardPID.configs.limitIntegration = enable;
 	forwardPID.maximumAbsValueOfIntegrationOutput = MaxSpeed * 0.3;
 
-	//enableSpeedPID();
+	enableSpeedPID();
 }
 
 /**
@@ -233,8 +233,7 @@ void TurnTo(direction_t Direction)
 		anglePID.setpoint -= 360;
 	}
 
-	//Keep Angle
-	anglePID._sumError = 0;
+	enableSpeedPID();
 	enableDirectionPID();
 
 	uint32_t startTime = GetCurrentTimeMillisecond();
@@ -268,19 +267,32 @@ void TurnTo(direction_t Direction)
 
 void StraightUntill(uint16_t Distance)
 {
-	//Keep Angle
-	enableDirectionPID();
-
 	forwardPID.setpoint = Distance;
+
+	enableSpeedPID();
+	enableDirectionPID();
 	enableForwardPID();
 
-	uint32_t startTime = GetCurrentTimeMillisecond();
-	uint32_t startStableTime = GetCurrentTimeMillisecond();
+	mtime_t startTime = GetCurrentTimeMillisecond();
+	mtime_t startStableTime = GetCurrentTimeMillisecond();
+	mtime_t startTrimTime = GetCurrentTimeMillisecond();
 
 	while (1)
 	{
 		leftSpeedPID.setpoint = speedBaseOutput + speedDifference;
 		rightSpeedPID.setpoint = speedBaseOutput - speedDifference;
+
+		if((abs(Distance - distance) < ForwardTrimDistance) && (fabs(calculateYawError(yaw, anglePID.setpoint)) < ForwardTrimAngleErrorLimit))
+		{
+			disableDirectionPID();
+			if(GetCurrentTimeMillisecond() - startTrimTime > ForwardTrimTimeLimit)
+			{
+				break;
+			}
+		} else {
+			enableDirectionPID();
+			startTrimTime = GetCurrentTimeMillisecond();
+		}
 
 		if(abs(distance - forwardPID.setpoint) > ForwardAccuracy)
 		{
@@ -298,11 +310,11 @@ void StraightUntill(uint16_t Distance)
 		}
 	}
 
+	leftSpeedPID.setpoint = 0;
+	rightSpeedPID.setpoint = 0;
 	disableForwardPID();
 	disableDirectionPID();
-	Brake();
-
-	forwardPID._sumError = 0;
+	disableSpeedPID();
 }
 
 #ifdef DEBUG
@@ -315,16 +327,19 @@ void StraightUntill(uint16_t Distance)
  */
 void KeepSpeed(void)
 {
+	enableSpeedPID();
 	while(1)
 	{
-		float data[] = { leftSpeed, rightSpeed, leftPWM, rightPWM };
-		LogJustFloat(data, 4);
+		float data[] = { leftSpeed, rightSpeed, leftPWM, rightPWM, leftSpeedPID.setpoint, rightSpeedPID.setpoint };
+		LogJustFloat(data, 6);
 		SleepMillisecond(10);
 	}
+	disableSpeedPID();
 }
 
 void KeepAngle(void)
 {
+	enableSpeedPID();
 	enableDirectionPID();
 	while (1)
 	{
@@ -337,13 +352,13 @@ void KeepAngle(void)
 		SleepMillisecond(10);
 	}
 	disableDirectionPID();
-	anglePID._sumError = 0;
-	Brake();
+	disableSpeedPID();
 }
 
 void KeepDistance(uint16_t Distance)
 {
 	forwardPID.setpoint = Distance;
+	enableSpeedPID();
 	enableDirectionPID();
 	enableForwardPID();
 
@@ -358,8 +373,7 @@ void KeepDistance(uint16_t Distance)
 
 	disableForwardPID();
 	disableDirectionPID();
-	forwardPID._sumError = 0;
-	Brake();
+	disableSpeedPID();
 }
 
 #endif
@@ -372,7 +386,7 @@ __attribute__((always_inline)) inline void SpeedPIDCalculateHandler(void)
 	leftSpeed  = GetLeftEncoderSpeed();
 	rightSpeed = GetRightEncoderSpeed();
 
-	if(getSpeedPID())
+	if(getSpeedPID_Status())
 	{
 		leftPWM = PosPID_Calc(&leftSpeedPID, leftSpeed);
 		rightPWM = PosPID_Calc(&rightSpeedPID, rightSpeed);
@@ -384,7 +398,7 @@ __attribute__((always_inline)) inline void SpeedPIDCalculateHandler(void)
 
 __attribute__((always_inline)) inline void DirectionPIDCalculateHandler(void)
 {
-	if(getDirectionPIDStatus())
+	if(getDirectionPID_Status())
 	{
 		yaw = GetYawValue();
 		speedDifference = PosPID_CalcWithCustErrAndDiff(&AnglePID, calculateYawError(yaw, anglePID.setpoint), GetYawVelocity());
@@ -393,7 +407,7 @@ __attribute__((always_inline)) inline void DirectionPIDCalculateHandler(void)
 
 __attribute__((always_inline)) inline void ForwardPIDCalculateHandler(void)
 {
-	if(getForwardPIDStatus())
+	if(getForwardPID_Status())
 	{
 		distance = GetTOF_Distance();
 		speedBaseOutput = PosPID_Calc(&ForwardPID, distance);

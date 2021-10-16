@@ -6,7 +6,6 @@
  */
 #include "App.h"
 #include "RobotConfigs.h"
-#include "ArmControl.h"
 #include "Examples.h"
 
 #include <stdio.h>
@@ -20,8 +19,10 @@
 #include "lvgl.h"
 //Motion Control
 #include "MotionControl.h"
-
 //Arm Control
+#include "ArmControl.h"
+//Voice player
+#include "VoicePlayer.h"
 
 int App(void)
 {
@@ -29,13 +30,20 @@ int App(void)
 	//Current posture: ¡ý
 	AllInit();
 
-	//CalibrationAllServo();
-
-	KeepSpeed();
+	//Voice_t voices[] = { BroadcastFruitDetectResult, BroadcastApple, BroadcastOne };
+	//VoicePlayerPlayByIDS(voices, 3);
 
 	//CalibrationAllServo();
 
 	ConnectToBluetoothDevice();
+
+	while(1)
+	{
+		FillScreen(RED);
+		FillScreen(GREEN);
+		FillScreen(BLUE);
+	}
+
 /*
 	while(1)
 	{
@@ -58,11 +66,11 @@ int App(void)
 
 	TurnTo(Right);
 
-	StraightUntill(1600);
+	StraightUntill(1500);
 
 	TurnTo(Left);
 
-	StraightUntill(500);
+	StraightUntill(DisktopDistanceBeforeTurn - 50);
 
 	TurnTo(Left);
 
@@ -81,7 +89,7 @@ int App(void)
 
 	TurnTo(Left);
 
-	StraightUntill(500);
+	StraightUntill(DisktopDistanceBeforeTurn);
 
 	TurnTo(Left);
 
@@ -104,12 +112,14 @@ int App(void)
 
 	TurnTo(Left);
 
-	StraightUntill(500);
+	StraightUntill(DisktopDistanceBeforeTurn);
 
 	TurnTo(Left);
 
 	StraightUntill(1950);
 
+	//Arrival Desktop.
+	//Current posture: ¡ý
 	//PlaceApple();
 
 	StraightUntill(2300);
@@ -138,7 +148,7 @@ int App(void)
 
 	TurnTo(BackWard);
 
-	StraightUntill(300);
+	StraightUntill(500);
 
 	//EmptyTrash();
 

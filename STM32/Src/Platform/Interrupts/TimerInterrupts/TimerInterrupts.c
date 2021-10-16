@@ -21,12 +21,11 @@ __attribute__((always_inline)) inline void TimerInterruptHandler(void)
 }
 
 /**
- * @brief: Timer for LVGL.
+ * @brief: Timer for LVGL and Voice queue.
  * @note:
- * 		Responsible for refreshing UI.
  * 		**Call frequency: 30Hz.**
  */
-__attribute__((always_inline)) inline void LVGLInterruptHandler(void)
+__attribute__((always_inline)) inline void UI_VoiceInterruptHandler(void)
 {
 	UI_VoiceTimerHandler();
 }

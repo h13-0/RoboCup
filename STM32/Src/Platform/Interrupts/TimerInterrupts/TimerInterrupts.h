@@ -19,12 +19,11 @@
 void TimerInterruptHandler(void);
 
 /**
- * @brief: Timer for LVGL.
+ * @brief: Timer for LVGL and Voice queue.
  * @note:
- * 		Responsible for refreshing UI.
  * 		**Call frequency: 30Hz.**
  */
-void LVGLInterruptHandler(void);
+void UI_VoiceInterruptHandler(void);
 
 #if(ArmType == LiftingPlatform)
 

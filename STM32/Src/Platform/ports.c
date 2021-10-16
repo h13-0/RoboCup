@@ -18,4 +18,5 @@ void PortsInit(void)
 	//Init Clock First.
 	ClockInit();
 	I2C_SetPort(&I2C_Port);
+	SPIInit();
 }

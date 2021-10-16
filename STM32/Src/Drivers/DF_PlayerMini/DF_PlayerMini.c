@@ -16,6 +16,7 @@ DF_PlayerError_t DF_PlayerInit(DF_PlayerMini_t *Player)
 {
 	GPIO_Init(&Player -> BusyIO, Input);
 	Player -> _latestVoicePositionInQueue = 0;
+	Player -> _lastPlayTime = GetCurrentTimeMillisecond();
 	if(currentPlayerNumbers < StepperNumbers)
 	{
 		players[currentPlayerNumbers] = Player;
@@ -32,6 +33,7 @@ DF_PlayerError_t DF_PlayerJoinQueue(DF_PlayerMini_t *Player, VoiceID_t VoiceID)
 	if(Player -> _latestVoicePositionInQueue < VoiceQueueSize)
 	{
 		Player -> VoiceQueue[Player -> _latestVoicePositionInQueue] = VoiceID;
+		Player -> _latestVoicePositionInQueue ++;
 		return DF_PlayerOK;
 	} else {
 		return DF_PlayerBufferIsFull;
@@ -42,9 +44,9 @@ DF_PlayerError_t DF_PlayerJoinQueue(DF_PlayerMini_t *Player, VoiceID_t VoiceID)
 typedef enum
 {
 	DF_PlayNext = 0x01,
+	DF_PlayByID = 0x03,
 	DF_SetVolume = 0x06,
 	DF_Reset = 0x0c,
-	DF_PlayByID = 0x0d,
 	DF_Pause = 0x0e,
 	DF_Stop = 0x16,
 } Command_t;
@@ -62,11 +64,11 @@ __attribute__((always_inline)) static void sendCommand(USART_t USART_Port, Comma
 
 	//Send parameters.
 #if (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
-	SerialSend(USART_Port, parameter >> 8);
 	SerialSend(USART_Port, parameter & 0xFF);
+	SerialSend(USART_Port, parameter >> 8);
 #elif (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
-	SerialSend(USART_Port, parameter & 0xFF);
 	SerialSend(USART_Port, parameter >> 8);
+	SerialSend(USART_Port, parameter & 0xFF);
 #endif
 
 	//Send packet tail.
@@ -91,14 +93,16 @@ DF_PlayerError_t DF_PlayerReset(DF_PlayerMini_t *Player)
 
 void DF_PlayerVoiceQueueTimerHandler(void)
 {
-	return;
+	mtime_t currentTime = GetCurrentTimeMillisecond();
 	for(uint8_t playerID = 0; playerID < currentPlayerNumbers; playerID ++)
 	{
-		if( (GPIO_ReadLevel(&players[playerID] -> BusyIO)) && (players[playerID] -> _latestVoicePositionInQueue > 0) )
+		if( (GPIO_ReadLevel(&players[playerID] -> BusyIO)) && (players[playerID] -> _latestVoicePositionInQueue > 0) && (currentTime - players[playerID] -> _lastPlayTime > BroadcastIntervalMillisecond) )
 		{
 			//Play next voice.
-			memmove(players[playerID] -> VoiceQueue, (players[playerID] -> VoiceQueue + 1), VoiceQueueSize - 1);
 			playByID(players[playerID] -> USART_Port, players[playerID] -> VoiceQueue[0]);
+			memmove(players[playerID] -> VoiceQueue, (players[playerID] -> VoiceQueue + 1), VoiceQueueSize - 1);
+			players[playerID] -> _latestVoicePositionInQueue --;
+			players[playerID] -> _lastPlayTime = currentTime;
 		}
 	}
 }

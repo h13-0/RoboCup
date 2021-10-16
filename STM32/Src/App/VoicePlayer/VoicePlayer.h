@@ -10,8 +10,6 @@
 
 void VoicePlayerInit(void);
 
-void VoicePlayerReset(void);
-
 typedef enum
 {
 	BroadcastFruitDetectResult = 1,
@@ -20,5 +18,7 @@ typedef enum
 } Voice_t;
 
 void VoicePlayerPlayByID(Voice_t Voice);
+
+void VoicePlayerPlayByIDS(Voice_t *VoicePtr, uint8_t Length);
 
 #endif /* APP_VOICEPLAYER_VOICEPLAYER_H_ */
