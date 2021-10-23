@@ -36,6 +36,29 @@ Type = float
 | `AppCenX` | 0~1   | AppCenX |
 | `AppCenY` | 0~1   | AppCenY |
 
-#### 水果种类输出
+#### 靶标坐标输出
+Key = `TarCenX`  
+Type = float
+Key = `TarCenY`
+Type = float
 
+| Key       | Value | 作用    |
+| --------- | ----- | ------- |
+| `TarCenX` | 0~1   | TarCenX |
+| `TarCenY` | 0~1   | TarCenY |
+
+#### 水果种类输出
+Type = uint8_t  
+| Key                   | Value              | 作用          |
+| --------------------- | ------------------ | ------------- |
+| `AppleNum`            | [1, QuantityLimit] | Number        |
+| `BananaNum`           | [0, QuantityLimit] |               |
+| `KiwiFruitNum`        | [0, QuantityLimit] |               |
+| `LemonNum`            | [0, QuantityLimit] |               |
+| `OrangeNum`           | [0, QuantityLimit] |               |
+| `PeachNum`            | [0, QuantityLimit] |               |
+| `PearNum`             | [0, QuantityLimit] |               |
+| `PitayaNum`           | [0, QuantityLimit] |               |
+| `SnowPearNum`         | [0, QuantityLimit] |               |
+| `FruitDetectFinished` | 0 ~ 1              | 1 -> Finished |
 

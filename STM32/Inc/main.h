@@ -80,8 +80,8 @@ void Error_Handler(void);
 #define TIM2_CH2____RightEncoder_CHB_GPIO_Port GPIOA
 #define TIM5_CH3____Servo4_Pin LL_GPIO_PIN_2
 #define TIM5_CH3____Servo4_GPIO_Port GPIOA
-#define GPIO_EXIT4____Z_AxisLimitSensor_Pin LL_GPIO_PIN_4
-#define GPIO_EXIT4____Z_AxisLimitSensor_GPIO_Port GPIOA
+#define GPIO_Input____Z_AxisLimitSensor_Pin LL_GPIO_PIN_4
+#define GPIO_Input____Z_AxisLimitSensor_GPIO_Port GPIOA
 #define TIM3_CH1____Motor_D0_Pin LL_GPIO_PIN_6
 #define TIM3_CH1____Motor_D0_GPIO_Port GPIOA
 #define TIM3_CH2____Motor_D1_Pin LL_GPIO_PIN_7

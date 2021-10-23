@@ -30,7 +30,7 @@ void RoboCup::Detector::Filter(cv::InputArray InputHSV_FULL_Image, cv::OutputArr
 	Mat output = OutputBinaryMask.getMat();
 	output.setTo(0);
 
-	for (auto filter : positiveFilters)
+	for (auto& filter : positiveFilters)
 	{
 		Mat positiveOutput;
 		filter.FilterWithHSV_FULL_Image(InputHSV_FULL_Image, positiveOutput);
@@ -42,7 +42,7 @@ void RoboCup::Detector::Filter(cv::InputArray InputHSV_FULL_Image, cv::OutputArr
 	if (negativeFilters.size() > 0)
 	{
 		Mat negativeOutout = Mat::zeros(InputHSV_FULL_Image.size(), CV_8UC1);
-		for (auto filter : negativeFilters)
+		for (auto& filter : negativeFilters)
 		{
 			Mat filterOutput;
 			filter.FilterWithHSV_FULL_Image(InputHSV_FULL_Image, filterOutput);

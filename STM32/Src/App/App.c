@@ -9,14 +9,11 @@
 #include "Examples.h"
 
 #include <stdio.h>
-
 //Drivers
 #include "ports.h"
 
 #include "Drivers.h"
 //App
-//LVGL
-#include "lvgl.h"
 //Motion Control
 #include "MotionControl.h"
 //Arm Control
@@ -37,13 +34,34 @@ int App(void)
 
 	ConnectToBluetoothDevice();
 
+	SetOpenLoopClawPosition(90, 221, ApproachHeight);
+
+	while(GetImageProcessingModuleWorkingMode() != TargetDetect)
+	{
+		SwitchImageProcessingModuleWorkingMode(TargetDetect);
+	}
+
+	ClosureClaw();
+	SetArmNodeAngle(ClawRotation, 0);
+	AimAt(Target, 200000);
+	//ClosureClaw();
+
+	while(1)
+	{
+		Coordinates_t coor;
+		GetTargetCoordinates(&coor);
+		float data[] = { coor.X, coor.Y };
+		LogJustFloat(data, 2);
+	}
+
+	/*
 	while(1)
 	{
 		FillScreen(RED);
 		FillScreen(GREEN);
 		FillScreen(BLUE);
 	}
-
+*/
 /*
 	while(1)
 	{
@@ -70,7 +88,7 @@ int App(void)
 
 	TurnTo(Left);
 
-	StraightUntill(DisktopDistanceBeforeTurn - 50);
+	StraightUntill(DisktopDistanceBeforeTurn - 25);
 
 	TurnTo(Left);
 

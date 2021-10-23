@@ -38,7 +38,7 @@ namespace RoboCup
 			: FruitType(FruitType), Rect(Rect){ };
 		RoboCup::Fruit_t::Fruit_t FruitType;
 		cv::RotatedRect Rect;
-	} Result_t;
+	} FruitDetectResult_t;
 
 	class FruitDetector
 	{
@@ -60,12 +60,12 @@ namespace RoboCup
 		///		->Peach->SnowPear->Pear->KiwiFruit
 		/// (Confidence ranking from high to low.) </note>
 		/// <returns>Result in std::vector<RoboCup::Result_t>.</returns>
-		std::vector<RoboCup::Result_t> Detect(cv::InputArray InputBGR_Image) noexcept;
+		std::vector<RoboCup::FruitDetectResult_t> Detect(cv::InputArray InputBGR_Image) noexcept;
 
 	private:
 		static void maskXOR_Operation(cv::InputArray InputImage, cv::InputArray InputMask, cv::OutputArray OutputImage);
 		static bool rectSizeCompare(const cv::RotatedRect& Rect1, const cv::RotatedRect& Rect2);
-		std::vector<RoboCup::Result_t> checkFruitDetectionResult(const std::vector<RoboCup::Result_t>& Results);
+		std::vector<RoboCup::FruitDetectResult_t> checkFruitDetectionResult(const std::vector<RoboCup::FruitDetectResult_t>& Results);
 
 		FruitDetectorConfigs configs;
 

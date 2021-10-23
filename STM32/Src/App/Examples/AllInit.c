@@ -12,14 +12,14 @@
 #include "Drivers.h"
 //App
 #include "Examples.h"
-//LVGL
-#include "lvgl.h"
+
 //Motion Control
 #include "MotionControl.h"
 //Arm Control
 #include "ArmControl.h"
 //Voice Player
 #include "VoicePlayer.h"
+#include "UI.h"
 
 /**
  * @brief: Init all modules and peripherals.
@@ -36,10 +36,6 @@ void AllInit(void)
 
 	Log(Debug, "Start!");
 
-	BluetoothInit();
-
-	EncoderInit();
-
 	//First run
 #ifdef FirstRun
 	//Init WT101
@@ -50,7 +46,11 @@ void AllInit(void)
 		Log(Info, "All peripherals are configured, Please close the macro definition and rebuild and redownload the program.");
 #endif
 
-	ResetYaw();
+	//Init application.
+#if(ShowSchoolMotto)
+	DisplaySchoolMotto();
+#endif
+	BluetoothInit();
 
 	MotionControlInit();
 

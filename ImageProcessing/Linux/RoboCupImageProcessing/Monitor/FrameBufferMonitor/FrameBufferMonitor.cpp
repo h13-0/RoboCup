@@ -51,7 +51,7 @@ void RoboCup::FrameBufferMonitor::Display(const std::string& Title, cv::InputArr
             std::unique_lock<std::mutex> lock(bufferMutex);
             cvtColor(InputImage, buffer, COLOR_GRAY2BGR);
         }
-        else if(InputImage.channels() == 3) {
+        else if (InputImage.channels() == 3) {
             std::unique_lock<std::mutex> lock(bufferMutex);
             buffer = InputImage.getMat().clone();
         }
@@ -73,9 +73,9 @@ void RoboCup::FrameBufferMonitor::Refresh(int MillisecondsToDelay)
         frame = buffer.clone();
     }
 
-    float scalingRatio = min(xResolution / frame.rows, yResolution / frame.cols);
-    resize(frame, frame, Size(frame.rows * scalingRatio, frame.cols * scalingRatio));
-    int rols = frame.rows;
+    float scalingRatio = fmin(float(xResolution) / frame.cols, float(yResolution) / frame.rows);
+    resize(frame, frame, Size(frame.cols * scalingRatio, frame.rows * scalingRatio));
+    int rows = frame.rows;
     int cols = frame.cols;
 
     std::vector<Mat> splitedBGR;
@@ -83,10 +83,10 @@ void RoboCup::FrameBufferMonitor::Refresh(int MillisecondsToDelay)
     {
     case 16:
         cvtColor(frame, frame, COLOR_BGR2BGR565);
-        for (int y = 0; y < cols; y++)
+        for (int y = 0; y < rows; y++)
         {
             frameBufferFileStream.seekp(y * xResolution * 2);
-            frameBufferFileStream.write(reinterpret_cast<char*>(frame.ptr(y)), rols * 2);
+            frameBufferFileStream.write(reinterpret_cast<char*>(frame.ptr(y)), cols * 2);
         }
         break;
 
@@ -94,10 +94,10 @@ void RoboCup::FrameBufferMonitor::Refresh(int MillisecondsToDelay)
         split(frame, splitedBGR);
         splitedBGR.push_back(cv::Mat(frame.size(), CV_8UC1, Scalar(255)));
         merge(splitedBGR, frame);
-        for (int y = 0; y < cols; y++)
+        for (int y = 0; y < rows; y++)
         {
             frameBufferFileStream.seekp(y * xResolution * 4);
-            frameBufferFileStream.write(reinterpret_cast<char*>(frame.ptr(y)), rols * 4);
+            frameBufferFileStream.write(reinterpret_cast<char*>(frame.ptr(y)), cols * 4);
         }
         break;
 

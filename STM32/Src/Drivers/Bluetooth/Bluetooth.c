@@ -5,12 +5,16 @@
  *      Author: h13
  */
 #include "Bluetooth.h"
-#include "Ports.h"
+#include "RobotConfigs.h"
 
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdint.h>
 #include <string.h>
+
+#include "Ports.h"
+
+static GPIO_t bleEN_IO = BluetoothEN_IO;
 
 void BluetoothPrintf(char *fmt, ...)
 {
@@ -18,7 +22,7 @@ void BluetoothPrintf(char *fmt, ...)
 	char buffer[32];
 	va_list arg;
 
-	ResetHC05_EN_Pin();
+	GPIO_PullDown(&bleEN_IO);
 
 	va_start(arg, fmt);
 	length = vsprintf(buffer, fmt, arg);
@@ -41,7 +45,7 @@ static void sendAT_Command(char *fmt, ...)
 	char buffer[32];
 	va_list arg;
 
-	SetHC05_EN_Pin();
+	GPIO_PullUp(&bleEN_IO);
 	SleepMillisecond(10);
 
 	va_start(arg, fmt);
@@ -54,7 +58,7 @@ static void sendAT_Command(char *fmt, ...)
 	}
 
 	SleepMillisecond(300);
-	ResetHC05_EN_Pin();
+	GPIO_PullDown(&bleEN_IO);
 }
 
 void ResetBluetoothConfigs(void)

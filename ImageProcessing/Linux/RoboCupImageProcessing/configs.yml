@@ -42,13 +42,15 @@ FruitDetectorSettings:
       PositiveThresholds:
       - [70, 102, 50, 255, 79, 255]
       NegativeThresholds:
-      - [210, 255, 95, 255, 125, 255]
-      - [0, 74, 60, 255, 0, 255]
+      - [0, 65, 60, 255, 0, 255]
       ReflectiveThresholds:
       - [70, 255, 0, 255, 253, 255]
       MinimumSize: 1300
       ErodeKernelSize: 5
       MinimunLengthWidthRatio: 0.65
+      PitayaThresholds:
+      - [210, 255, 175, 255, 125, 255]
+      MinimumPitayaSize: 1500
 
   LemonDetector:
     Enable: true
@@ -175,11 +177,13 @@ AppleDetectorSettings:
     PositiveThresholds:
     - [70, 102, 50, 255, 79, 255]
     NegativeThresholds:
-    - [210, 255, 95, 255, 125, 255]
-    - [0, 74, 60, 255, 0, 255]
+    - [0, 65, 60, 255, 0, 255]
     ReflectiveThresholds:
     - [70, 255, 0, 255, 253, 255]
     MinimumSize: 1300
     ErodeKernelSize: 5
     MinimunLengthWidthRatio: 0.65
-
+    PitayaThresholds:
+    - [210, 255, 175, 255, 125, 255]
+    MinimumPitayaSize: 1500
+    

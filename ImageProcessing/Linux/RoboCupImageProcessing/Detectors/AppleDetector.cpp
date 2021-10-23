@@ -9,7 +9,7 @@ std::vector<cv::RotatedRect> RoboCup::AppleDetector::Detect(cv::InputArray Input
 {
 	using namespace std;
 	using namespace cv;
-	
+
 	Mat hsvImage;
 	Mat outputContours;
 	bool outputContoursRequired = false;
@@ -35,7 +35,33 @@ std::vector<cv::RotatedRect> RoboCup::AppleDetector::Detect(cv::InputArray Input
 	Mat filterOutout = Mat::zeros(hsvImage.size(), CV_8UC1);
 
 	Filter(hsvImage, filterOutout);
-	
+
+	//Remove pitaya interference.
+	if (pitayaFilters.size() > 0)
+	{
+		Mat pitaya = Mat::zeros(hsvImage.size(), CV_8UC1);
+		for (auto& filter : pitayaFilters)
+		{
+			Mat output;
+			filter.FilterWithHSV_FULL_Image(hsvImage, output);
+			bitwise_or(output, pitaya, pitaya);
+		}
+
+		vector<vector<Point>> pitayaContours;
+		findContours(pitaya, pitayaContours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+		for (unsigned int index = 0; index < pitayaContours.size(); index++)
+		{
+			float size = contourArea(pitayaContours[index]);
+			if (size > minimumPitayaSize)
+			{
+				RotatedRect minRect = minAreaRect(Mat(pitayaContours[index]));
+				minRect.size.width > minRect.size.height ? minRect.size.width * 1.5 : minRect.size.height * 1.5;
+				
+				rectangle(filterOutout, minRect.boundingRect(), Scalar(0), -1);
+			}
+		}
+	}
+
 	//Corrosion image to eliminate pear and kiwi interference.
 	Mat erodeKernel = getStructuringElement(MORPH_ELLIPSE, Size(erodeKernelSize, erodeKernelSize));
 	erode(filterOutout, filterOutout, erodeKernel);
@@ -43,9 +69,9 @@ std::vector<cv::RotatedRect> RoboCup::AppleDetector::Detect(cv::InputArray Input
 	//Judge the roundness of the edge to select the apple.
 	vector<vector<Point>> contours;
 	findContours(filterOutout, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
-	
+
 	vector<RotatedRect> result;
-	for (unsigned int index = 0; index < contours.size(); index ++)
+	for (unsigned int index = 0; index < contours.size(); index++)
 	{
 		float size = contourArea(contours[index]);
 		if (size > minimumSize)

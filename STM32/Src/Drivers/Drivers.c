@@ -14,4 +14,6 @@ void DriversInit(void)
 	MotorInit();
 	ServoInit();
 	LCDInit();
+	EncoderInit();
+	ResetYaw();
 }

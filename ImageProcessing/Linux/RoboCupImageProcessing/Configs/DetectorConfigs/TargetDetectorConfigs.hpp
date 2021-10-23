@@ -65,8 +65,10 @@ namespace RoboCup
 			return minimumRectOverlapRate;
 		};
 
+		float GetMinimumSize(void) = delete;
+
 	private:
-		float GetMinimumSize(void) { };
+		//float GetMinimumSize(void) { };
 		float minimumPositiveSize;
 		float minimumPositiveLengthWidthRatio;
 		float minimumReflectiveSize;

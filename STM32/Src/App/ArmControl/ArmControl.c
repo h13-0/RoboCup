@@ -22,5 +22,5 @@ void ClosureClaw(void)
  */
 void ReleaseClaw(void)
 {
-	SetArmNodeAngle(ClawGrab, 0);
+	SetArmNodeAngle(ClawGrab, 180);
 }

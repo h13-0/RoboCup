@@ -75,7 +75,7 @@ RoboCup::FruitDetector::FruitDetector(const FruitDetectorConfigs& configs) noexc
 ///		->Peach->SnowPear->Pear->KiwiFruit
 /// (Confidence ranking from high to low.) </note>
 /// <returns>Result in std::vector<RoboCup::Result_t>.</returns>
-std::vector<RoboCup::Result_t> RoboCup::FruitDetector::Detect(cv::InputArray InputBGR_Image) noexcept
+std::vector<RoboCup::FruitDetectResult_t> RoboCup::FruitDetector::Detect(cv::InputArray InputBGR_Image) noexcept
 {
 	/**
 	 * @note: Identification sequence:
@@ -93,7 +93,7 @@ std::vector<RoboCup::Result_t> RoboCup::FruitDetector::Detect(cv::InputArray Inp
 	Mat bgrImage = InputBGR_Image.getMat().clone();
 
 	std::vector<cv::RotatedRect> subdetectorResults;
-	std::vector<RoboCup::Result_t> finalResults;
+	std::vector<RoboCup::FruitDetectResult_t> finalResults;
 
 	//Step 0: Adjust resolution.
 
@@ -245,7 +245,7 @@ bool RoboCup::FruitDetector::rectSizeCompare(const cv::RotatedRect& Rect1, const
 	return(Rect1.size.area() > Rect2.size.area())? true : false;
 }
 
-std::vector<RoboCup::Result_t> RoboCup::FruitDetector::checkFruitDetectionResult(const std::vector<RoboCup::Result_t>& Results)
+std::vector<RoboCup::FruitDetectResult_t> RoboCup::FruitDetector::checkFruitDetectionResult(const std::vector<RoboCup::FruitDetectResult_t>& Results)
 {
 	using namespace std;
 	using namespace cv;
@@ -302,7 +302,7 @@ std::vector<RoboCup::Result_t> RoboCup::FruitDetector::checkFruitDetectionResult
 
 
 	//Check quantity limit and pack results.
-	std::vector<RoboCup::Result_t> results;
+	std::vector<RoboCup::FruitDetectResult_t> results;
 	int resultSize = 0;
 	int quantityLimit = 0;
 

@@ -12,18 +12,27 @@
 
 static ImageProcessingModuleWorkingMode_t currentMode = NotReady;
 static Coordinates_t appleCoordinates = { 0 };
+static Coordinates_t targetCoordinates = { 0 };
 
-static void updateTimeStamp(void)
+static void updateAppleTimeStamp(void)
 {
 	appleCoordinates.TimeStamp = GetCurrentTimeMillisecond();
+}
+
+static void updateTargetTimeStamp(void)
+{
+	targetCoordinates.TimeStamp = GetCurrentTimeMillisecond();
 }
 
 static void binaryProtocolPraise(char *data, uint8_t length)
 {
 	MatchKeyInt8_t(data, length, "WM:", 3, currentMode, return);
 
-	MatchKeyFloat(data, length, "AppCenX:", 8, appleCoordinates.X, updateTimeStamp(); return);
-	MatchKeyFloat(data, length, "AppCenY:", 8, appleCoordinates.Y, updateTimeStamp(); return);
+	MatchKeyFloat(data, length, "AppCenX:", 8, appleCoordinates.X, updateAppleTimeStamp(); return);
+	MatchKeyFloat(data, length, "AppCenY:", 8, appleCoordinates.Y, updateAppleTimeStamp(); return);
+
+	MatchKeyFloat(data, length, "TarCenX:", 8, targetCoordinates.X, updateTargetTimeStamp(); return);
+	MatchKeyFloat(data, length, "TarCenY:", 8, targetCoordinates.Y, updateTargetTimeStamp(); return);
 }
 
 /**
@@ -115,5 +124,5 @@ __attribute__((always_inline)) inline void GetAppleCoordinates(Coordinates_t *Co
  */
 __attribute__((always_inline)) inline void GetTargetCoordinates(Coordinates_t *Coordinates)
 {
-
+	*Coordinates = targetCoordinates;
 }

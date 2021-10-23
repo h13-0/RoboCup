@@ -27,8 +27,8 @@ typedef struct
 {
 	GPIO_t StepperIO;
 	GPIO_t DirectionIO;
-	uint32_t CurrentSteps;
-	uint32_t TargetSteps;
+	int32_t CurrentSteps;
+	int32_t TargetSteps;
 } Stepper_t;
 
 StepperError_t StepperInit(Stepper_t *Stepper);

@@ -26,11 +26,18 @@ namespace RoboCup
 		AppleDetectorConfigs(const YAML::Node& Node) noexcept : AppleDetectorConfigs()
 		{
 			GetParameters(Node, positiveThresholds, negativeThresholds, reflectiveThresholds, minimumSize);
+			pitayaThresholds = GetHSV_Thresholds(Node["PitayaThresholds"]);
 			erodeKernelSize = GetIntegerValue(Node["ErodeKernelSize"], erodeKernelSize);
 			minimumLengthWidthRatio = GetFloatValue(Node["MinimumLengthWidthRatio"], minimumLengthWidthRatio);
+			minimumPitayaSize = GetFloatValue(Node["MinimumPitayaSize"], minimumPitayaSize);
 		};
 
 		~AppleDetectorConfigs() noexcept { };
+
+		std::vector<h13::HSV_Threshold_t> GetPitayaThresholds(void) const noexcept
+		{
+			return pitayaThresholds;
+		};
 
 		int GetErodeKernelSize(void) const noexcept
 		{
@@ -42,8 +49,15 @@ namespace RoboCup
 			return minimumLengthWidthRatio;
 		}
 
+		float GetMinimumPitayaSize(void) const noexcept
+		{
+			return minimumPitayaSize;
+		};
+
 	private:
+		std::vector<h13::HSV_Threshold_t> pitayaThresholds;
 		int erodeKernelSize = 5;
 		float minimumLengthWidthRatio = 0.65;
+		float minimumPitayaSize = 1500;
 	};
 }

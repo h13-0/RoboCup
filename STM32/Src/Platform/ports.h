@@ -37,7 +37,6 @@
 
 /*************************GPIO Ports*************************/
 #include "GPIO.h"
-#include "HC05_GPIO_Ports.h"
 
 /**
  * @brief: Initialize all base peripherals.

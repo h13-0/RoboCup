@@ -397,7 +397,7 @@ static void armControlCalculate(Coordinates_t *Coordinates, float AimCenterX, fl
  */
 void AimAt(Target_t AimTarget, mtime_t TimeOut)
 {
-	static mtime_t lastCalculateTime = 0;
+	mtime_t lastCalculateTime = 0;
 	mtime_t startTime = GetCurrentTimeMillisecond();
 	xAxisPID_Accumulator = rotationAngle;
 	yAxisPID_Accumulator = axialLength;

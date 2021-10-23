@@ -51,22 +51,34 @@
 #define ForwardPID_Differention                      (0.0)
 
 /************************Arm Control************************/
-#define GrabHeight                                   (245)                 //millimeters
-#define ApproachHeight                               (GrabHeight + 75)     //millimeters
-#define RetractionHeight                             (ApproachHeight + 50) //millimeters
-#define BaseAxialLength                              (110)                 //millimeters
-#define ElongationDistance                           (55)                  //millimeters
-#define WashAppleHeight                              (330)                 //millimeters
-#define WashAppleAxialLength                         (245)                 //millimeters
+//Motion parameters
+#define GrabHeight                                   (245)                                               //millimeters
+#define ApproachHeight                               (GrabHeight + 25 > 305 ? 305 : GrabHeight + 25)     //millimeters
+#define RetractionHeight                             (ApproachHeight + 50)                               //millimeters
+#define BaseAxialLength                              (210)                                               //millimeters
+#define ElongationDistance                           (55)                                                //millimeters
+#define WashAppleHeight                              (330)                                               //millimeters
+#define WashAppleAxialLength                         (245)                                               //millimeters
 #define ThrowAppleAxialLength                        (0)
 #define ThrowAppleHeight                             (0)
-#define AppleAimCenterX                              (0.5)
-#define AppleAimCenterY                              (0.8)
-#define TargetAimCenterX                             (0.5)
-#define TargetAimCenterY                             (0.5)
-#define AimToleranceErrorX                           (0.1)
-#define AimToleranceErrorY                           (0.1)
-#define ClawStableTimesLimit                         (90)
+
+//
+#define AppleAimCenterX                              (0.65)
+#define AppleAimCenterY                              (0.44)
+#define TargetAimCenterX                             (0.65)
+#define TargetAimCenterY                             (0.129)
+
+//
+#define AimToleranceErrorX                           (0.015)
+#define AimToleranceErrorY                           (0.015)
+#define ClawStableTimesLimit                         (200)                                               //microseconds
+
+//PID
+#define X_AxisPID_Proportion                         (-2.0)
+#define X_AxisPID_Integration                        (0.0)
+
+#define Y_AxisPID_Proportion                         (7.80)
+#define Y_AxisPID_Integration                        (0.05)
 
 /*************************Arm Config************************/
 //List of available arm types.
@@ -75,7 +87,7 @@
 
 //Arm type selection.
 #define ArmType                                      LiftingPlatform
-#define MaximumRotationAngleOfGraspingApple          (107)
+#define MaximumRotationAngleOfGraspingApple          (90)
 
 #if(ArmType == MechanicalArm)
 //Arm size configs.
@@ -107,7 +119,7 @@
 #define Z_AxisMaximumHeight                          (445)
 #define Z_AxisZeroPoint                              Z_AxisMaximumHeight
 #define Z_AxisZeroingStep                            (1)
-#define Z_AxisZeroingLogicExpression                 (1)
+#define Z_AxisZeroingLogicExpression                 (!GPIO_ReadLevel(&(GPIO_t) { .Port = Z_LimitSensorPort, .Pin = Z_LimitSensorPin} ))
 #define Z_AxisZeroingDelayPerStep                    (10)
 
 #define AL_AxisMinimumLength                         (80)
@@ -116,18 +128,52 @@
 #define AL_AxisZeroingLogicExpression                (1)
 #define AL_AxisZeroingDelayPerStep                   (10)
 
+#define MinimumAxialLength                           (AL_AxisMinimumLength + ArmNode3_Length)
+#define MaximumAxialLength                           (AL_AxisMaximumLength + ArmNode2_Length + ArmNode3_Length)
+#define MaximumElongationAngle                       (75.0)
+
+/**
+ * @platform configs.
+ */
+#define Z_LimitSensorPort                            GPIOA
+#define Z_LimitSensorPin                             LL_GPIO_PIN_4
+#define Z_LimitSensorIO                              ((GPIO_t) { .Port = Z_LimitSensorPort, .Pin = Z_LimitSensorPin})
 #endif //ArmType
 
 /**************Image Processing Module Configs**************/
-#define AppleDetectionAverageFPS                     (18)
+#define AppleDetectionAverageFPS                     (30)
+#define TargetDetectionAverageFPS                    (30)
 #define MaximumFPS_Fluctuation                       (1.5)
 #define ImageProcessingSerialBufferLength            (32)
 
 /*********************Bluetooth Configs********************/
+//Target and message configs.
 #define BluetoothTargetNonSignificantAddress         (0x2020)
 #define BluetoothTargetUpperAddress                  (0x04)
 #define BluetoothTargetLowerAddress                  (0x030495)
 #define SendBluetoothMessageContent()                BluetoothPrintf("a")
+
+/**
+ * @platform configs.
+ */
+#define BluetoothEN_Port                             GPIOC
+#define BluetoothEN_Pin                              LL_GPIO_PIN_3
+#define BluetoothEN_IO                               ((GPIO_t) { .Port = BluetoothEN_Port, .Pin = BluetoothEN_Pin})
+
+/************************UI Configs************************/
+#define ShowSchoolMotto                              (1)
+
+/**
+ * @platform configs.
+ */
+#define LCD_Width                                    (130)
+#define LCD_Height                                   (130)
+
+#define LCD_Rotate_0                                 (0)
+#define LCD_Rotate_90                                (1)
+#define LCD_Rotate_180                               (2)
+#define LCD_Rotate_270                               (3)
+#define LCD_Rotation                                 LCD_Rotate_90
 
 /**
  * @group: Module configs
@@ -211,16 +257,16 @@
 #define ClawGrabServo                                { .Frequency = 50, .TIMx = TIM5, .Channel = LL_TIM_CHANNEL_CH3, .ReloadValue = 2000 }
 
 #define ArmRotationServoMaximumRotationAngle         (270)
-#define ArmRotationServoProportion                   (0.867)
-#define ArmRotationServoOffset                       (0.0)
+#define ArmRotationServoProportion                   (1.0)
+#define ArmRotationServoOffset                       (9.0)
 
-#define ArmElongationServoMaximumRotationAngle       (180)
-#define ArmElongationServoProportion                 (0.857)
-#define ArmElongationServoOffset                     (5.0)
+#define ArmElongationServoMaximumRotationAngle       (270)
+#define ArmElongationServoProportion                 (1.098)
+#define ArmElongationServoOffset                     (9.0)
 
 #define ArmParallelServoMaximumRotationAngle         (180)
 #define ArmParallelServoProportion                   (1.0)
-#define ArmParallelServoOffset                       (6.0)
+#define ArmParallelServoOffset                       (11.0)
 
 #define ClawRotationServoOffset                      (10.0)
 #endif

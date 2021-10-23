@@ -14,8 +14,9 @@
 
 RoboCup::MainWorkingFlow::MainWorkingFlow(const Configs& Configs)
     : WorkingFlow(Configs), fruitDetector(FruitDetector(Configs.GetFruitDetectorSettings()))
-    , mode(WorkingMode::FruitDetection), appleDetector(AppleDetector(Configs.GetAppleDetectorSettings()))
+    , mode(WorkingMode::StandBy), appleDetector(AppleDetector(Configs.GetAppleDetectorSettings()))
     , targetDetector(TargetDetectorConfigs(Configs.GetTargetDetectorSettings()))
+    , fruitDetectionFinished(0), exit(false), exited(false)
 {
     using namespace cv;
     using namespace h13;
@@ -93,6 +94,11 @@ RoboCup::MainWorkingFlow::MainWorkingFlow(const Configs& Configs)
             }
             else if (!cmd.compare("FruitDetection"))
             {
+                if (mode != WorkingMode::FruitDetection)
+                {
+                    std::unique_lock<std::mutex> lockFlag(fruitDetectionFinishedMutex);
+                    fruitDetectionFinished = 0;
+                }
                 mode = WorkingMode::FruitDetection;
                 LOG(INFO) << "Switch to mode: FruitDetection";
             }
@@ -191,24 +197,37 @@ int RoboCup::MainWorkingFlow::Run()
 
 void RoboCup::MainWorkingFlow::standBy(cv::InputOutputArray InputOutputBGR_Image)
 {
-
+    //Nothing to do.
 }
 
 void RoboCup::MainWorkingFlow::appleDetectMax(cv::InputOutputArray InputOutputBGR_Image)
 {
     using namespace cv;
+
     auto results = appleDetector.Detect(InputOutputBGR_Image);
-    for (auto result : results)
+    
+    //Sort apple size.
+    sortRotatedRectMaxToMin(results);
+    
+    for (int index = 0; index < results.size(); index++)
     {
+        RotatedRect& result = results[index];
         Point2f point[4];
-        //result.points(point);
         result.points(point);
         Rect rect = result.boundingRect();
-        rectangle(InputOutputBGR_Image, rect, Scalar(0, 255, 0), 2);
-        putText(InputOutputBGR_Image, "Target Apple", Point(rect.x, rect.y - 16), FONT_HERSHEY_COMPLEX, 1, Scalar(0, 255, 0));
-        for (int index = 0; index < 4; index++)
+        
+        if (index == 0)
         {
-            line(InputOutputBGR_Image, point[index], point[(index + 1) % 4], cv::Scalar(255, 0, 0), 2);
+            rectangle(InputOutputBGR_Image, rect, Scalar(0, 255, 0), 2);
+            putText(InputOutputBGR_Image, "Max Apple", Point(rect.x, rect.y - 16), FONT_HERSHEY_COMPLEX, 1, Scalar(0, 255, 0));
+            for (int index = 0; index < 4; index++)
+            {
+                line(InputOutputBGR_Image, point[index], point[(index + 1) % 4], cv::Scalar(255, 0, 0), 2);
+            }
+            sendAppleCoordinates(result.center.x / InputOutputBGR_Image.rows(), result.center.y / InputOutputBGR_Image.cols());
+        }
+        else {
+            rectangle(InputOutputBGR_Image, rect, Scalar(0, 0, 255), 2);
         }
     }
 }
@@ -217,17 +236,29 @@ void RoboCup::MainWorkingFlow::appleDetectLeft(cv::InputOutputArray InputOutputB
 {
     using namespace cv;
     auto results = appleDetector.Detect(InputOutputBGR_Image);
-    for (auto result : results)
+
+    //Sort Apple Left to Right.
+    sortRotatedRectLeftToRight(results);
+
+    for(int index = 0; index < results.size(); index++)
     {
+        RotatedRect& result = results[index];
         Point2f point[4];
-        //result.points(point);
         result.points(point);
         Rect rect = result.boundingRect();
-        rectangle(InputOutputBGR_Image, rect, Scalar(0, 255, 0), 2);
-        putText(InputOutputBGR_Image, "Target Apple", Point(rect.x, rect.y - 16), FONT_HERSHEY_COMPLEX, 1, Scalar(0, 255, 0));
-        for (int index = 0; index < 4; index++)
+
+        if (index == 0)
         {
-            line(InputOutputBGR_Image, point[index], point[(index + 1) % 4], cv::Scalar(255, 0, 0), 2);
+            rectangle(InputOutputBGR_Image, rect, Scalar(0, 255, 0), 2);
+            putText(InputOutputBGR_Image, "Left Apple", Point(rect.x, rect.y - 16), FONT_HERSHEY_COMPLEX, 1, Scalar(0, 255, 0));
+            for (int index = 0; index < 4; index++)
+            {
+                line(InputOutputBGR_Image, point[index], point[(index + 1) % 4], cv::Scalar(255, 0, 0), 2);
+            }
+            sendAppleCoordinates(result.center.x / InputOutputBGR_Image.rows(), result.center.y / InputOutputBGR_Image.cols());
+        }
+        else {
+            rectangle(InputOutputBGR_Image, rect, Scalar(0, 0, 255), 2);
         }
     }
 }
@@ -236,17 +267,29 @@ void RoboCup::MainWorkingFlow::appleDetectRight(cv::InputOutputArray InputOutput
 {
     using namespace cv;
     auto results = appleDetector.Detect(InputOutputBGR_Image);
-    for (auto result : results)
+    
+    //Sort Apple Right to left.
+    sortRotatedRectRightToLeft(results);
+
+    for (int index = 0; index < results.size(); index++)
     {
+        RotatedRect& result = results[index];
         Point2f point[4];
-        //result.points(point);
         result.points(point);
         Rect rect = result.boundingRect();
-        rectangle(InputOutputBGR_Image, rect, Scalar(0, 255, 0), 2);
-        putText(InputOutputBGR_Image, "Target Apple", Point(rect.x, rect.y - 16), FONT_HERSHEY_COMPLEX, 1, Scalar(0, 255, 0));
-        for (int index = 0; index < 4; index++)
+
+        if (index == 0)
         {
-            line(InputOutputBGR_Image, point[index], point[(index + 1) % 4], cv::Scalar(255, 0, 0), 2);
+            rectangle(InputOutputBGR_Image, rect, Scalar(0, 255, 0), 2);
+            putText(InputOutputBGR_Image, "Right Apple", Point(rect.x, rect.y - 16), FONT_HERSHEY_COMPLEX, 1, Scalar(0, 255, 0));
+            for (int index = 0; index < 4; index++)
+            {
+                line(InputOutputBGR_Image, point[index], point[(index + 1) % 4], cv::Scalar(255, 0, 0), 2);
+            }
+            sendAppleCoordinates(result.center.x / InputOutputBGR_Image.rows(), result.center.y / InputOutputBGR_Image.cols());
+        }
+        else {
+            rectangle(InputOutputBGR_Image, rect, Scalar(0, 0, 255), 2);
         }
     }
 }
@@ -257,14 +300,23 @@ void RoboCup::MainWorkingFlow::targetDetect(cv::InputOutputArray InputOutputBGR_
     using namespace cv;
 
     auto targets = targetDetector.Detect(InputOutputBGR_Image);
-    for (auto target : targets)
+
+    //Find max target.
+    sortRotatedRectMaxToMin(targets);
+
+    if (targets.size() > 0)
     {
+        RotatedRect& target = targets[0];
         Point2f point[4];
         target.points(point);
+        Rect rect = target.boundingRect();
+        rectangle(InputOutputBGR_Image, rect, Scalar(0, 0, 255), 2);
+        putText(InputOutputBGR_Image, "Target", Point(rect.x, rect.y - 16), FONT_HERSHEY_COMPLEX, 1, Scalar(0, 255, 0));
         for (int index = 0; index < 4; index++)
         {
-            line(InputOutputBGR_Image, point[index], point[(index + 1) % 4], cv::Scalar(0, 0, 255), 2);
+            line(InputOutputBGR_Image, point[index], point[(index + 1) % 4], cv::Scalar(255, 0, 0), 2);
         }
+        sendTargetCoordinates(target.center.x / InputOutputBGR_Image.rows(), target.center.y / InputOutputBGR_Image.cols());
     }
 }
 
@@ -275,10 +327,9 @@ void RoboCup::MainWorkingFlow::fruitDetection(cv::InputOutputArray InputOutputBG
 
     Mat mask;
     auto results = fruitDetector.Detect(InputOutputBGR_Image);
-    for (auto result : results)
+    for (auto& result : results)
     {
         Point2f point[4];
-        //result.points(point);
         result.Rect.points(point);
         Rect rect = result.Rect.boundingRect();
         rectangle(InputOutputBGR_Image, rect, Scalar(0, 255, 0), 2);
@@ -288,11 +339,22 @@ void RoboCup::MainWorkingFlow::fruitDetection(cv::InputOutputArray InputOutputBG
             line(InputOutputBGR_Image, point[index], point[(index + 1) % 4], cv::Scalar(255, 0, 0), 2);
         }
     }
+
+    int _fruitDetectionFinished = 1;
+    {
+        std::unique_lock<std::mutex> lockFlag(fruitDetectionFinishedMutex);
+        _fruitDetectionFinished = fruitDetectionFinished;
+    }
+    
+    if (!_fruitDetectionFinished)
+    {
+        sendFruitDetectResult(results);
+    }
 }
 
 void RoboCup::MainWorkingFlow::reportWorkingMode(const WorkingMode::WorkingMode& Mode)
 {
-    protocol->SendPacket("WM", int8_t(Mode));
+    protocol->SendPacket("WM", uint8_t(Mode));
 }
 
 void RoboCup::MainWorkingFlow::sendAppleCoordinates(const float& X_Coordinates, const float& Y_Coordinates)
@@ -303,8 +365,96 @@ void RoboCup::MainWorkingFlow::sendAppleCoordinates(const float& X_Coordinates, 
 
 void RoboCup::MainWorkingFlow::sendTargetCoordinates(const float& X_Coordinates, const float& Y_Coordinates)
 {
-    //protocol->SendPacket("", );
-    //protocol->SendPacket("", );
+    protocol->SendPacket("TarCenX", X_Coordinates);
+    protocol->SendPacket("TarCenY", Y_Coordinates);
 }
 
+void RoboCup::MainWorkingFlow::sendFruitDetectResult(const std::vector<RoboCup::FruitDetectResult_t>& Results)
+{
+    //Unpack Results.
+    uint8_t appleNumber = 0;
+    uint8_t bananaNumber = 0;
+    uint8_t kiwiFruitNumber = 0;
+    uint8_t lemonNumber = 0;
+    uint8_t orangeNumber = 0;
+    uint8_t peachNumber = 0;
+    uint8_t pearNumber = 0;
+    uint8_t pitayaNumber = 0;
+    uint8_t snowPearNumber = 0;
 
+    {
+        std::unique_lock<std::mutex> lockFlag(fruitDetectionFinishedMutex);
+        fruitDetectionFinished = 1;
+    }
+
+    for (auto& result : Results)
+    {
+        switch (result.FruitType)
+        {
+        case Fruit_t::Apple:
+            appleNumber++;
+            break;
+        case Fruit_t::Banana:
+            bananaNumber++;
+            break;
+
+        case Fruit_t::KiwiFruit:
+            kiwiFruitNumber++;
+            break;
+
+        case Fruit_t::Lemon:
+            lemonNumber++;
+            break;
+
+        case Fruit_t::Orange:
+            orangeNumber++;
+            break;
+
+        case Fruit_t::Peach:
+            peachNumber++;
+            break;
+
+        case Fruit_t::Pear:
+            pearNumber++;
+            break;
+
+        case Fruit_t::Pitaya:
+            pitayaNumber++;
+            break;
+
+        case Fruit_t::SnowPear:
+            snowPearNumber++;
+            break;
+
+        default:
+            break;
+        }
+    }
+    for (int times = 0; times < 3; times++)
+    {
+        protocol->SendPacket("AppleNum", appleNumber);
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        protocol->SendPacket("BananaNum", bananaNumber);
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        protocol->SendPacket("KiwiFruitNum", kiwiFruitNumber);
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        protocol->SendPacket("LemonNum", lemonNumber);
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        protocol->SendPacket("OrangeNum", orangeNumber);
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        protocol->SendPacket("PeachNum", peachNumber);
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        protocol->SendPacket("PearNum", pearNumber);
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        protocol->SendPacket("PitayaNum", pitayaNumber);
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        protocol->SendPacket("SnowPearNum", snowPearNumber);
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
+    
+    for (int times = 0; times < 3; times++)
+    {
+        protocol->SendPacket("FruitDetectFinished", uint8_t(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
+}

@@ -50,13 +50,13 @@ namespace RoboCup
 
 		void sendTargetCoordinates(const float& X_Coordinates, const float& Y_Coordinates);
 
-		//void SendFruitDetectionResult();
+		void sendFruitDetectResult(const std::vector<RoboCup::FruitDetectResult_t>& Results);
 
 		/// <summary>
 		/// Base object.
 		/// </summary>
 		Monitor *monitor;
-		h13::Protocol* protocol;
+		h13::SerialProtocol* protocol;
 		cv::VideoCapture capture;
 		FruitDetector fruitDetector;
 		AppleDetector appleDetector;
@@ -67,7 +67,11 @@ namespace RoboCup
 		/// </summary>
 		WorkingMode::WorkingMode mode;
 		std::mutex modeMutex;
-
+		uint8_t fruitDetectionFinished;
+		std::mutex fruitDetectionFinishedMutex;
+		/// <summary>
+		/// Variables for safe exit.
+		/// </summary>
 		bool exit;
 		bool exited;
 		std::condition_variable exitedConditionVariable;

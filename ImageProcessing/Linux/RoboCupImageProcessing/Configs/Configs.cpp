@@ -24,7 +24,7 @@ RoboCup::TargetDetectorConfigs RoboCup::Configs::GetTargetDetectorSettings() con
 
 RoboCup::AppleDetectorConfigs RoboCup::Configs::GetAppleDetectorSettings() const
 {
-	return AppleDetectorConfigs(configs["AppleDetectorSettings"]);
+	return AppleDetectorConfigs(configs["AppleDetectorSettings"]["DetectorConfigs"]);
 }
 
 RoboCup::ApplicationConfigs RoboCup::Configs::GetApplicationConfigs() const

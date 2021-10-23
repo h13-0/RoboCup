@@ -28,4 +28,6 @@
 
 #include "PlaceTrashCan.h"
 
+#include "DisplaySchoolMotto.h"
+
 #endif /* APP_EXAMPLES_EXAMPLES_H_ */

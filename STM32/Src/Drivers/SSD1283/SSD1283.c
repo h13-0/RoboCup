@@ -3,27 +3,14 @@
  *
  *  Created on: 2021Äê6ÔÂ4ÈÕ
  *      Author: h13
- *      note:   This screen driver has been streamlined for LVGL.
+ *      note:   This screen driver has been streamlined for Simple UI.
  */
 
 #include "SSD1283.h"
+#include "RobotConfigs.h"
 
 #include "SPI.h"
 #include "Clock.h"
-
-/**
- * @group: Configs
- */
-//
-#define WIDTH	        130
-#define HEIGHT	        130
-//Rotation Configs
-//	0 -> 0
-//	1 -> 90
-//	2 -> 180
-//	3 -> 270
-#define Rotation        2
-
 
 /**
  * @brief: Select the register you want to operate on.
@@ -102,16 +89,16 @@ void LCDInit(void) {
 	lcdWriteCmd(0x07, 0x0023); /* display control */
 	SleepMillisecond(30);
 	lcdWriteCmd(0x07, 0x0033); /* display control */
-#if (Rotation == 0)
+#if (LCD_Rotation == LCD_Rotate_0)
 	lcdWriteCmd(0x01, 0x2183); /* driver output control, REV, TB, RGB */
 	lcdWriteCmd(0x03, 0x6830); /* entry mode, 65K, ram, ID0 */
-#elif(Rotation == 1)
+#elif(LCD_Rotation == LCD_Rotate_90)
 	lcdWriteCmd(0x01, 0x2283);
 	lcdWriteCmd(0x03, 0x6808);
-#elif(Rotation == 2)
+#elif(LCD_Rotation == LCD_Rotate_180)
 	lcdWriteCmd(0x01, 0x2183);
 	lcdWriteCmd(0x03, 0x6800);
-#elif(Rotation == 3)
+#elif(LCD_Rotation == LCD_Rotate_270)
 	lcdWriteCmd(0x01, 0x2283);
 	lcdWriteCmd(0x03, 0x6838);
 #else
@@ -124,6 +111,7 @@ void LCDInit(void) {
 	lcdWriteCmd(0x0B, 0x580C); /* frame cycle control */
 	lcdWriteCmd(0x12, 0x0609); /* power control 3 */
 	lcdWriteCmd(0x13, 0x3100); /* power control 4 */
+	FillScreen(WHITE);
 }
 
 /**
@@ -134,8 +122,9 @@ void LCDInit(void) {
  * 		xEnd:   X-axis End Point.
  * 		yEnd:   Y-axis End Point.
  */
-void LCDSetRegion(uint8_t xStart, uint8_t yStart, uint8_t xEnd, uint8_t yEnd) {
-#if (Rotation == 0)
+void LCDSetRegion(uint8_t xStart, uint8_t yStart, uint8_t xEnd, uint8_t yEnd)
+{
+#if(LCD_Rotation == LCD_Rotate_0)
 	lcdSelectReg(0x44);
 	lcdWriteData(xEnd + 2);
 	lcdWriteData(xStart + 2);
@@ -148,31 +137,31 @@ void LCDSetRegion(uint8_t xStart, uint8_t yStart, uint8_t xEnd, uint8_t yEnd) {
 	lcdWriteData(yStart + 2);
 	lcdWriteData(xStart + 2);
 
-#elif(Rotation == 1)
+#elif(LCD_Rotation == LCD_Rotate_90)
 	lcdSelectReg(0x44);
-	lcdWriteData(HEIGHT - yStart + 1);
-	lcdWriteData(HEIGHT - yEnd + 1);
+	lcdWriteData(LCD_Height - yStart + 1);
+	lcdWriteData(LCD_Height - yEnd + 1);
 
 	lcdSelectReg(0x45);
-	lcdWriteData(WIDTH - xStart - 1);
-	lcdWriteData(WIDTH - xEnd - 1);
+	lcdWriteData(LCD_Width - xStart - 1);
+	lcdWriteData(LCD_Width - xEnd - 1);
 
 	lcdSelectReg(0x21);
-	lcdWriteData(WIDTH - xStart - 1);
-	lcdWriteData(HEIGHT - yStart + 1);
-#elif(Rotation == 2)
+	lcdWriteData(LCD_Width - xStart - 1);
+	lcdWriteData(LCD_Height - yStart + 1);
+#elif(LCD_Rotation == LCD_Rotate_180)
 	lcdSelectReg(0x44);
-	lcdWriteData(HEIGHT - xStart + 1);
-	lcdWriteData(HEIGHT - xEnd + 1);
+	lcdWriteData(LCD_Height - xStart + 1);
+	lcdWriteData(LCD_Height - xEnd + 1);
 
 	lcdSelectReg(0x45);
-	lcdWriteData(WIDTH - yStart + 1);
-	lcdWriteData(WIDTH - yEnd + 1);
+	lcdWriteData(LCD_Width - yStart + 1);
+	lcdWriteData(LCD_Width - yEnd + 1);
 
 	lcdSelectReg(0x21);
-	lcdWriteData(HEIGHT - yStart + 1);
-	lcdWriteData(WIDTH - xStart + 1);
-#elif(Rotation == 3)
+	lcdWriteData(LCD_Height - yStart + 1);
+	lcdWriteData(LCD_Width - xStart + 1);
+#elif(LCD_Rotation == LCD_Rotate_270)
 	lcdSelectReg(0x44);
 	lcdWriteData(yEnd + 2);
 	lcdWriteData(yStart + 2);
@@ -215,28 +204,28 @@ void LCDFlush(uint8_t xStart, uint8_t yStart, uint8_t xEnd, uint8_t yEnd, uint16
 
 #elif(Rotation == 1)
 	lcdSelectReg(0x44);
-	lcdWriteData(HEIGHT - yStart + 1);
-	lcdWriteData(HEIGHT - yEnd + 1);
+	lcdWriteData(LCD_Height - yStart + 1);
+	lcdWriteData(LCD_Height - yEnd + 1);
 
 	lcdSelectReg(0x45);
-	lcdWriteData(WIDTH - xStart - 1);
-	lcdWriteData(WIDTH - xEnd - 1);
+	lcdWriteData(LCD_Width - xStart - 1);
+	lcdWriteData(LCD_Width - xEnd - 1);
 
 	lcdSelectReg(0x21);
-	lcdWriteData(WIDTH - xStart - 1);
-	lcdWriteData(HEIGHT - yStart + 1);
+	lcdWriteData(LCD_Width - xStart - 1);
+	lcdWriteData(LCD_Height - yStart + 1);
 #elif(Rotation == 2)
 	lcdSelectReg(0x44);
-	lcdWriteData(HEIGHT - xStart + 1);
-	lcdWriteData(HEIGHT - xEnd + 1);
+	lcdWriteData(LCD_Height - xStart + 1);
+	lcdWriteData(LCD_Height - xEnd + 1);
 
 	lcdSelectReg(0x45);
-	lcdWriteData(WIDTH - yStart + 1);
-	lcdWriteData(WIDTH - yEnd + 1);
+	lcdWriteData(LCD_Width - yStart + 1);
+	lcdWriteData(LCD_Width - yEnd + 1);
 
 	lcdSelectReg(0x21);
-	lcdWriteData(HEIGHT - yStart + 1);
-	lcdWriteData(WIDTH - xStart + 1);
+	lcdWriteData(LCD_Height - yStart + 1);
+	lcdWriteData(LCD_Width - xStart + 1);
 #elif(Rotation == 3)
 	lcdSelectReg(0x44);
 	lcdWriteData(yEnd + 2);
@@ -265,11 +254,14 @@ void LCDFlush(uint8_t xStart, uint8_t yStart, uint8_t xEnd, uint8_t yEnd, uint16
  */
 void FillScreen(uint16_t color) {
 	unsigned int i, m;
-	LCDSetRegion(0, 0, WIDTH - 1, HEIGHT - 1);
-	for (i = 0; i < WIDTH; i++)
-		for (m = 0; m < HEIGHT; m++) {
+	LCDSetRegion(0, 0, LCD_Width - 1, LCD_Height - 1);
+	for (i = 0; i < LCD_Width; i++)
+	{
+		for (m = 0; m < LCD_Height; m++)
+		{
 			writeData16(color);
 		}
+	}
 }
 
 /**
@@ -277,4 +269,13 @@ void FillScreen(uint16_t color) {
  */
 void LCDClear(void) {
 	FillScreen(BLACK);
+}
+
+void LCD_Write16(uint16_t *DataPtr, uint16_t Length)
+{
+	for(uint16_t i = 0; i < Length; i++)
+	{
+		writeData16(*DataPtr);
+		DataPtr ++;
+	}
 }

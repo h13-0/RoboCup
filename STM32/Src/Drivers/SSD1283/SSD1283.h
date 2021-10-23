@@ -63,4 +63,6 @@ void FillScreen(uint16_t color);
  */
 void LCDClear(void);
 
+void LCD_Write16(uint16_t *DataPtr, uint16_t Length);
+
 #endif /* PLATFORM_SSD1283_SSD1283_H_ */
