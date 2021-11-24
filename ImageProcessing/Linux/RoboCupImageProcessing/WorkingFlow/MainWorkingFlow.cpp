@@ -92,7 +92,7 @@ RoboCup::MainWorkingFlow::MainWorkingFlow(const Configs& Configs)
                 mode = WorkingMode::TargetDetection;
                 LOG(INFO) << "Switch to mode: TargetDetection";
             }
-            else if (!cmd.compare("FruitDetection"))
+            else if (!cmd.compare("FruitDetect"))
             {
                 if (mode != WorkingMode::FruitDetection)
                 {
@@ -126,73 +126,94 @@ int RoboCup::MainWorkingFlow::Run()
     exit = false;
     exited = false;
 
-    while (1)
-    {
-        if (capture.isOpened())
-        {
-            Mat frame;
-            while (capture.read(frame))
+    std::thread readFrameFromDeviceThread(
+        [&] {
+            while (1)
             {
-                //Check exit flag.
+                if (capture.isOpened())
                 {
-                    std::unique_lock<std::mutex> lock(exitFlagMutex);
-                    if (this->exit)
+                    Mat _frame;
+                    while (capture.read(_frame))
                     {
-                        break;
+                        unique_lock lock(frameMutex);
+                        frame = _frame.clone();
                     }
                 }
-
-                auto start = std::chrono::high_resolution_clock::now();
-                //Dispatch.
-                WorkingMode::WorkingMode _mode;
-                {
-                    std::unique_lock<std::mutex> lock(modeMutex);
-                    _mode = mode;
-                }
-                switch (_mode)
-                {
-                case RoboCup::WorkingMode::WorkingMode::StandBy:
-                    standBy(frame);
-                    break;
-                case RoboCup::WorkingMode::WorkingMode::AppleDetectMax:
-                    appleDetectMax(frame);
-                    break;
-                case RoboCup::WorkingMode::WorkingMode::AppleDetectLeft:
-                    appleDetectLeft(frame);
-                    break;
-                case RoboCup::WorkingMode::WorkingMode::AppleDetectRight:
-                    appleDetectRight(frame);
-                    break;
-                case RoboCup::WorkingMode::WorkingMode::TargetDetection:
-                    targetDetect(frame);
-                    break;
-                case RoboCup::WorkingMode::WorkingMode::FruitDetection:
-                    fruitDetection(frame);
-                    break;
-                default:
-                    break;
-                }
-                auto end = std::chrono::high_resolution_clock::now();
-                std::chrono::duration<double, std::milli> tm = end - start;
-                if (_mode != WorkingMode::StandBy)
-                {
-                    putText(frame, "fps: " + to_string(1000 / tm.count()), Point(0, 24), FONT_HERSHEY_COMPLEX, 1, Scalar(255, 255, 255));
-                }
-                putText(frame, "Mode: " + RoboCup::WorkingMode::GetLabelString(_mode), Point(0, frame.cols - 24), FONT_HERSHEY_COMPLEX, 1, Scalar(255, 255, 255));
-                if (monitor)
-                {
-                    monitor->Display("Final", frame);
-                }
-                reportWorkingMode(_mode);
+                LOG(FATAL) << "Could not open camera.";
+                throw std::runtime_error("Could not open camera.");
             }
         }
-        else {
-            LOG(FATAL) << "Could not open camera.";
+    );
+
+    readFrameFromDeviceThread.detach();
+
+    while (1)
+    {
+        //Check exit flag.
+        {
+            std::unique_lock<std::mutex> lock(exitFlagMutex);
+            if (this->exit)
+            {
+                break;
+            }
         }
 
-        exited = true;
-        exitedConditionVariable.notify_one();
+        //Read frame.
+        Mat _frame;
+        while(_frame.empty())
+        {
+            unique_lock lock(frameMutex);
+            _frame = frame.clone();
+            this_thread::sleep_for(chrono::milliseconds(100));
+        }
+
+
+        auto start = std::chrono::high_resolution_clock::now();
+        //Dispatch.
+        WorkingMode::WorkingMode _mode;
+        {
+            std::unique_lock<std::mutex> lock(modeMutex);
+            _mode = mode;
+        }
+        switch (_mode)
+        {
+        case RoboCup::WorkingMode::WorkingMode::StandBy:
+            standBy(_frame);
+            break;
+        case RoboCup::WorkingMode::WorkingMode::AppleDetectMax:
+            appleDetectMax(_frame);
+            break;
+        case RoboCup::WorkingMode::WorkingMode::AppleDetectLeft:
+            appleDetectLeft(_frame);
+            break;
+        case RoboCup::WorkingMode::WorkingMode::AppleDetectRight:
+            appleDetectRight(_frame);
+            break;
+        case RoboCup::WorkingMode::WorkingMode::TargetDetection:
+            targetDetect(_frame);
+            break;
+        case RoboCup::WorkingMode::WorkingMode::FruitDetection:
+            fruitDetection(_frame);
+            break;
+        default:
+            break;
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> tm = end - start;
+        if (_mode != WorkingMode::StandBy)
+        {
+            putText(_frame, "fps: " + to_string(1000 / tm.count()), Point(0, 24), FONT_HERSHEY_COMPLEX, 1, Scalar(255, 255, 255));
+        }
+        putText(_frame, "Mode: " + RoboCup::WorkingMode::GetLabelString(_mode), Point(0, _frame.cols - 24), FONT_HERSHEY_COMPLEX, 1, Scalar(255, 255, 255));
+        if (monitor)
+        {
+            monitor->Display("Final", _frame);
+        }
+        reportWorkingMode(_mode);
     }
+    exited = true;
+    exitedConditionVariable.notify_one();
+    return -1;
 }
 
 void RoboCup::MainWorkingFlow::standBy(cv::InputOutputArray InputOutputBGR_Image)
@@ -372,15 +393,15 @@ void RoboCup::MainWorkingFlow::sendTargetCoordinates(const float& X_Coordinates,
 void RoboCup::MainWorkingFlow::sendFruitDetectResult(const std::vector<RoboCup::FruitDetectResult_t>& Results)
 {
     //Unpack Results.
-    uint8_t appleNumber = 0;
-    uint8_t bananaNumber = 0;
-    uint8_t kiwiFruitNumber = 0;
-    uint8_t lemonNumber = 0;
-    uint8_t orangeNumber = 0;
-    uint8_t peachNumber = 0;
-    uint8_t pearNumber = 0;
-    uint8_t pitayaNumber = 0;
-    uint8_t snowPearNumber = 0;
+    int8_t appleNumber = 0;
+    int8_t bananaNumber = 0;
+    int8_t kiwiFruitNumber = 0;
+    int8_t lemonNumber = 0;
+    int8_t orangeNumber = 0;
+    int8_t peachNumber = 0;
+    int8_t pearNumber = 0;
+    int8_t pitayaNumber = 0;
+    int8_t snowPearNumber = 0;
 
     {
         std::unique_lock<std::mutex> lockFlag(fruitDetectionFinishedMutex);

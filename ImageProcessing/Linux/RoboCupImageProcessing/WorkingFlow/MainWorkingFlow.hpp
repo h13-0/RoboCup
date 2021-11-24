@@ -69,6 +69,9 @@ namespace RoboCup
 		std::mutex modeMutex;
 		uint8_t fruitDetectionFinished;
 		std::mutex fruitDetectionFinishedMutex;
+		cv::Mat frame;
+		std::mutex frameMutex;
+
 		/// <summary>
 		/// Variables for safe exit.
 		/// </summary>

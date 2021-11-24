@@ -30,4 +30,8 @@
 
 #include "DisplaySchoolMotto.h"
 
+#include "PrepareArmPosition.h"
+
+#include "IdentifyFruit.h"
+
 #endif /* APP_EXAMPLES_EXAMPLES_H_ */

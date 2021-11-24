@@ -52,12 +52,13 @@
 
 /************************Arm Control************************/
 //Motion parameters
-#define GrabHeight                                   (245)                                               //millimeters
+#define GrabHeight                                   (275)                                               //millimeters
 #define ApproachHeight                               (GrabHeight + 25 > 305 ? 305 : GrabHeight + 25)     //millimeters
-#define RetractionHeight                             (ApproachHeight + 50)                               //millimeters
+//#define RetractionHeight                             (ApproachHeight + 50)                               //millimeters
 #define BaseAxialLength                              (210)                                               //millimeters
-#define ElongationDistance                           (55)                                                //millimeters
-#define WashAppleHeight                              (330)                                               //millimeters
+#define CatchAppleElongationDistance                 (0)                                                 //millimeters
+#define PlaceAppleElongationDistance                 (150)                                               //millimeters
+#define WashAppleHeight                              (350)                                               //millimeters
 #define WashAppleAxialLength                         (245)                                               //millimeters
 #define ThrowAppleAxialLength                        (0)
 #define ThrowAppleHeight                             (0)
@@ -66,7 +67,7 @@
 #define AppleAimCenterX                              (0.65)
 #define AppleAimCenterY                              (0.44)
 #define TargetAimCenterX                             (0.65)
-#define TargetAimCenterY                             (0.129)
+#define TargetAimCenterY                             (0.16)
 
 //
 #define AimToleranceErrorX                           (0.015)
@@ -78,7 +79,7 @@
 #define X_AxisPID_Integration                        (0.0)
 
 #define Y_AxisPID_Proportion                         (7.80)
-#define Y_AxisPID_Integration                        (0.05)
+#define Y_AxisPID_Integration                        (0.005)
 
 /*************************Arm Config************************/
 //List of available arm types.
@@ -117,14 +118,15 @@
 
 #define Z_AxisMinimumHeight                          (320)
 #define Z_AxisMaximumHeight                          (445)
-#define Z_AxisZeroPoint                              Z_AxisMaximumHeight
+#define Z_AxisZeroPoint                              (Z_AxisMaximumHeight - ArmNode2_Length)
 #define Z_AxisZeroingStep                            (1)
 #define Z_AxisZeroingLogicExpression                 (!GPIO_ReadLevel(&(GPIO_t) { .Port = Z_LimitSensorPort, .Pin = Z_LimitSensorPin} ))
-#define Z_AxisZeroingDelayPerStep                    (10)
+#define Z_AxisZeroingDelayPerStep                    (5)
 
 #define AL_AxisMinimumLength                         (80)
 #define AL_AxisMaximumLength                         (215)
-#define AL_AxisZeroPoint                             AL_AxisMinimumLength
+#define AL_AxisZeroPoint                             (AL_AxisMinimumLength + ArmNode3_Length)
+#define AL_AxisZeroingStep                           (1)
 #define AL_AxisZeroingLogicExpression                (1)
 #define AL_AxisZeroingDelayPerStep                   (10)
 
@@ -378,9 +380,19 @@
 
 /***********************USART Configs***********************/
 #define USART_t                                      USART_TypeDef*
-#define DebugPorts                                   USART1
-#define ImageProcessingModulePorts                   UART4
-#define LuatPorts                                    UART5
-#define BluetoothPorts                               UART5
+
+#define DebugPort                                    USART1
+#define DebugPortBaudRate                            (1152000)
+
+#define ImageProcessingModulePort                    UART4
+#define ImageProcessingModulePortBaudRate            (115200)
+
+//Because DF Player only supports 9600 baud rates only.
+#define LuatPort                                     UART5
+#define LuatPortBaudRate                             (9600)      //9600 only.
+#define BluetoothPort                                UART5
+#define BluetoothPortBaudRate                        (9600)      //9600 only.
+#define DF_PlayerPort                                UART5
+#define DF_PlayerPortBaudRate                        (9600)      //9600 only.
 
 #endif /* ROBOTCONFIGS_H_ */

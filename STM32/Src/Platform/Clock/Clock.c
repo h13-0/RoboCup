@@ -1,7 +1,7 @@
 /*
  * Clock.c
  *
- *  Created on: 2021年6月25日
+ *  Created on: 2021, 6, 25
  *      Author: h13
  */
 #include "Clock.h"
@@ -34,11 +34,11 @@ void ClockInit(void)
  */
 void SleepMillisecond(mtime_t milliseconds)
 {
-	uint32_t startVal = SysTick -> VAL;
-	mtime_t startMillisecond = _milliseconds;
+	//uint32_t startVal = SysTick -> VAL;
+	mtime_t endMillisecond = _milliseconds + milliseconds;
 
-	while(startMillisecond + milliseconds > _milliseconds);
-	while(startVal < SysTick -> VAL);
+	while(endMillisecond > _milliseconds);
+	//while((endMillisecond == _milliseconds) && (startVal < SysTick -> VAL));
 }
 
 /**

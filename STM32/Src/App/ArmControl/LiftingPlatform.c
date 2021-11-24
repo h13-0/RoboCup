@@ -16,7 +16,7 @@
 #include "Stepper.h"
 #include "Servo.h"
 
-#define PI      (3.1415926)
+#define PI                (3.1415926)
 
 static Stepper_t zAxisStepper = Z_AxisStepper, axisLengthStepper = AL_AxisStepper;
 static GPIO_t zLimitSensorIO = Z_LimitSensorIO;
@@ -54,8 +54,19 @@ void ArmControlInit(void)
 		SleepMillisecond(Z_AxisZeroingDelayPerStep);
 	}
 
+	currentZ_AxisHeight = Z_AxisZeroPoint;
 	zAxisStepper.CurrentSteps = 0;
-	zAxisStepper.TargetSteps  = 0;
+	zAxisStepper.TargetSteps = 0;
+
+	while(!AL_AxisZeroingLogicExpression)
+	{
+		StepperForward(&axisLengthStepper, AL_AxisZeroingStep);
+		SleepMillisecond(AL_AxisZeroingDelayPerStep);
+	}
+
+	currentAxisLength = AL_AxisZeroPoint;
+	axisLengthStepper.CurrentSteps = 0;
+	axisLengthStepper.TargetSteps = 0;
 
 	xAxisPID.proportion   = X_AxisPID_Proportion;
 	xAxisPID.integration  = X_AxisPID_Integration;
@@ -113,14 +124,14 @@ ArmControlResult_t SetOpenLoopClawPosition(uint16_t RotationAngle, uint16_t Axia
 			alAxisTargetSteps = (AxialLength - AL_AxisMinimumLength - ArmNode3_Length) * AL_AxisStepsPerMillimeter;
 			armElongationAngle = 0;
 			armParallelAngle = 0;
-			zAxisTargetSteps = (Z_AxisHeight - Z_AxisMinimumHeight + ArmNode2_Length - Z_AxisZeroPoint + Z_AxisMinimumHeight) * Z_AxisStepsPerMillimeter;
+			zAxisTargetSteps = (Z_AxisHeight - Z_AxisZeroPoint) * Z_AxisStepsPerMillimeter;
 		} else {
 			//Move AL-Axis stepper and servos.
 			alAxisTargetSteps = (AL_AxisMaximumLength - AL_AxisMinimumLength) * AL_AxisStepsPerMillimeter;
 			uint16_t residualElongation = AxialLength - ArmNode3_Length - AL_AxisMaximumLength;
 			armElongationAngle = asin((double)residualElongation / ArmNode2_Length) * 180 / PI;
 			armParallelAngle = armElongationAngle;
-			zAxisTargetSteps = (Z_AxisHeight - Z_AxisMinimumHeight + sqrt(pow((double)ArmNode2_Length, 2) - pow((double)residualElongation, 2)) - Z_AxisZeroPoint + Z_AxisMinimumHeight) * Z_AxisStepsPerMillimeter;
+			zAxisTargetSteps = ( (Z_AxisHeight + sqrt(pow((double)ArmNode2_Length, 2) - pow((double)residualElongation, 2))) - (Z_AxisZeroPoint + ArmNode2_Length)) * Z_AxisStepsPerMillimeter;
 		}
 
 		//Implement.
@@ -194,12 +205,12 @@ static void calculateY_AxisPID(float CurrentTargetY, float AimCenterY)
 /**
  * @brief: Aim the mechanical claw at Target.
  * @param:
- * 		Target_t AimTarget:            Target in enum.
- * 		mtime_t  TimeOut:              Time out in millisecond.
+ * 		Target_t Target:  Target in enum.
+ * 		mtime_t  TimeOut: Time out in millisecond.
  * @note:
  * 		When using open-loop control, the `RelativeZ_AxisHeight` does not take effect.
  */
-void AimAt(Target_t AimTarget, mtime_t TimeOut)
+void AimAt(Target_t Target, mtime_t TimeOut)
 {
 	mtime_t lastCalculateTime = 0;
 	mtime_t startTime = GetCurrentTimeMillisecond();
@@ -210,16 +221,18 @@ void AimAt(Target_t AimTarget, mtime_t TimeOut)
 	while(1)
 	{
 		Coordinates_t coordinates = { 0 };
-		float currentX = coordinates.X;
-		float currentY = coordinates.Y;
+		float currentX = 0;
+		float currentY = 0;
 
-		switch(AimTarget)
+		switch(Target)
 		{
-		case Apple:
+		case AimApple:
 			GetAppleCoordinates(&coordinates);
 			if((GetCurrentTimeMillisecond() - coordinates.TimeStamp < (1000.0 * MaximumFPS_Fluctuation / AppleDetectionAverageFPS))
 					&& (GetCurrentTimeMillisecond() - lastCalculateTime > (1000.0 * MaximumFPS_Fluctuation / AppleDetectionAverageFPS)))
 			{
+				currentX = coordinates.X;
+				currentY = coordinates.Y;
 				if(fabs(currentX - AppleAimCenterX) > AimToleranceErrorX)
 				{
 					calculateX_AxisPID(currentX, AppleAimCenterX);
@@ -234,16 +247,18 @@ void AimAt(Target_t AimTarget, mtime_t TimeOut)
 
 				SetOpenLoopClawPosition(xAxisPID_Accumulator, yAxisPID_Accumulator, currentZ_AxisHeight);
 				lastCalculateTime = GetCurrentTimeMillisecond();
+			} else if(GetCurrentTimeMillisecond() - coordinates.TimeStamp > (1000.0 * MaximumFPS_Fluctuation / AppleDetectionAverageFPS)) {
+				startStableTime = GetCurrentTimeMillisecond();
 			}
 			break;
 
-		case Target:
+		case AimTarget:
 			GetTargetCoordinates(&coordinates);
-			startStableTime = GetCurrentTimeMillisecond();
 			if((GetCurrentTimeMillisecond() - coordinates.TimeStamp < (1000.0 * MaximumFPS_Fluctuation / TargetDetectionAverageFPS))
 				&& (GetCurrentTimeMillisecond() - lastCalculateTime > (1000.0 * MaximumFPS_Fluctuation / TargetDetectionAverageFPS)))
 			{
-				startStableTime = GetCurrentTimeMillisecond();
+				currentX = coordinates.X;
+				currentY = coordinates.Y;
 				if(fabs(currentX - TargetAimCenterX) > AimToleranceErrorX)
 				{
 					calculateX_AxisPID(currentX, TargetAimCenterX);
@@ -258,6 +273,8 @@ void AimAt(Target_t AimTarget, mtime_t TimeOut)
 
 				SetOpenLoopClawPosition(xAxisPID_Accumulator, yAxisPID_Accumulator, currentZ_AxisHeight);
 				lastCalculateTime = GetCurrentTimeMillisecond();
+			} else if(GetCurrentTimeMillisecond() - coordinates.TimeStamp > (1000.0 * MaximumFPS_Fluctuation / TargetDetectionAverageFPS)) {
+				startStableTime = GetCurrentTimeMillisecond();
 			}
 			break;
 
@@ -279,8 +296,8 @@ void AimAt(Target_t AimTarget, mtime_t TimeOut)
 			return;
 		}
 
-		float data[] = { coordinates.X, TargetAimCenterX, coordinates.Y, TargetAimCenterY, coordinates.TimeStamp };
-		LogJustFloat(data, 5);
+		float data[] = { coordinates.X, TargetAimCenterX, coordinates.Y, TargetAimCenterY, coordinates.TimeStamp, startStableTime };
+		LogJustFloat(data, 6);
 	}
 }
 

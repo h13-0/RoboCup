@@ -6,11 +6,13 @@
  */
 #include "ArmControl.h"
 #include "WashApple.h"
+#include "PrepareArmPosition.h"
 #include "RobotConfigs.h"
 
 #include "Ports.h"
 #include "Drivers.h"
 
+#if(ArmType == MechanicalArm)
 /**
  * @brief: Wash Apple
  */
@@ -109,3 +111,39 @@ void WashApple(void)
 		SleepMillisecond(5);
 	}
 }
+#elif(ArmType == LiftingPlatform)
+/**
+ * @brief: Wash Apple
+ */
+void WashApple(void)
+{
+	SmoothMoveTo(MoveRotationAngle, 90, 15);
+	SmoothMoveTo(MoveAxialLength, 300, 5);
+
+	for(uint8_t angle = 0; angle < 180; angle++)
+	{
+		SetArmNodeAngle(ClawRotation, angle);
+		SleepMillisecond(5);
+	}
+
+	for(uint8_t angle = 180; angle > 0; angle--)
+	{
+		SetArmNodeAngle(ClawRotation, angle);
+		SleepMillisecond(5);
+	}
+
+	for(uint8_t angle = 0; angle < 180; angle++)
+	{
+		SetArmNodeAngle(ClawRotation, angle);
+		SleepMillisecond(5);
+	}
+
+	for(uint8_t angle = 180; angle > 0; angle--)
+	{
+		SetArmNodeAngle(ClawRotation, angle);
+		SleepMillisecond(5);
+	}
+
+	PrepareArmPosition(0);
+}
+#endif

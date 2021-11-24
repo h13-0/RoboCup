@@ -30,13 +30,13 @@ void BluetoothPrintf(char *fmt, ...)
 
 	for(uint8_t i = 0; i < length; i++)
 	{
-		BluetoothSerialSend(buffer[i]);
+		SerialSend(BluetoothPort, buffer[i]);
 	}
 }
 
 void BluetoothSendChar(char Data)
 {
-	BluetoothSerialSend(Data);
+	SerialSend(BluetoothPort, Data);
 }
 
 static void sendAT_Command(char *fmt, ...)
@@ -54,7 +54,7 @@ static void sendAT_Command(char *fmt, ...)
 
 	for(uint8_t i = 0; i < length; i++)
 	{
-		BluetoothSerialSend(buffer[i]);
+		SerialSend(BluetoothPort, buffer[i]);
 	}
 
 	SleepMillisecond(300);

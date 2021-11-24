@@ -15,6 +15,8 @@
 #include "stm32f1xx_ll_usart.h"
 #endif
 
+void SerialInit(USART_t USART, uint32_t BaudRate);
+
 void SerialSend(USART_t USART, uint8_t data);
 
 #endif /* PLATFORM_USART_USART_H_ */

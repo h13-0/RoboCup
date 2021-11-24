@@ -6,11 +6,13 @@
  */
 
 #include "AppLog.h"
+#include "RobotConfigs.h"
+
 #include <stdio.h>
 #include <stdarg.h>
-//Serial Printf Lib
-#include "JustFloat.h"
 
+#include "JustFloat.h"
+#include "ports.h"
 
 /**
  * @brief: Init Log Method and Ports.
@@ -19,9 +21,10 @@ inline void LogInit()
 {
 #ifndef DEBUG
 	//Release Init Functions.
-
+	SerialInit(DebugPort, DebugPortBaudRate);
 #else
 	//Debug Init Functions.
+	SerialInit(DebugPort, DebugPortBaudRate);
 #endif
 }
 

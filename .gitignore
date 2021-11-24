@@ -8,6 +8,7 @@ ImageProcessing/OpenMV/CascadeClassifier/Background
 ImageProcessing/Linux/RoboCupImageProcessing/.vs
 ImageProcessing/Linux/RoboCupImageProcessing/out
 /yolo/datasets
+/yolo/v4test
 /OpenMV/CascadeClassifier/Resized/Apple
 /OpenMV/CascadeClassifier/Source/Apple
 /OpenMV/CascadeClassifier/Background

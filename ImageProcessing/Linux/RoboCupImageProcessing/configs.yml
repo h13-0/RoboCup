@@ -1,4 +1,5 @@
 # Base settings of application.
+# Version 2021-11-24
 ApplicationSettings:
   # Select monitor type
   ## Available type
@@ -24,7 +25,7 @@ ApplicationSettings:
   ## Linux: /dev/ttyUSB0
   ## Windows: com3
   SerialPort:
-    /dev/
+    /dev/ttyS1
 
 # Fruit detector parameters settings.
 # note: These variables only work in the `FruitDetector` mode.
@@ -40,7 +41,7 @@ FruitDetectorSettings:
     QuantityLimit: 4
     DetectorConfigs:
       PositiveThresholds:
-      - [70, 102, 50, 255, 79, 255]
+      - [70, 110, 50, 255, 79, 255]
       NegativeThresholds:
       - [0, 65, 60, 255, 0, 255]
       ReflectiveThresholds:
@@ -51,7 +52,33 @@ FruitDetectorSettings:
       PitayaThresholds:
       - [210, 255, 175, 255, 125, 255]
       MinimumPitayaSize: 1500
+  
+  BananaDetector:
+    Enable: true
+    QuantityLimit: 4
+    DetectorConfigs:
+      PositiveThresholds:
+      - [39, 75, 0, 170, 160, 255]
+      NegativeThresholds:
+      ReflectiveThresholds:
+      MinimumSize: 2000
+      ErodeKernelSize: 5
+      DilateKernelSize: 7
+      MaximumLengthWidthRatio: 0.5
 
+  KiwiFruitDetector:
+    Enable: true
+    QuantityLimit: 4
+    DetectorConfigs:
+      PositiveThresholds:
+      - [60, 80, 80, 180, 50, 255]
+      - [45, 110, 22, 206, 15, 255]
+      NegativeThresholds:
+      - [0, 51, 0, 26, 0, 255]
+      - [0, 255, 0, 40, 0, 255]
+      ReflectiveThresholds:
+      MinimumSize: 1300
+      
   LemonDetector:
     Enable: true
     QuantityLimit: 4
@@ -71,37 +98,13 @@ FruitDetectorSettings:
     QuantityLimit: 4
     DetectorConfigs:
       PositiveThresholds:
-      - [3, 26, 106, 255, 0, 255]
+      - [8, 26, 106, 255, 150, 255]
       NegativeThresholds:
       - [7, 21, 100, 150, 0, 255]
       ReflectiveThresholds:
       MinimumSize: 1600
       ErodeKernelSize: 5
-  
-  BananaDetector:
-    Enable: true
-    QuantityLimit: 4
-    DetectorConfigs:
-      PositiveThresholds:
-      - [26, 55, 60, 175, 174, 255]
-      NegativeThresholds:
-      ReflectiveThresholds:
-      MinimumSize: 2000
-      ErodeKernelSize: 5
-      DilateKernelSize: 7
-      MaximumLengthWidthRatio: 0.5
     
-  PitayaDetector:
-    Enable: true
-    QuantityLimit: 4
-    DetectorConfigs:
-      PositiveThresholds:
-      - [210, 255, 95, 255, 125, 255]
-      NegativeThresholds:
-      ReflectiveThresholds:
-      MinimumSize: 3000
-      ErodeKernelSize: 5
-      
   PeachDetector:
     Enable: true
     QuantityLimit: 4
@@ -115,6 +118,30 @@ FruitDetectorSettings:
       MinimumSize: 1300
       ErodeKernelSize: 10
       MaximumLengthWidthRatio: 0.5
+
+  PearDetector:
+    Enable: true
+    QuantityLimit: 4
+    DetectorConfigs:
+      PositiveThresholds:
+      - [40, 61, 145, 255, 30, 255]
+      - [50, 66, 185, 255, 40, 255]
+      NegativeThresholds:
+      ReflectiveThresholds:
+      MinimumSize: 1000
+      ErodeKernelSize: 5
+      MinimumLengthWidthRatio: 0.5
+      
+  PitayaDetector:
+    Enable: true
+    QuantityLimit: 4
+    DetectorConfigs:
+      PositiveThresholds:
+      - [210, 255, 95, 255, 125, 255]
+      NegativeThresholds:
+      ReflectiveThresholds:
+      MinimumSize: 3000
+      ErodeKernelSize: 5
     
   SnowPearDetector:
     Enable: true
@@ -130,32 +157,6 @@ FruitDetectorSettings:
       MinimumLengthWidthRatio: 0.5
       MinimumContourArea: 2200
       MaximumContourArea: 15000
-  
-  PearDetector:
-    Enable: true
-    QuantityLimit: 4
-    DetectorConfigs:
-      PositiveThresholds:
-      - [40, 61, 145, 255, 30, 255]
-      - [50, 66, 185, 255, 40, 255]
-      NegativeThresholds:
-      ReflectiveThresholds:
-      MinimumSize: 1000
-      ErodeKernelSize: 5
-      MinimumLengthWidthRatio: 0.5
-          
-  KiwiFruitDetector:
-    Enable: true
-    QuantityLimit: 4
-    DetectorConfigs:
-      PositiveThresholds:
-      - [60, 80, 80, 180, 50, 255]
-      - [45, 110, 22, 206, 15, 255]
-      NegativeThresholds:
-      - [0, 51, 0, 26, 0, 255]
-      - [0, 255, 0, 40, 0, 255]
-      ReflectiveThresholds:
-      MinimumSize: 1300
       
 # Target detector parameters settings.
 TargetDetectorSettings:
@@ -164,7 +165,7 @@ TargetDetectorSettings:
     - [116, 180, 0, 70, 90, 255]
     NegativeThresholds:
     ReflectiveThresholds:
-    - [240, 255, 155, 255, 80, 255]
+    - [240, 255, 90, 255, 80, 255]
     MinimumPositiveSize: 5000
     MinimumPositiveLengthWidthRatio: 0.4
     MinimumReflectiveSize: 2000
@@ -175,7 +176,7 @@ TargetDetectorSettings:
 AppleDetectorSettings:
   DetectorConfigs:
     PositiveThresholds:
-    - [70, 102, 50, 255, 79, 255]
+    - [70, 110, 50, 255, 79, 255]
     NegativeThresholds:
     - [0, 65, 60, 255, 0, 255]
     ReflectiveThresholds:
@@ -185,5 +186,5 @@ AppleDetectorSettings:
     MinimunLengthWidthRatio: 0.65
     PitayaThresholds:
     - [210, 255, 175, 255, 125, 255]
-    MinimumPitayaSize: 1500
+    MinimumPitayaSize: 1500  
     

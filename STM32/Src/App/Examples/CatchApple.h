@@ -10,9 +10,9 @@
 
 typedef enum
 {
-	MaximumTarget,
-	LeftTarget,
-	RightTarget,
+	CatchMaximumApple,
+	CatchLeftApple,
+	CatchRightApple,
 } TargetType_t;
 
 void CatchApple(TargetType_t Target);

@@ -17,6 +17,11 @@
  */
 void ImageProcessingModuleHandler(uint8_t data);
 
+/**
+ * @brief: Init image processing module peripheral.
+ */
+void ImageProcessingModulePeripheral(void);
+
 typedef enum
 {
 	NotReady = -1,
@@ -62,5 +67,26 @@ typedef struct
 void GetAppleCoordinates(Coordinates_t *Coordinates);
 
 void GetTargetCoordinates(Coordinates_t *Coordinates);
+
+/**
+ * @brief: Get the result of fruit detection.
+ * @usage:
+ * 	int8_t* result = GetFruitDetectionResult();
+ * 	printf("AppleNumber: %d\r\n", *(result + FruitApple));
+ */
+typedef enum
+{
+	FruitApple = 0,
+	FruitBanana = 1,
+	FruitKiwiFruit = 2,
+	FruitLemon = 3,
+	FruitOrange = 4,
+	FruitPeach = 5,
+	FruitPear = 6,
+	FruitPitaya = 7,
+	FruitSnowPear = 8,
+} FruitID_t;
+
+int8_t* GetFruitDetectionResult(void);
 
 #endif /* DRIVERS_IMAGEPROCESSINGMODULE_IMAGEPROCESSINGMODULE_H_ */

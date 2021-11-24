@@ -133,9 +133,9 @@
 
 #define MatchKeyInt16_t(String, StringLength, Key, KeyLength, TargetInt16_t, Callback) MatchKeyRaw(String, StringLength, Key, KeyLength, TargetInt16_t, 2, Callback)
 
-#define MatchKeyInt32_t(String, StringLength, Key, KeyLength, TargetInt32_t, Callback) MatchKeyRaw(String, StringLength, Key, KeyLength, TargetInt32_t, 3, Callback)
+#define MatchKeyInt32_t(String, StringLength, Key, KeyLength, TargetInt32_t, Callback) MatchKeyRaw(String, StringLength, Key, KeyLength, TargetInt32_t, 4, Callback)
 
-#define MatchKeyInt64_t(String, StringLength, Key, KeyLength, TargetInt64_t, Callback) MatchKeyRaw(String, StringLength, Key, KeyLength, TargetInt64_t, 4, Callback)
+#define MatchKeyInt64_t(String, StringLength, Key, KeyLength, TargetInt64_t, Callback) MatchKeyRaw(String, StringLength, Key, KeyLength, TargetInt64_t, 8, Callback)
 
 #define MatchKeyString(String, StringLength, Key, KeyLength, TargetString, TargetLength, Callback) \
 			if(StringLength >= KeyLength) \

@@ -14,6 +14,7 @@
 
 #include <stdint.h>
 
+#if(ArmType == MechanicalArm)
 /**
  * @brief: Place the apple in the center of the target.
  * @TODO:  Place in the center of the target.
@@ -90,3 +91,38 @@ void PlaceApple(void)
 		SleepMillisecond(5);
 	}
 }
+#elif(ArmType == LiftingPlatform)
+/**
+ * @brief: Place the apple in the center of the target.
+ */
+void PlaceApple(void)
+{
+	//Enter the ready position.
+	ClosureClaw();
+	SetArmNodeAngle(ClawRotation, 0);
+
+	SmoothMoveTo(MoveRotationAngle, 90, 15);
+	SmoothMoveTo(MoveAxialLength, 221, 5);
+	SmoothMoveTo(MoveZ_AxisHeight, ApproachHeight, 5);
+
+	SwitchImageProcessingModuleWorkingMode(TargetDetect);
+
+	AimAt(AimTarget, 20000);
+
+	uint16_t rotationAngle = 0, axialLength = 0, zAxisHeight = 0;
+	GetOpenLoopClawPosition(&rotationAngle, &axialLength, &zAxisHeight);
+
+	SmoothMoveTo(MoveAxialLength, axialLength + PlaceAppleElongationDistance, 5);
+	SmoothMoveTo(MoveZ_AxisHeight, GrabHeight, 5);
+
+	SleepMillisecond(500);
+
+	ReleaseClaw();
+
+	SleepMillisecond(500);
+
+	SmoothMoveTo(MoveZ_AxisHeight, ApproachHeight, 5);
+	SmoothMoveTo(MoveAxialLength, 221, 5);
+	SmoothMoveTo(MoveRotationAngle, 90, 15);
+}
+#endif

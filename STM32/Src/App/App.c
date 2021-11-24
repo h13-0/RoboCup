@@ -27,24 +27,10 @@ int App(void)
 	//Current posture: ¡ý
 	AllInit();
 
-	//Voice_t voices[] = { BroadcastFruitDetectResult, BroadcastApple, BroadcastOne };
-	//VoicePlayerPlayByIDS(voices, 3);
-
-	//CalibrationAllServo();
-
 	ConnectToBluetoothDevice();
 
-	SetOpenLoopClawPosition(90, 221, ApproachHeight);
-
-	while(GetImageProcessingModuleWorkingMode() != TargetDetect)
-	{
-		SwitchImageProcessingModuleWorkingMode(TargetDetect);
-	}
-
-	ClosureClaw();
-	SetArmNodeAngle(ClawRotation, 0);
-	AimAt(Target, 200000);
-	//ClosureClaw();
+	PrepareArmPosition(90);
+	IdentifyFruit();
 
 	while(1)
 	{
@@ -53,22 +39,6 @@ int App(void)
 		float data[] = { coor.X, coor.Y };
 		LogJustFloat(data, 2);
 	}
-
-	/*
-	while(1)
-	{
-		FillScreen(RED);
-		FillScreen(GREEN);
-		FillScreen(BLUE);
-	}
-*/
-/*
-	while(1)
-	{
-		float data = GetTOF_Distance();
-		LogJustFloat(&data, 1);
-	}
-*/
 
 	//while(1);
 	//KeepSpeed();
@@ -100,7 +70,7 @@ int App(void)
 
 	//TODO: Identify fruit.
 	//Catch apple.
-	//CatchApple(MaximumTarget);
+	CatchApple(CatchMaximumApple);
 
 	//Go to the pool.
 	StraightUntill(400);

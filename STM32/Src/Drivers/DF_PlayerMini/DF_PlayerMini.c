@@ -15,6 +15,7 @@ static uint8_t currentPlayerNumbers = 0;
 DF_PlayerError_t DF_PlayerInit(DF_PlayerMini_t *Player)
 {
 	GPIO_Init(&Player -> BusyIO, Input);
+	SerialInit(&Player -> USART_Port, 9600);
 	Player -> _latestVoicePositionInQueue = 0;
 	Player -> _lastPlayTime = GetCurrentTimeMillisecond();
 	if(currentPlayerNumbers < StepperNumbers)

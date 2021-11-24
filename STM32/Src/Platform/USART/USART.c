@@ -12,6 +12,11 @@
 #include "stm32f1xx_ll_usart.h"
 #endif
 
+void SerialInit(USART_t USART, uint32_t BaudRate)
+{
+	//Do nothing in low-layer library.
+}
+
 __attribute__((always_inline)) inline void SerialSend(USART_t USART, uint8_t data)
 {
 	while (LL_USART_IsActiveFlag_TC(USART) == RESET);

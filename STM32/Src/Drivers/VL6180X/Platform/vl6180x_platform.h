@@ -25,7 +25,7 @@
 #include "vl6180x_def.h"
 
 #include "I2C.h"
-#include "VL6180X_GPIO_Ports.h"
+#include "GPIO.h"
 
 #define VL6180x_SINGLE_DEVICE_DRIVER 	0
 #define VL6180x_RANGE_STATUS_ERRSTRING  0

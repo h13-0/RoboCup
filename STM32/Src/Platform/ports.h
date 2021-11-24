@@ -25,12 +25,6 @@
  */
 /*************************USART Ports************************/
 #include "USART.h"
-//Debug
-#include "DebugPorts.h"
-//Image Processing Module
-#include "ImageProcessingModulePorts.h"
-//Bluetooth
-#include "BluetoothPorts.h"
 
 /**************************PWM Ports*************************/
 #include "PWM.h"

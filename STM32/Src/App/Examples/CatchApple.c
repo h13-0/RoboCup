@@ -4,13 +4,13 @@
  *  Created on: 2021Äê8ÔÂ14ÈÕ
  *      Author: h13
  */
+#include "RobotConfigs.h"
 #include "ArmControl.h"
 #include "CatchApple.h"
-#include "RobotConfigs.h"
 #include "Drivers.h"
 //Arm Control
-#include "ImageProcessingModule.h"
 
+#if(ArmType == MechanicalArm)
 //TODO: Bug entering preparation posture¡£
 void CatchApple(TargetType_t Target)
 {
@@ -87,7 +87,7 @@ void CatchApple(TargetType_t Target)
 	}
 
 	//Aim at apple.
-	AimAt(Apple, 20000);
+	AimAt(AimApple, 20000);
 
 	//Catch apple.
 	GetOpenLoopClawPosition(&rotationAngle, &axialLength, &zAxisHeight);
@@ -122,34 +122,53 @@ void CatchApple(TargetType_t Target)
 		SetOpenLoopClawPosition(rotationAngle, axialLength, zAxisHeight);
 		SleepMillisecond(5);
 	}
-
-#if(ArmType == MechanicalArm)
 	SmoothRotateArmNode(ArmParallel, -45, 15);
 	SmoothRotateArmNode(ArmElongationNode0, 45, 15);
 	SmoothRotateArmNode(ArmElongationNode1, 0, 15);
 	SmoothRotateArmNode(ArmRotation, 0, 15);
 	SmoothRotateArmNode(ArmParallel, 0, 15);
 	SmoothRotateArmNode(ArmElongationNode0, 0, 15);
-
+}
 #elif(ArmType == LiftingPlatform)
+void CatchApple(TargetType_t Target)
+{
+	//Enter the ready position.
+	ReleaseClaw();
+	SetArmNodeAngle(ClawRotation, 0);
 
-	for( ; axialLength > 0; axialLength --)
+	//Switching the working mode of image processing module.
+	switch(Target)
 	{
-		SetOpenLoopClawPosition(rotationAngle, axialLength, zAxisHeight);
-		SleepMillisecond(5);
+	case CatchMaximumApple:
+		SwitchImageProcessingModuleWorkingMode(AppleDetectMax);
+		break;
+
+	case CatchLeftApple:
+		SwitchImageProcessingModuleWorkingMode(AppleDetectLeft);
+		break;
+
+	case CatchRightApple:
+		SwitchImageProcessingModuleWorkingMode(AppleDetectRight);
+		break;
+
+	default:
+		break;
 	}
 
-	for( ; rotationAngle > 0; rotationAngle --)
-	{
-		SetOpenLoopClawPosition(rotationAngle, axialLength, zAxisHeight);
-		SleepMillisecond(5);
-	}
+	AimAt(AimApple, 20000);
 
-	for( ; zAxisHeight > 0; zAxisHeight --)
-	{
-		SetOpenLoopClawPosition(rotationAngle, axialLength, zAxisHeight);
-		SleepMillisecond(5);
-	}
-#endif
+	uint16_t rotationAngle = 0, axialLength = 0, zAxisHeight = 0;
+	GetOpenLoopClawPosition(&rotationAngle, &axialLength, &zAxisHeight);
+
+	SmoothMoveTo(MoveAxialLength, axialLength + CatchAppleElongationDistance, 5);
+	SmoothMoveTo(MoveZ_AxisHeight, GrabHeight, 5);
+
+	SleepMillisecond(500);
+	ClosureClaw();
+	SleepMillisecond(500);
+
+	SmoothMoveTo(MoveZ_AxisHeight, ApproachHeight, 5);
+	SmoothMoveTo(MoveAxialLength, AL_AxisZeroPoint, 5);
 }
 
+#endif
