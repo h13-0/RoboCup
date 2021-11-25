@@ -330,8 +330,7 @@ void KeepSpeed(void)
 	enableSpeedPID();
 	while(1)
 	{
-		float data[] = { leftSpeed, rightSpeed, leftPWM, rightPWM, leftSpeedPID.setpoint, rightSpeedPID.setpoint };
-		LogJustFloat(data, 6);
+		LogJustFloat(leftSpeed, rightSpeed, leftPWM, rightPWM, leftSpeedPID.setpoint, rightSpeedPID.setpoint);
 		SleepMillisecond(10);
 	}
 	disableSpeedPID();
@@ -346,8 +345,7 @@ void KeepAngle(void)
 		leftSpeedPID.setpoint = speedBaseOutput + speedDifference;
 		rightSpeedPID.setpoint = speedBaseOutput - speedDifference;
 
-		float data[] = { yaw, anglePID.setpoint, GetYawVelocity(), speedDifference, leftPWM, rightPWM };
-		LogJustFloat(data, 6);
+		LogJustFloat(yaw, anglePID.setpoint, GetYawVelocity(), speedDifference, leftPWM, rightPWM);
 
 		SleepMillisecond(10);
 	}
@@ -366,8 +364,7 @@ void KeepDistance(uint16_t Distance)
 	{
 		leftSpeedPID.setpoint = speedBaseOutput + speedDifference;
 		rightSpeedPID.setpoint = speedBaseOutput - speedDifference;
-		float data[] = { distance, yaw, forwardPID.setpoint, speedBaseOutput, speedDifference };
-		LogJustFloat(data, 5);
+		LogJustFloat(distance, yaw, forwardPID.setpoint, speedBaseOutput, speedDifference, 5);
 		SleepMillisecond(10);
 	}
 

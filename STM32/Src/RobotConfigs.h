@@ -155,6 +155,9 @@
 #define BluetoothTargetLowerAddress                  (0x030495)
 #define SendBluetoothMessageContent()                BluetoothPrintf("a")
 
+/*********************Message Configs*********************/
+#define TargetPhone                                  ("13755514525")
+
 /**
  * @platform configs.
  */
@@ -176,6 +179,9 @@
 #define LCD_Rotate_180                               (2)
 #define LCD_Rotate_270                               (3)
 #define LCD_Rotation                                 LCD_Rotate_90
+
+/********************Version Information*********************/
+#define PrintBuildTime                               (1)
 
 /**
  * @group: Module configs

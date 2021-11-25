@@ -34,8 +34,6 @@ void AllInit(void)
 	//Init Log.
 	LogInit();
 
-	Log(Debug, "Start!");
-
 	//First run
 #ifdef FirstRun
 	//Init WT101
@@ -47,9 +45,18 @@ void AllInit(void)
 #endif
 
 	//Init application.
+
+#if(PrintBuildTime)
+	//Print Version and build time.
+	Log(Info, "Build Time: %s, %s", __DATE__, __TIME__);
+#endif
+
+	Log(Info, "Start!");
+
 #if(ShowSchoolMotto)
 	DisplaySchoolMotto();
 #endif
+
 	BluetoothInit();
 
 	MotionControlInit();

@@ -14,6 +14,21 @@
 #include "JustFloat.h"
 #include "ports.h"
 
+#ifdef __GNUC__
+int __io_putchar(int ch) {
+	while (LL_USART_IsActiveFlag_TC(DebugPort) == RESET);
+	LL_USART_TransmitData8(DebugPort, (uint8_t) ch);
+	return ch;
+}
+#else
+int fputc(int ch, FILE *stream)
+{
+	while(LL_USART_IsActiveFlag_TC(DebugPort) == RESET);
+	LL_USART_TransmitData8(DebugPort, (uint8_t)ch);
+	return ch;
+}
+#endif
+
 /**
  * @brief: Init Log Method and Ports.
  */
@@ -32,7 +47,8 @@ inline void LogInit()
  * @brief: Output Log To Display(Release) or USART(Debug).
  * @param: Log Level and Log in string.
  */
-void Log(LogLevel_t level, char *fmt, ...)
+//void mLog(LogLevel_t level, char *fmt, ...)
+void __mLog(LogLevel_t level, const char *FileName, int LineNumber, char *fmt, ...)
 {
 #ifndef DEBUG
 	//Release Log Functions.
@@ -87,18 +103,36 @@ void Log(LogLevel_t level, char *fmt, ...)
 	}
 #endif
 
+	printf("%ldms : %s, %d: \r\n", GetCurrentTimeMillisecond(), FileName, LineNumber);
+	printf("    ");
+
 	va_list arg;
 	va_start(arg, fmt);
 	vprintf(fmt, arg);
 	va_end(arg);
-	printf("\r\n");
+	printf("\r\n\r\n");
 }
 
 /**
  * @brief: Output Float Data to VOFA+
  * @param: data and length.
  */
-inline __attribute__((always_inline)) void LogJustFloat(float data[], uint8_t len)
+void __logJustFloat(uint8_t Length, ...)
 {
-	SendJustFloatFrame(data, len);
+	va_list args;
+	va_start(args, Length);
+
+	if(Length)
+	{
+		float data[Length];
+
+		for(uint8_t index = 0; index < Length; index++)
+		{
+			data[index + 1] = va_arg(args, double);
+		}
+
+		SendJustFloatFrame(data, Length);
+	}
+
+	va_end(args);
 }

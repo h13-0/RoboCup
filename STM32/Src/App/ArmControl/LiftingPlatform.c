@@ -296,8 +296,7 @@ void AimAt(Target_t Target, mtime_t TimeOut)
 			return;
 		}
 
-		float data[] = { coordinates.X, TargetAimCenterX, coordinates.Y, TargetAimCenterY, coordinates.TimeStamp, startStableTime };
-		LogJustFloat(data, 6);
+		LogJustFloat(coordinates.X, TargetAimCenterX, coordinates.Y, TargetAimCenterY, coordinates.TimeStamp, startStableTime);
 	}
 }
 

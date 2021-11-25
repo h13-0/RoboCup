@@ -28,6 +28,8 @@
 
 #include "Encoder.h"
 
+#include "Luat.h"
+
 /**
  * @brief: Init all drivers.
  */

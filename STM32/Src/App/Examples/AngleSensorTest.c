@@ -27,7 +27,6 @@ void AngleSensorTest(void)
 
 	while(1)
 	{
-		float data[] = { GetYawValue() };
-		LogJustFloat(data, 1);
+		LogJustFloat(GetYawValue());
 	}
 }

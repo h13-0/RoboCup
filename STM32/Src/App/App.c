@@ -29,15 +29,20 @@ int App(void)
 
 	ConnectToBluetoothDevice();
 
-	PrepareArmPosition(90);
-	IdentifyFruit();
+	//PrepareArmPosition(90);
+	//IdentifyFruit();
+
+	char messageBuffer[128] = { 0 };
+	LuatMessage_t message = LuatCreatNewMessage(messageBuffer, 128);
+	LuatAddMessageContents(&message, UnicodeChsPing, UnicodeChsGuo);
+	LuatSendMessage(&message, TargetPhone);
+
 
 	while(1)
 	{
 		Coordinates_t coor;
 		GetTargetCoordinates(&coor);
-		float data[] = { coor.X, coor.Y };
-		LogJustFloat(data, 2);
+		LogJustFloat(coor.X, coor.Y);
 	}
 
 	//while(1);

@@ -128,20 +128,17 @@ int RoboCup::MainWorkingFlow::Run()
 
     std::thread readFrameFromDeviceThread(
         [&] {
-            while (1)
+            while (capture.isOpened())
             {
-                if (capture.isOpened())
+                Mat _frame;
+                while (capture.read(_frame))
                 {
-                    Mat _frame;
-                    while (capture.read(_frame))
-                    {
-                        unique_lock lock(frameMutex);
-                        frame = _frame.clone();
-                    }
+                    unique_lock lock(frameMutex);
+                    frame = _frame.clone();
                 }
-                LOG(FATAL) << "Could not open camera.";
-                throw std::runtime_error("Could not open camera.");
             }
+            LOG(FATAL) << "Could not open camera.";
+            throw std::runtime_error("Could not open camera.");
         }
     );
 
@@ -166,7 +163,6 @@ int RoboCup::MainWorkingFlow::Run()
             _frame = frame.clone();
             this_thread::sleep_for(chrono::milliseconds(100));
         }
-
 
         auto start = std::chrono::high_resolution_clock::now();
         //Dispatch.

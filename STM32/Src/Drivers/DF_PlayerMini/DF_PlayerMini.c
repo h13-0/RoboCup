@@ -15,7 +15,7 @@ static uint8_t currentPlayerNumbers = 0;
 DF_PlayerError_t DF_PlayerInit(DF_PlayerMini_t *Player)
 {
 	GPIO_Init(&Player -> BusyIO, Input);
-	SerialInit(&Player -> USART_Port, 9600);
+	SerialInit(Player -> USART_Port, 9600);
 	Player -> _latestVoicePositionInQueue = 0;
 	Player -> _lastPlayTime = GetCurrentTimeMillisecond();
 	if(currentPlayerNumbers < StepperNumbers)
@@ -52,7 +52,7 @@ typedef enum
 	DF_Stop = 0x16,
 } Command_t;
 
-__attribute__((always_inline)) static void sendCommand(USART_t USART_Port, Command_t Command, uint16_t parameter)
+__attribute__((always_inline)) inline static void sendCommand(USART_t USART_Port, Command_t Command, uint16_t parameter)
 {
 	//Send packet head.
 	SerialSend(USART_Port, 0x7E);
@@ -76,12 +76,12 @@ __attribute__((always_inline)) static void sendCommand(USART_t USART_Port, Comma
 	SerialSend(USART_Port, 0xEF);
 }
 
-__attribute__((always_inline)) static void playByID(USART_t USART_Port, VoiceID_t ID)
+__attribute__((always_inline)) inline static void playByID(USART_t USART_Port, VoiceID_t ID)
 {
 	sendCommand(USART_Port, DF_PlayByID, ID);
 }
 
-__attribute__((always_inline)) static void resetPlayer(USART_t USART_Port)
+__attribute__((always_inline)) inline static void resetPlayer(USART_t USART_Port)
 {
 	sendCommand(USART_Port, DF_PlayByID, 0);
 }
