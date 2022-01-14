@@ -156,6 +156,7 @@
 #define SendBluetoothMessageContent()                BluetoothPrintf("a")
 
 /*********************Message Configs*********************/
+//You should write your target phone number in this private file which will not be synchronized by git.
 #include "PrivateConfigs.h"
 
 /**
