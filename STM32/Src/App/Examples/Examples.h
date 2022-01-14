@@ -34,4 +34,6 @@
 
 #include "IdentifyFruit.h"
 
+#include "SendResultViaMessage.h"
+
 #endif /* APP_EXAMPLES_EXAMPLES_H_ */

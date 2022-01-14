@@ -30,7 +30,7 @@ typedef enum
 	AppleDetectLeft = 2,
 	AppleDetectRight = 3,
 	TargetDetect = 4,
-	FruitDetection = 5,
+	FruitIdentify = 5,
 } ImageProcessingModuleWorkingMode_t;
 
 /**
@@ -68,25 +68,22 @@ void GetAppleCoordinates(Coordinates_t *Coordinates);
 
 void GetTargetCoordinates(Coordinates_t *Coordinates);
 
+typedef struct
+{
+	int8_t AppleNumber;
+	int8_t BananaNumber;
+	int8_t KiwiFruitNumber;
+	int8_t LemonNumber;
+	int8_t OrangeNumber;
+	int8_t PeachNumber;
+	int8_t PearNumber;
+	int8_t PitayaNumber;
+	int8_t SnowPearNumber;
+} FruitIdentifyResult_t;
+
 /**
  * @brief: Get the result of fruit detection.
- * @usage:
- * 	int8_t* result = GetFruitDetectionResult();
- * 	printf("AppleNumber: %d\r\n", *(result + FruitApple));
  */
-typedef enum
-{
-	FruitApple = 0,
-	FruitBanana = 1,
-	FruitKiwiFruit = 2,
-	FruitLemon = 3,
-	FruitOrange = 4,
-	FruitPeach = 5,
-	FruitPear = 6,
-	FruitPitaya = 7,
-	FruitSnowPear = 8,
-} FruitID_t;
-
-int8_t* GetFruitDetectionResult(void);
+FruitIdentifyResult_t GetFruitDetectionResult(void);
 
 #endif /* DRIVERS_IMAGEPROCESSINGMODULE_IMAGEPROCESSINGMODULE_H_ */

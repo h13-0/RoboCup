@@ -37,7 +37,6 @@ int App(void)
 	LuatAddMessageContents(&message, UnicodeChsPing, UnicodeChsGuo);
 	LuatSendMessage(&message, TargetPhone);
 
-
 	while(1)
 	{
 		Coordinates_t coor;

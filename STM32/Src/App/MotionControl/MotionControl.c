@@ -364,7 +364,7 @@ void KeepDistance(uint16_t Distance)
 	{
 		leftSpeedPID.setpoint = speedBaseOutput + speedDifference;
 		rightSpeedPID.setpoint = speedBaseOutput - speedDifference;
-		LogJustFloat(distance, yaw, forwardPID.setpoint, speedBaseOutput, speedDifference, 5);
+		LogJustFloat(distance, yaw, forwardPID.setpoint, speedBaseOutput, speedDifference);
 		SleepMillisecond(10);
 	}
 

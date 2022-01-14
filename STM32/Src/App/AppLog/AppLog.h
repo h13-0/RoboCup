@@ -33,9 +33,8 @@ void LogInit();
  * @brief: Output Log To Display(Release) or USART(Debug).
  * @param: Log Level and Log in format.
  */
-void __mLog(LogLevel_t level, const char *FileName, int LineNumber, char *fmt, ...);
-
 #define Log(level, fmt, ...) __mLog(level, __FILE__, __LINE__, fmt, ##__VA_ARGS__)
+void __mLog(LogLevel_t level, const char *FileName, int LineNumber, char *fmt, ...);
 
 /**
  * @brief: Output Float Data to VOFA+

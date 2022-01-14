@@ -156,7 +156,7 @@
 #define SendBluetoothMessageContent()                BluetoothPrintf("a")
 
 /*********************Message Configs*********************/
-#define TargetPhone                                  ("13755514525")
+#include "PrivateConfigs.h"
 
 /**
  * @platform configs.

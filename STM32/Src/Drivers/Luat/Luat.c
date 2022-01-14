@@ -5,8 +5,19 @@
  *      Author: h13
  */
 #include "Luat.h"
-#include "string.h"
+#include "RobotConfigs.h"
+#include "ports.h"
+#include <string.h>
+#include <stdio.h>
 #include <stdarg.h>
+
+/**
+ * @brief: Init peripheral for Luat.
+ */
+void LuatModuleInit(void)
+{
+	SerialInit(LuatPort, LuatPortBaudRate);
+}
 
 /**
  * @brief: Create new message for Luat.
@@ -54,6 +65,26 @@ int __luatAddMessageContents(LuatMessage_t *Msg, uint8_t Length, ...)
 	return 0;
 }
 
+static void sendAT_Command(char *fmt, ...)
+{
+	uint8_t length;
+	char buffer[48];
+	va_list arg;
+
+	SleepMillisecond(10);
+
+	va_start(arg, fmt);
+	length = vsprintf(buffer, fmt, arg);
+	va_end(arg);
+
+	for(uint8_t i = 0; i < length; i++)
+	{
+		SerialSend(LuatPort, buffer[i]);
+	}
+
+	SleepMillisecond(300);
+}
+
 /**
  * @brief: Send message to target phone.
  * @param:
@@ -65,5 +96,14 @@ int __luatAddMessageContents(LuatMessage_t *Msg, uint8_t Length, ...)
  */
 void LuatSendMessage(LuatMessage_t *Msg, const char* TargetPhoneNumber)
 {
+	sendAT_Command("AT+CMGF=1\r\n");
+	sendAT_Command("AT+CSMP=17,167,0,8\r\n");
+	sendAT_Command("AT+CMGS=\"%s\"\r\n", TargetPhoneNumber);
 
+	for(uint8_t index = 0; index < Msg -> Index; index++)
+	{
+		SerialSend(LuatPort, *(Msg -> BufferPtr + index));
+	}
+
+	SerialSend(LuatPort, 0x1a);
 }

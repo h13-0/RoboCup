@@ -1,5 +1,0 @@
-classes= 9
-names = E:\project\RoboCup\yolo\datasets\yolomark\Fruit.names
-train  = E:\project\RoboCup\yolo\datasets\yolomark\train.txt
-valid  = E:\project\RoboCup\yolo\datasets\yolomark\valid.txt
-backup = E:\project\RoboCup\yolo\yoloV4Tiny\backup\

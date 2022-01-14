@@ -15,6 +15,11 @@
 
 #include <stdint.h>
 
+/**
+ * @brief: Init peripheral for Luat.
+ */
+void LuatModuleInit(void);
+
 typedef struct
 {
 	uint8_t       Index;
@@ -33,15 +38,43 @@ LuatMessage_t LuatCreatNewMessage(char *BufferPtr, uint8_t BufferSize);
 typedef enum
 {
 	//English characters.
+	/*
 	UnicodeEngOne   = 0x0031,     //English 1
+	UnicodeEngTwo   = 0x0032,     //English 2
+	UnicodeEngThree = 0x0033,     //English 3
+	UnicodeEngFour  = 0x0034,     //English 4
+	UnicodeEngFive  = 0x0035,     //English 5
+	UnicodeEngSix   = 0x0036,     //English 6
+	UnicodeEngComma = 0x002c,     //English ,
+	*/
 
 	//Chinese characters.
 	UnicodeChsPing  = 0x82f9,     //Chinese Æ»
 	UnicodeChsGuo   = 0x679c,     //Chinese ¹û
 	UnicodeChsXiang = 0x9999,     //Chinese Ïã
 	UnicodeChsJiao  = 0x8549,     //Chinese ½¶
+	UnicodeChsMi    = 0x7315,     //Chinese â¨
+	UnicodeChsHou   = 0x7334,     //Chinese ºï
+	UnicodeChsTao   = 0x6843,     //Chinese ÌÒ
+	UnicodeChsNing  = 0x67e0,     //Chinese Äû
+	UnicodeChsMeng  = 0x6aac,     //Chinese ÃÊ
+	UnicodeChsJu    = 0x6a58,     //Chinese éÙ
+	UnicodeChsZi    = 0x5b50,     //Chinese ×Ó
+	UnicodeChsLi    = 0x68a8,     //Chinese Àæ
+	UnicodeChsHuo   = 0x706b,     //Chinese »ð
+	UnicodeChsLong  = 0x9f99,     //Chinese Áú
+	UnicodeChsXue   = 0x96ea,     //Chinese Ñ©
 
+	UnicodeChsYi    = 0x4e00,     //Chinese Ò»
+	UnicodeChsLiang = 0x4e24,     //Chinese Á½
+	UnicodeChsSan   = 0x4e09,     //Chinese Èý
+	UnicodeChsSi    = 0x56db,     //Chinese ËÄ
+	UnicodeChsWu    = 0x4e94,     //Chinese Îå
+	UnicodeChsLiu   = 0x516d,     //Chinese Áù
+	UnicodeChsQi    = 0x4e03,     //Chinese Æß
 	UnicodeChsGe    = 0x4e2a,     //Chinese ¸ö
+
+	UnicodeChsComma = 0xff0c,     //Chinese £¬
 } Unicode_t;
 
 /**

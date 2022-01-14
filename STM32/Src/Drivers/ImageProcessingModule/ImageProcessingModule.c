@@ -16,7 +16,7 @@ static ImageProcessingModuleWorkingMode_t currentMode = NotReady;
 static Coordinates_t appleCoordinates = { 0 };
 static Coordinates_t targetCoordinates = { 0 };
 
-static int8_t fruitDetectResult[9] = { -1 };
+static FruitIdentifyResult_t fruitIdentifyResult = { -1 };
 
 static void updateAppleTimeStamp(void)
 {
@@ -30,6 +30,7 @@ static void updateTargetTimeStamp(void)
 
 static void binaryProtocolPraise(char *data, uint8_t length)
 {
+	//WorkingMode
 	MatchKeyInt8_t(data, length, "WM:", 3, currentMode, return);
 
 	//AppleDetect
@@ -41,15 +42,15 @@ static void binaryProtocolPraise(char *data, uint8_t length)
 	MatchKeyFloat(data, length, "TarCenY:", 8, targetCoordinates.Y, updateTargetTimeStamp(); return);
 
 	//FruitDetect
-	MatchKeyInt8_t(data, length, "AppleNum:", 9, fruitDetectResult[FruitApple], return);
-	MatchKeyInt8_t(data, length, "BananaNum:", 10, fruitDetectResult[FruitBanana], return);
-	MatchKeyInt8_t(data, length, "KiwiFruitNum:", 13, fruitDetectResult[FruitKiwiFruit], return);
-	MatchKeyInt8_t(data, length, "LemonNum:", 9, fruitDetectResult[FruitLemon], return);
-	MatchKeyInt8_t(data, length, "OrangeNum:", 10, fruitDetectResult[FruitOrange], return);
-	MatchKeyInt8_t(data, length, "PeachNum:", 9, fruitDetectResult[FruitPeach], return);
-	MatchKeyInt8_t(data, length, "PearNum:", 8, fruitDetectResult[FruitPear], return);
-	MatchKeyInt8_t(data, length, "PitayaNum:", 10, fruitDetectResult[FruitPitaya], return);
-	MatchKeyInt8_t(data, length, "SnowPearNum:", 12, fruitDetectResult[FruitSnowPear], return);
+	MatchKeyInt8_t(data, length, "AppleNum:", 9, fruitIdentifyResult.AppleNumber, return);
+	MatchKeyInt8_t(data, length, "BananaNum:", 10, fruitIdentifyResult.BananaNumber, return);
+	MatchKeyInt8_t(data, length, "KiwiFruitNum:", 13, fruitIdentifyResult.KiwiFruitNumber, return);
+	MatchKeyInt8_t(data, length, "LemonNum:", 9, fruitIdentifyResult.LemonNumber, return);
+	MatchKeyInt8_t(data, length, "OrangeNum:", 10, fruitIdentifyResult.OrangeNumber, return);
+	MatchKeyInt8_t(data, length, "PeachNum:", 9, fruitIdentifyResult.PeachNumber, return);
+	MatchKeyInt8_t(data, length, "PearNum:", 8, fruitIdentifyResult.PearNumber, return);
+	MatchKeyInt8_t(data, length, "PitayaNum:", 10, fruitIdentifyResult.PitayaNumber, return);
+	MatchKeyInt8_t(data, length, "SnowPearNum:", 12, fruitIdentifyResult.SnowPearNumber, return);
 }
 
 /**
@@ -112,8 +113,8 @@ __attribute__((always_inline)) inline void SwitchImageProcessingModuleWorkingMod
 			imageProcessingModuleSendString("CMD:TargetDetect\r\n");
 			break;
 
-		case FruitDetection:
-			imageProcessingModuleSendString("CMD:FruitDetect\r\n");
+		case FruitIdentify:
+			imageProcessingModuleSendString("CMD:FruitIdentify\r\n");
 			break;
 
 		default:
@@ -156,7 +157,7 @@ __attribute__((always_inline)) inline void GetTargetCoordinates(Coordinates_t *C
  * 	int8_t* result = GetFruitDetectionResult();
  * 	printf("AppleNumber: %d\r\n", *(result + FruitApple));
  */
-__attribute__((always_inline)) inline int8_t* GetFruitDetectionResult(void)
+__attribute__((always_inline)) inline FruitIdentifyResult_t GetFruitDetectionResult(void)
 {
-	return fruitDetectResult;
+	return fruitIdentifyResult;
 }

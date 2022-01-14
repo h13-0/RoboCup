@@ -1,0 +1,17 @@
+C:\Users\h13\source\repos\HSV_Range\x64\Release\HSV_Range.vcxproj.CopyComplete
+C:\Users\h13\source\repos\HSV_Range\x64\Release\HSV_Range.exe
+C:\Users\h13\source\repos\HSV_Range\x64\Release\opencv_core.dll
+C:\Users\h13\source\repos\HSV_Range\x64\Release\zlib1.dll
+C:\Users\h13\source\repos\HSV_Range\x64\Release\opencv_imgproc.dll
+C:\Users\h13\source\repos\HSV_Range\x64\Release\opencv_videoio.dll
+C:\Users\h13\source\repos\HSV_Range\x64\Release\opencv_imgcodecs.dll
+C:\Users\h13\source\repos\HSV_Range\x64\Release\jpeg62.dll
+C:\Users\h13\source\repos\HSV_Range\x64\Release\webp.dll
+C:\Users\h13\source\repos\HSV_Range\x64\Release\libpng16.dll
+C:\Users\h13\source\repos\HSV_Range\x64\Release\tiff.dll
+C:\Users\h13\source\repos\HSV_Range\x64\Release\lzma.dll
+C:\Users\h13\source\repos\HSV_Range\x64\Release\avformat-58.dll
+C:\Users\h13\source\repos\HSV_Range\x64\Release\avcodec-58.dll
+C:\Users\h13\source\repos\HSV_Range\x64\Release\swresample-3.dll
+C:\Users\h13\source\repos\HSV_Range\x64\Release\avutil-56.dll
+C:\Users\h13\source\repos\HSV_Range\x64\Release\swscale-5.dll

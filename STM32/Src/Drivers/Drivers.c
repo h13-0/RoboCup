@@ -16,4 +16,5 @@ void DriversInit(void)
 	LCDInit();
 	EncoderInit();
 	ResetYaw();
+	LuatModuleInit();
 }
