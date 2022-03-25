@@ -6,8 +6,10 @@
 /OpenMV/CascadeClassifier/Resized/Apple
 /OpenMV/CascadeClassifier/Source/Apple
 /OpenMV/CascadeClassifier/Background
-STM32/Debug
-STM32/Release
+/STM32/Debug
+/STM32/Release
+STM32/Src/PrivateConfigs.h
 /mobilenet
 /yolo/yoloV4Tiny/backup/
 *.weights
+

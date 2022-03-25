@@ -105,7 +105,7 @@ void PlaceApple(void)
 	SmoothMoveTo(MoveAxialLength, 221, 5);
 	SmoothMoveTo(MoveZ_AxisHeight, ApproachHeight, 5);
 
-	SwitchImageProcessingModuleWorkingMode(TargetDetect);
+	SwitchImageProcessingModuleWorkingMode(TargetDetection);
 
 	AimAt(AimTarget, 20000);
 

@@ -39,9 +39,11 @@ int App(void)
 
 	while(1)
 	{
+		SwitchImageProcessingModuleWorkingMode(TargetDetection);
 		Coordinates_t coor;
 		GetTargetCoordinates(&coor);
-		LogJustFloat(coor.X, coor.Y);
+
+		LogJustFloat(coor.X, coor.Y, (float)(GetImageProcessingModuleWorkingMode()));
 	}
 
 	//while(1);

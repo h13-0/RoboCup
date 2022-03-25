@@ -109,8 +109,8 @@ __attribute__((always_inline)) inline void SwitchImageProcessingModuleWorkingMod
 			imageProcessingModuleSendString("CMD:AppleDetectRight\r\n");
 			break;
 
-		case TargetDetect:
-			imageProcessingModuleSendString("CMD:TargetDetect\r\n");
+		case TargetDetection:
+			imageProcessingModuleSendString("CMD:TargetDetection\r\n");
 			break;
 
 		case FruitIdentify:

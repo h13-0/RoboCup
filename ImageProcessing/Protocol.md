@@ -13,17 +13,22 @@ Type = string
 | Key | Value             | 作用              |
 | --- | ----------------- | ---------------- |
 | CMD | `AppleDetectLeft` | 检测左侧水果      |
-| CMD | `FruitDetection`  | 检测水果数量和种类 |
-| CMD | `TargetDetect`    | 检测靶标位置       |
+| CMD | `FruitIdentify`   | 检测水果数量和种类 |
+| CMD | `TargetDetection` | 检测靶标位置       |
 
 ### Module -> STM32:
 #### 工作模式
 Key = `WM`  
 Type = uint8_t  
-| Value | 作用           |
-| ----- | -------------- |
-| 0     | Standby        |
-| 1     | AppleDetection |
+| Value | Mode             |
+| ----- | ---------------- |
+| 0     | Standby          |
+| 1     | AppleDetectMax   |
+| 2     | AppleDetectLeft  |
+| 3     | AppleDetectRight |
+| 4     | TargetDetection  |
+| 5     | FruitIdentify    |
+
 
 #### 苹果坐标输出
 Key = `AppCenX`  

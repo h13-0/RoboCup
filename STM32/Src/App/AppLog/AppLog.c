@@ -128,7 +128,7 @@ void __logJustFloat(uint8_t Length, ...)
 
 		for(uint8_t index = 0; index < Length; index++)
 		{
-			data[index + 1] = va_arg(args, double);
+			data[index] = va_arg(args, double);
 		}
 
 		SendJustFloatFrame(data, Length);

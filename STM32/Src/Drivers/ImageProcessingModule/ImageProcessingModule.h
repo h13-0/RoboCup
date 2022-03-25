@@ -29,7 +29,7 @@ typedef enum
 	AppleDetectMax = 1,
 	AppleDetectLeft = 2,
 	AppleDetectRight = 3,
-	TargetDetect = 4,
+	TargetDetection = 4,
 	FruitIdentify = 5,
 } ImageProcessingModuleWorkingMode_t;
 
