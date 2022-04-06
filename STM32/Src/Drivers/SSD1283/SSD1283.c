@@ -72,7 +72,7 @@ static void lcdReset(void) {
  * @brief: Initializes the LCD
  * @note:  **Considering the possibility of multiple SPI devices, please manually initialize SPI before initializing LCD!!**
  */
-void LCDInit(void) {
+void LCD_Init(void) {
 	lcdReset(); /* Reset before LCD Init. */
 	lcdWriteCmd(0x10, 0x2F8E); /* power control 1 */
 	lcdWriteCmd(0x11, 0x000C); /* power control 2 */
@@ -111,7 +111,7 @@ void LCDInit(void) {
 	lcdWriteCmd(0x0B, 0x580C); /* frame cycle control */
 	lcdWriteCmd(0x12, 0x0609); /* power control 3 */
 	lcdWriteCmd(0x13, 0x3100); /* power control 4 */
-	FillScreen(WHITE);
+	Fill_Screen(WHITE);
 }
 
 /**
@@ -122,7 +122,7 @@ void LCDInit(void) {
  * 		xEnd:   X-axis End Point.
  * 		yEnd:   Y-axis End Point.
  */
-void LCDSetRegion(uint8_t xStart, uint8_t yStart, uint8_t xEnd, uint8_t yEnd)
+void LCD_SetRegion(uint8_t xStart, uint8_t yStart, uint8_t xEnd, uint8_t yEnd)
 {
 #if(LCD_Rotation == LCD_Rotate_0)
 	lcdSelectReg(0x44);
@@ -187,7 +187,7 @@ void LCDSetRegion(uint8_t xStart, uint8_t yStart, uint8_t xEnd, uint8_t yEnd)
  * 		data:   Pointer of data.
  * 		len:    Length of data.
  */
-void LCDFlush(uint8_t xStart, uint8_t yStart, uint8_t xEnd, uint8_t yEnd, uint16_t *data, uint16_t len)
+void LCD_Flush(uint8_t xStart, uint8_t yStart, uint8_t xEnd, uint8_t yEnd, uint16_t *data, uint16_t len)
 {
 #if (Rotation == 0)
 	lcdSelectReg(0x44);
@@ -252,9 +252,9 @@ void LCDFlush(uint8_t xStart, uint8_t yStart, uint8_t xEnd, uint8_t yEnd, uint16
  * @brief: Fill the screen
  * @param: Color.
  */
-void FillScreen(uint16_t color) {
+void Fill_Screen(uint16_t color) {
 	unsigned int i, m;
-	LCDSetRegion(0, 0, LCD_Width - 1, LCD_Height - 1);
+	LCD_SetRegion(0, 0, LCD_Width - 1, LCD_Height - 1);
 	for (i = 0; i < LCD_Width; i++)
 	{
 		for (m = 0; m < LCD_Height; m++)
@@ -267,8 +267,9 @@ void FillScreen(uint16_t color) {
 /**
  * @brief: Clear the screen.
  */
-void LCDClear(void) {
-	FillScreen(BLACK);
+void LCD_Clear(void)
+{
+	Fill_Screen(BLACK);
 }
 
 void LCD_Write16(uint16_t *DataPtr, uint16_t Length)

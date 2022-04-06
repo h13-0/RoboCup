@@ -64,14 +64,16 @@
 #define ThrowAppleHeight                             (0)
 
 //
-#define AppleAimCenterX                              (0.65)
-#define AppleAimCenterY                              (0.44)
-#define TargetAimCenterX                             (0.65)
-#define TargetAimCenterY                             (0.16)
+#define AppleAimCenterX                              (0.475)
+#define AppleAimCenterY                              (0.60)
+#define TargetAimCenterX                             (0.53)
+#define TargetAimCenterY                             (0.18)
+#define FruitAimCenterX                              (0.5)
+#define FruitAimCenterY                              (0.35)
 
 //
-#define AimToleranceErrorX                           (0.015)
-#define AimToleranceErrorY                           (0.015)
+#define AimToleranceErrorX                           (0.025)
+#define AimToleranceErrorY                           (0.025)
 #define ClawStableTimesLimit                         (200)                                               //microseconds
 
 //PID

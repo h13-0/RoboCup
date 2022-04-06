@@ -8,6 +8,8 @@
 #ifndef APP_EXAMPLES_DISPLAYRESULT_H_
 #define APP_EXAMPLES_DISPLAYRESULT_H_
 
+#include "ImageProcessingModule.h"
 
+void DisplayResult(FruitIdentifyResult_t *Result);
 
 #endif /* APP_EXAMPLES_DISPLAYRESULT_H_ */

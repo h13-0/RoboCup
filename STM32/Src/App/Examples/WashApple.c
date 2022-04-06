@@ -117,7 +117,8 @@ void WashApple(void)
  */
 void WashApple(void)
 {
-	SmoothMoveTo(MoveRotationAngle, 90, 15);
+	//SmoothMoveTo(MoveRotationAngle, 90, 15);
+	PrepareArmPosition(90);
 	SmoothMoveTo(MoveAxialLength, 300, 5);
 
 	for(uint8_t angle = 0; angle < 180; angle++)

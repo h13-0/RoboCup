@@ -105,6 +105,12 @@ void PlaceApple(void)
 	SmoothMoveTo(MoveAxialLength, 221, 5);
 	SmoothMoveTo(MoveZ_AxisHeight, ApproachHeight, 5);
 
+	// Take a snapshot to debug.
+#ifdef DEBUG
+	SleepMillisecond(500);
+	TakeSnapShot();
+#endif
+
 	SwitchImageProcessingModuleWorkingMode(TargetDetection);
 
 	AimAt(AimTarget, 20000);
@@ -122,6 +128,7 @@ void PlaceApple(void)
 	SleepMillisecond(500);
 
 	SmoothMoveTo(MoveZ_AxisHeight, ApproachHeight, 5);
+	SleepMillisecond(500);
 	SmoothMoveTo(MoveAxialLength, 221, 5);
 	SmoothMoveTo(MoveRotationAngle, 90, 15);
 }

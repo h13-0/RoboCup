@@ -12,6 +12,12 @@
 
 void EmptyTrash(void)
 {
-	SleepMillisecond(200);
+	SmoothRotateArmNode(ArmRotation, 45, 15);
+	SleepMillisecond(300);
 
+	SmoothRotateArmNode(ArmElongation, 170, 10);
+
+	SleepMillisecond(1000);
+
+	SmoothRotateArmNode(ArmRotation, 0, 15);
 }

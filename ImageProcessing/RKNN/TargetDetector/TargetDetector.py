@@ -5,8 +5,8 @@ from typing import List, Tuple
 
 class TargetDetector():
     def __init__(self,
-        CentralThreshold : List = [(240, 155, 80), (255, 255, 255)],
-        EdgeThreshold : List = [(70, 0, 90), (145, 20, 255)],
+        CentralThreshold : List = [(240, 95, 80), (255, 255, 255)],
+        EdgeThreshold : List = [(140, 0, 90), (167, 50, 255)],
         MinimumCentralSize : float = 2000.0,
         MinimumCentralLengthWidthRatio : float = 0.4,
         MinimumEdgeSize = 5000.0,

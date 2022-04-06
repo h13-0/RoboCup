@@ -98,6 +98,9 @@ __attribute__((always_inline)) inline void PIDAdjustHandler(char *data, uint8_t 
 	MatchKeyFloat(data, len, "CRN:", 4, angle, SetArmNodeAngle(ClawRotation, angle); return);
 	MatchKeyFloat(data, len, "CGB:", 4, angle, SetArmNodeAngle(ClawGrab, angle); return);
 
+	MatchKeyFloat(data, len, "AS:", 3, floatValue, SetAL_AxisLength(floatValue); return);
+	MatchKeyFloat(data, len, "ZS:", 3, floatValue, SetZ_AxisHeight(floatValue); return);
+
 	float speed = 0;
 	MatchKeyFloat(data, len, "MSP:", 4, speed, SetLeftMotorPWM(speed); SetRightMotorPWM(speed); return);
 }

@@ -28,6 +28,8 @@
 
 #include "PlaceTrashCan.h"
 
+#include "DisplayResult.h"
+
 #include "DisplaySchoolMotto.h"
 
 #include "PrepareArmPosition.h"

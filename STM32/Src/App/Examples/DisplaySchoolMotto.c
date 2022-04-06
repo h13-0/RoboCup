@@ -5,12 +5,13 @@
  *      Author: h13
  */
 
+#include <DrawPicture.h>
 #include "DisplaySchoolMotto.h"
-#include "SimpleUI.h"
-
-extern const unsigned char SchoolMotto[24180];
+#include "Drivers.h"
+#include "SchoolMotto.h"
 
 void DisplaySchoolMotto(void)
 {
-	DrawPicture(0, 18, 130, 93, (uint16_t *)SchoolMotto);
+	Fill_Screen(WHITE);
+	DrawPicture(0, 18, 130, 94, (uint16_t *)GetSchoolMottoPtr());
 }

@@ -13,7 +13,7 @@ void DriversInit(void)
 {
 	MotorInit();
 	ServoInit();
-	LCDInit();
+	LCD_Init();
 	EncoderInit();
 	ResetYaw();
 	LuatModuleInit();

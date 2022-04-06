@@ -24,6 +24,7 @@ class WorkingMode(Enum):
     AppleDetectRight = 3
     TargetDetection = 4
     FruitIdentify = 5
+    SnapShot = 6
 
 
 class MainWorkingFlow():
@@ -69,6 +70,9 @@ class MainWorkingFlow():
         self.__workingMode__ = WorkingMode.StandBy
         self.__workingModeLock__ = threading.Lock()
 
+        # SnapShorts variables.
+        self.__lastSnapShotTime__ = 0
+
         # Set additional variables.
         self.__displayOnFrameBuffer__ = DisplayOnFrameBuffer
         self.__displayFPS = DisplayFPS
@@ -102,6 +106,9 @@ class MainWorkingFlow():
                 print("Switch to mode: " + Mode)
             elif(Mode == "FruitIdentify"):
                 self.__workingMode__ = WorkingMode.FruitIdentify
+                print("Switch to mode: " + Mode)
+            elif(Mode == "SnapShot"):
+                self.__workingMode__ = WorkingMode.SnapShot
                 print("Switch to mode: " + Mode)
             else:
                 pass
@@ -208,8 +215,8 @@ class MainWorkingFlow():
         y = (maxRect[1] + maxRect[3]) / (2.0 * Frame.shape[0])
 
         # Send coordinate.
-        self.__protocol__.SendFloat("AppCenX", x)
-        self.__protocol__.SendFloat("AppCenY", y)
+        self.__protocol__.SendFloat("AppCenX", float(x))
+        self.__protocol__.SendFloat("AppCenY", float(y))
 
 
     def __appleDetectLeft__(self, Frame : np.ndarray) -> None:
@@ -240,8 +247,8 @@ class MainWorkingFlow():
         y = (leftRect[1] + leftRect[3]) / (2.0 * Frame.shape[0])
 
         # Send coordinate.
-        self.__protocol__.SendFloat("AppCenX", x)
-        self.__protocol__.SendFloat("AppCenY", y)
+        self.__protocol__.SendFloat("AppCenX", float(x))
+        self.__protocol__.SendFloat("AppCenY", float(y))
 
 
     def __appleDetectRight__(self, Frame : np.ndarray) -> None:
@@ -272,8 +279,8 @@ class MainWorkingFlow():
         y = (rightRect[1] + rightRect[3]) / (2.0 * Frame.shape[0])
 
         # Send coordinate.
-        self.__protocol__.SendFloat("AppCenX", x)
-        self.__protocol__.SendFloat("AppCenY", y)
+        self.__protocol__.SendFloat("AppCenX", float(x))
+        self.__protocol__.SendFloat("AppCenY", float(y))
 
 
     def __targetDetection__(self, Frame : np.ndarray) -> None:
@@ -292,21 +299,34 @@ class MainWorkingFlow():
                 # Send Result.
                 x = maxTarget[0][0] / Frame.shape[1]
                 y = maxTarget[0][1] / Frame.shape[0]
-                self.__protocol__.SendFloat("TarCenX", x)
-                self.__protocol__.SendFloat("TarCenY", y)
+                self.__protocol__.SendFloat("TarCenX", float(x))
+                self.__protocol__.SendFloat("TarCenY", float(y))
 
 
-    def __fruitIdentify__(self, Frame : np.ndarray) -> None:
+    def __fruitIdentify__(self, Frame : np.ndarray):
         '''
             @brief: Function of identifying fruits.
-            
+            @param Frame: Frame of camera.
+            @return: 
+                boxes : List of bounding boxes.
+                classes : List of classes.
+                scores : List of scores.
         '''
         boxes, classes, scores = self.__yoloDetector__.Predict(Frame)
         boxes, classes, scores = self.__boxesPostProcess__(boxes, classes, scores)
+
+        x = 0.0
+        y = 0.0
         if(boxes is not None):
+            boxes.astype(np.int32)
             for index in range(len(boxes)):
+                # Find focus.
+                x += int(boxes[index][0]) + int(boxes[index][2])
+                y += int(boxes[index][1]) + int(boxes[index][3])
+
+                # Draw boxes.
                 cv.rectangle(Frame, (boxes[index][0], boxes[index][1]), (boxes[index][2], boxes[index][3]), (255, 0, 0), 2)
-                cv.putText(Frame, self.__rknnLables__[classes[index]], 
+                cv.putText(Frame, self.__rknnLables__[classes[index]] + ": " + str(scores[index]*100)[0:2], 
                     (boxes[index][0], boxes[index][1]), 
                     cv.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2
                 )
@@ -373,6 +393,31 @@ class MainWorkingFlow():
         self.__protocol__.SendChar('SnowPearNum', SnowPearNum)
         self.__protocol__.SendChar('FruitDetectFinished', FruitDetectFinished)
 
+        # Send focus.
+        '''
+            | Key       | Value | Effect              |
+            | --------- | ----- | ------------------- |
+            | `FruCenX` | 0~1   | Focus of all fruits |
+            | `FruCenY` | 0~1   |                     |
+        '''
+        if((boxes is not None) and (len(boxes) > 0)):
+            x = x / ((len(boxes) * Frame.shape[1] * 2.0) + 1e-5)
+            y = y / ((len(boxes) * Frame.shape[0] * 2.0) + 1e-5)
+        else:
+            x = 0.5
+            y = 0.5
+
+        self.__protocol__.SendFloat("FruCenX", float(x))
+        self.__protocol__.SendFloat("FruCenY", float(y))
+
+        return boxes, classes, scores
+
+
+    def __snapShot__(self, Frame : np.ndarray) -> None:
+        if(time.time() - self.__lastSnapShotTime__ > 1):
+            cv.imwrite("./Images/" + str(time.time()) + ".jpg", Frame)
+            self.__lastSnapShotTime__ = time.time()
+        return
 
     def __refreshFrame__(self) -> None:
         '''
@@ -478,6 +523,9 @@ class MainWorkingFlow():
                     modeStr = "FruitIdentify"
                     self.__fruitIdentify__(frame)
 
+                elif(currentWorkingMode == WorkingMode.SnapShot):
+                    modeStr = "SnapShot"
+                    self.__snapShot__(frame)
                 endTime = time.time()
 
                 # Calculate frame rate.
@@ -485,7 +533,7 @@ class MainWorkingFlow():
                     fps = 1.0 / (endTime - startTime)
                     if(fps > 120.0):
                         fps = 120.0
-                    print("FPS: {:.2f}".format(fps))
+                    #print("FPS: {:.2f}".format(fps))
                     if(self.__displayOnFrameBuffer__):
                         cv.putText(frame, "FPS: {:.2f}".format(fps), (0, 30), cv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2)
 

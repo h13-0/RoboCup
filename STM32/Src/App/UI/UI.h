@@ -8,6 +8,7 @@
 #ifndef APP_UI_UI_H_
 #define APP_UI_UI_H_
 
-#include "SimpleUI.h"
+#include "DrawPicture.h"
+#include "DrawText.h"
 
 #endif /* APP_UI_UI_H_ */

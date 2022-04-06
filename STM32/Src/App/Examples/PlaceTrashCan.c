@@ -12,7 +12,20 @@
 
 void PlaceTrashCan(void)
 {
-	SetArmNodeAngle(ClawRotation, 90);
+
+	SetAL_AxisLength(150);
 	SleepMillisecond(200);
 
+	SmoothRotateArmNode(ArmElongation, 80, 10);
+	SleepMillisecond(500);
+	ReleaseClaw();
+	SleepMillisecond(500);
+
+	SmoothRotateArmNode(ArmParallel, 0, 10);
+	SmoothRotateArmNode(ArmElongation, 0, 10);
+	SetAL_AxisLength(AL_AxisMinimumLength);
+	SleepMillisecond(200);
+
+	//Switch mode to openloop
+	SwitchArmControlMode(OpenLoopMode);
 }

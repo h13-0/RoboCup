@@ -29,22 +29,30 @@ int App(void)
 
 	ConnectToBluetoothDevice();
 
-	//PrepareArmPosition(90);
-	//IdentifyFruit();
+	//CatchTrashCan();
+	//while(1);
+
+	/*
+	PrepareArmPosition(90);
+	IdentifyFruit();
 
 	char messageBuffer[128] = { 0 };
 	LuatMessage_t message = LuatCreatNewMessage(messageBuffer, 128);
 	LuatAddMessageContents(&message, UnicodeChsPing, UnicodeChsGuo);
 	LuatSendMessage(&message, TargetPhone);
 
+	//PrepareArmPosition(90);
+	//PlaceApple();
+	//CatchApple(CatchMaximumApple);
+
+	SwitchImageProcessingModuleWorkingMode(FruitIdentify);
 	while(1)
 	{
-		SwitchImageProcessingModuleWorkingMode(TargetDetection);
 		Coordinates_t coor;
-		GetTargetCoordinates(&coor);
-
+		GetFruitsFocusCoordinates(&coor);
 		LogJustFloat(coor.X, coor.Y, (float)(GetImageProcessingModuleWorkingMode()));
 	}
+	*/
 
 	//while(1);
 	//KeepSpeed();
@@ -74,9 +82,12 @@ int App(void)
 	//Current posture: ¡ü
 	TurnOnTheBluetoothLight();
 
-	//TODO: Identify fruit.
 	//Catch apple.
+	ReleaseClaw();
+	PrepareArmPosition(90);
+	//TODO: Identify fruit.
 	CatchApple(CatchMaximumApple);
+	PrepareArmPosition(0);
 
 	//Go to the pool.
 	StraightUntill(400);
@@ -91,7 +102,7 @@ int App(void)
 
 	//Arrival pool.
 	//Current posture: ¡ý
-	//WashApple();
+	WashApple();
 
 	//Go to the desk.
 	StraightUntill(1600);
@@ -114,11 +125,14 @@ int App(void)
 
 	//Arrival Desktop.
 	//Current posture: ¡ý
-	//PlaceApple();
+	PlaceApple();
+
 
 	StraightUntill(2300);
 
-	//CatchApple(RightTarget);
+	ReleaseClaw();
+	CatchApple(CatchRightApple);
+	PrepareArmPosition(0);
 
 	//Go to the trash can.
 	//Current posture: ¡ý
@@ -126,35 +140,38 @@ int App(void)
 
 	TurnTo(Left);
 
-	StraightUntill(2000 - 150);
+	StraightUntill(1450);
 
 	TurnTo(Right);
 
-	StraightUntill(3100);
+	StraightUntill(3515);
 
 	//Arrive trash can.
 	//Current posture: ¡ý
-	//ThrowApple();
+	ThrowApple();
+	CatchTrashCan();
 
-	//CatchTrashCan();
+	StraightUntill(4350);
 
-	SleepMillisecond(500);
+	TurnTo(Left);
 
-	TurnTo(BackWard);
+	StraightUntill(1250);
+
+	EmptyTrash();
 
 	StraightUntill(500);
 
-	//EmptyTrash();
+	PlaceTrashCan();
+
+	TurnTo(Right);
+
+	StraightUntill(2500);
 
 	TurnTo(Left);
 
-	StraightUntill(1650);
+	StraightUntill(650);
 
-	//PlaceTrashCan();
-
-	TurnTo(Left);
-
-	StraightUntill(2450);
+	TurnTo(Right);
 
 	while(1);
 }

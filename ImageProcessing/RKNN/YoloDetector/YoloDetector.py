@@ -6,7 +6,7 @@ import numpy as np
 class YoloDetector():
     def __init__(self, ModulePath : str, Labels : list, InputWidth : int, InputHeight : int, Anchors : list, Mask : list,
         RowGrids : int = 0, ColGrids : int = 0,
-        MaxBoxes : int = 500, ObjThresh : float = 0.5, NmsThresh : float = 0.1) -> None:
+        MaxBoxes : int = 500, ObjThresh : float = 0.4, NmsThresh : float = 0.1) -> None:
         '''
         @brief: Init YoloDetector.
         @param:

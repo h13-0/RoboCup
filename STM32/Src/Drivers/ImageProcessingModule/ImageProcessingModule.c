@@ -15,6 +15,7 @@
 static ImageProcessingModuleWorkingMode_t currentMode = NotReady;
 static Coordinates_t appleCoordinates = { 0 };
 static Coordinates_t targetCoordinates = { 0 };
+static Coordinates_t fruitsCoordinates = { 0 };
 
 static FruitIdentifyResult_t fruitIdentifyResult = { -1 };
 
@@ -26,6 +27,11 @@ static void updateAppleTimeStamp(void)
 static void updateTargetTimeStamp(void)
 {
 	targetCoordinates.TimeStamp = GetCurrentTimeMillisecond();
+}
+
+static void updateFruitFocusTimeStamp(void)
+{
+	fruitsCoordinates.TimeStamp = GetCurrentTimeMillisecond();
 }
 
 static void binaryProtocolPraise(char *data, uint8_t length)
@@ -40,6 +46,10 @@ static void binaryProtocolPraise(char *data, uint8_t length)
 	//TargetDetect
 	MatchKeyFloat(data, length, "TarCenX:", 8, targetCoordinates.X, updateTargetTimeStamp(); return);
 	MatchKeyFloat(data, length, "TarCenY:", 8, targetCoordinates.Y, updateTargetTimeStamp(); return);
+
+	//FruitIdentify
+	MatchKeyFloat(data, length, "FruCenX:", 8, fruitsCoordinates.X, updateFruitFocusTimeStamp(); return);
+	MatchKeyFloat(data, length, "FruCenY:", 8, fruitsCoordinates.Y, updateFruitFocusTimeStamp(); return);
 
 	//FruitDetect
 	MatchKeyInt8_t(data, length, "AppleNum:", 9, fruitIdentifyResult.AppleNumber, return);
@@ -117,11 +127,20 @@ __attribute__((always_inline)) inline void SwitchImageProcessingModuleWorkingMod
 			imageProcessingModuleSendString("CMD:FruitIdentify\r\n");
 			break;
 
+		case SnapShot:
+			imageProcessingModuleSendString("CMD:SnapShot\r\n");
+			break;
+
 		default:
 			break;
 		}
 		SleepMillisecond(50);
 	}
+}
+
+void TakeSnapShot(void)
+{
+	SwitchImageProcessingModuleWorkingMode(SnapShot);
 }
 
 /**
@@ -149,6 +168,15 @@ __attribute__((always_inline)) inline void GetAppleCoordinates(Coordinates_t *Co
 __attribute__((always_inline)) inline void GetTargetCoordinates(Coordinates_t *Coordinates)
 {
 	*Coordinates = targetCoordinates;
+}
+
+/**
+ * @brief: Get the focus of fruits.
+ * @param: Pointer of coordinates.
+ */
+__attribute__((always_inline)) inline void GetFruitsFocusCoordinates(Coordinates_t *Coordinates)
+{
+	*Coordinates = fruitsCoordinates;
 }
 
 /**

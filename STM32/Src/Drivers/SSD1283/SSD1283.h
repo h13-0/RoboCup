@@ -28,7 +28,7 @@
  * @brief: Initializes the LCD
  * @note:  **Considering the possibility of multiple SPI devices, please manually initialize SPI before initializing LCD!!**
  */
-void LCDInit(void);
+void LCD_Init(void);
 
 /**
  * @brief: Sets the ROI that needs to be drawn
@@ -38,7 +38,7 @@ void LCDInit(void);
  * 		xEnd:   X-axis End Point.
  * 		yEnd:   Y-axis End Point.
  */
-void LCDSetRegion(uint8_t xStart, uint8_t yStart, uint8_t xEnd, uint8_t yEnd);
+void LCD_SetRegion(uint8_t xStart, uint8_t yStart, uint8_t xEnd, uint8_t yEnd);
 
 /**
  * @brief: Flush LCD With data.
@@ -50,18 +50,18 @@ void LCDSetRegion(uint8_t xStart, uint8_t yStart, uint8_t xEnd, uint8_t yEnd);
  * 		data:   Pointer of data.
  * 		len:    Length of data.
  */
-void LCDFlush(uint8_t xStart, uint8_t yStart, uint8_t xEnd, uint8_t yEnd, uint16_t *data, uint16_t len);
+void LCD_Flush(uint8_t xStart, uint8_t yStart, uint8_t xEnd, uint8_t yEnd, uint16_t *data, uint16_t len);
 
 /**
  * @brief: Fill the screen
  * @param: Color.
  */
-void FillScreen(uint16_t color);
+void Fill_Screen(uint16_t color);
 
 /**
  * @brief: Clear the screen.
  */
-void LCDClear(void);
+void LCD_Clear(void);
 
 void LCD_Write16(uint16_t *DataPtr, uint16_t Length);
 

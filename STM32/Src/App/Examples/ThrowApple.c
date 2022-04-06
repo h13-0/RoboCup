@@ -11,6 +11,7 @@
 #include "Drivers.h"
 #include "Ports.h"
 
+#if(ArmType == MechanicalArm)
 void ThrowApple(void)
 {
 	uint16_t rotationAngle, axialLength, zAxisHeight;
@@ -54,3 +55,17 @@ void ThrowApple(void)
 
 	ReleaseClaw();
 }
+#elif(ArmType == LiftingPlatform)
+void ThrowApple(void)
+{
+	uint16_t rotationAngle, axialLength, zAxisHeight;
+	GetOpenLoopClawPosition(&rotationAngle, &axialLength, &zAxisHeight);
+	SmoothMoveTo(MoveZ_AxisHeight, Z_AxisZeroPoint, 5);
+	SmoothMoveTo(MoveRotationAngle, 68, 15);
+	SmoothMoveTo(MoveAxialLength, 203, 5);
+	SleepMillisecond(250);
+	ReleaseClaw();
+}
+#endif
+
+//68 283 305

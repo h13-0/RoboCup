@@ -261,7 +261,7 @@ void TurnTo(direction_t Direction)
 	}
 
 	disableDirectionPID();
-	anglePID._sumError = 0;
+	disableSpeedPID();
 	Brake();
 }
 

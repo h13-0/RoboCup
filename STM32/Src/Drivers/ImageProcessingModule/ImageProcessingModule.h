@@ -31,6 +31,7 @@ typedef enum
 	AppleDetectRight = 3,
 	TargetDetection = 4,
 	FruitIdentify = 5,
+	SnapShot = 6,
 } ImageProcessingModuleWorkingMode_t;
 
 /**
@@ -39,6 +40,8 @@ typedef enum
  * @note:  Invalid when Mode is equal to NotReady.
  */
 void SwitchImageProcessingModuleWorkingMode(ImageProcessingModuleWorkingMode_t Mode);
+
+void TakeSnapShot(void);
 
 /**
  * @brief:  Get the current mode of image processing module.
@@ -67,6 +70,8 @@ typedef struct
 void GetAppleCoordinates(Coordinates_t *Coordinates);
 
 void GetTargetCoordinates(Coordinates_t *Coordinates);
+
+void GetFruitsFocusCoordinates(Coordinates_t *Coordinates);
 
 typedef struct
 {

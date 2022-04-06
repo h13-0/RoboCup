@@ -67,3 +67,7 @@ Type = uint8_t
 | `SnowPearNum`         | [0, QuantityLimit] |               |
 | `FruitDetectFinished` | 0 ~ 1              | 1 -> Finished |
 
+| Key       | Value | Effect              |
+| --------- | ----- | ------------------- |
+| `FruCenX` | 0~1   | Focus of all fruits |
+| `FruCenY` | 0~1   |                     |
