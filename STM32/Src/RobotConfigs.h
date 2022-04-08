@@ -54,10 +54,10 @@
 //Motion parameters
 #define GrabHeight                                   (275)                                               //millimeters
 #define ApproachHeight                               (GrabHeight + 25 > 305 ? 305 : GrabHeight + 25)     //millimeters
-//#define RetractionHeight                             (ApproachHeight + 50)                               //millimeters
+//#define RetractionHeight                             (ApproachHeight + 50)                             //millimeters
 #define BaseAxialLength                              (210)                                               //millimeters
 #define CatchAppleElongationDistance                 (0)                                                 //millimeters
-#define PlaceAppleElongationDistance                 (150)                                               //millimeters
+#define PlaceAppleElongationDistance                 (150)                                      //millimeters
 #define WashAppleHeight                              (350)                                               //millimeters
 #define WashAppleAxialLength                         (245)                                               //millimeters
 #define ThrowAppleAxialLength                        (0)
@@ -66,14 +66,18 @@
 //
 #define AppleAimCenterX                              (0.475)
 #define AppleAimCenterY                              (0.60)
-#define TargetAimCenterX                             (0.53)
+#define TargetAimCenterX                             (0.495)
 #define TargetAimCenterY                             (0.18)
 #define FruitAimCenterX                              (0.5)
 #define FruitAimCenterY                              (0.35)
 
 //
-#define AimToleranceErrorX                           (0.025)
-#define AimToleranceErrorY                           (0.025)
+#define AppleToleranceErrorX                         (0.030)
+#define AppleToleranceErrorY                         (0.030)
+#define TargetToleranceErrorX                        (0.0125)
+#define TargetToleranceErrorY                        (0.0125)
+#define FruitIdentifyToleranceErrorX                 (0.035)
+#define FruitIdentifyToleranceErrorY                 (0.035)
 #define ClawStableTimesLimit                         (200)                                               //microseconds
 
 //PID
@@ -152,9 +156,9 @@
 
 /*********************Bluetooth Configs********************/
 //Target and message configs.
-#define BluetoothTargetNonSignificantAddress         (0x2020)
-#define BluetoothTargetUpperAddress                  (0x04)
-#define BluetoothTargetLowerAddress                  (0x030495)
+#define BluetoothTargetNonSignificantAddress         (0x2143)
+#define BluetoothTargetUpperAddress                  (0x35)
+#define BluetoothTargetLowerAddress                  (0x352120)
 #define SendBluetoothMessageContent()                BluetoothPrintf("a")
 
 /*********************Message Configs*********************/
@@ -349,7 +353,7 @@
 #define VoicePlayerBusyPort                          GPIOC
 #define VoicePlayerBusyPin                           LL_GPIO_PIN_2
 #define VoiceDeviceNumber                            (1)
-#define VoiceQueueSize                               (32)
+#define VoiceQueueSize                               (48)
 #define BroadcastIntervalMillisecond                 (750)
 #define VoicePlayer                                  { .VoiceQueue = { 0 }, .USART_Port = UART5, .BusyIO = (GPIO_t){ .Port = VoicePlayerBusyPort, .Pin = VoicePlayerBusyPin } }
 

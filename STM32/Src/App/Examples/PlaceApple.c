@@ -93,9 +93,10 @@ void PlaceApple(void)
 }
 #elif(ArmType == LiftingPlatform)
 /**
- * @brief: Place the apple in the center of the target.
+ * @brief:  Place the apple in the center of the target.
+ * @return: RotationAngle of the target.
  */
-void PlaceApple(void)
+uint16_t PlaceApple(void)
 {
 	//Enter the ready position.
 	ClosureClaw();
@@ -121,6 +122,8 @@ void PlaceApple(void)
 	SmoothMoveTo(MoveAxialLength, axialLength + PlaceAppleElongationDistance, 5);
 	SmoothMoveTo(MoveZ_AxisHeight, GrabHeight, 5);
 
+	GetOpenLoopClawPosition(&rotationAngle, &axialLength, &zAxisHeight);
+	while(IsZ_AxisBusy());
 	SleepMillisecond(500);
 
 	ReleaseClaw();
@@ -128,8 +131,12 @@ void PlaceApple(void)
 	SleepMillisecond(500);
 
 	SmoothMoveTo(MoveZ_AxisHeight, ApproachHeight, 5);
-	SleepMillisecond(500);
-	SmoothMoveTo(MoveAxialLength, 221, 5);
+	while(IsZ_AxisBusy());
+
+	SleepMillisecond(200);
+
+	SmoothMoveTo(MoveAxialLength, 221, 10);
 	SmoothMoveTo(MoveRotationAngle, 90, 15);
+	return rotationAngle;
 }
 #endif

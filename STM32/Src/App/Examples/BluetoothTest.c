@@ -17,7 +17,7 @@ void BluetoothInit(void)
 	SetBluetoothClass(0);
 	SetBluetoothInquireMode(InquireModeRSSI, 9, 60);
 	SetBluetoothConnectMode(AnyAddress);
-	SetBluetoothPin("2020");
+	SetBluetoothPin("2021");
 	PairNewBluetoothDevice(BluetoothTargetNonSignificantAddress, BluetoothTargetUpperAddress, BluetoothTargetLowerAddress, 20);
 }
 

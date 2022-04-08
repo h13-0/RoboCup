@@ -29,13 +29,7 @@ int App(void)
 
 	ConnectToBluetoothDevice();
 
-	//CatchTrashCan();
-	//while(1);
-
 	/*
-	PrepareArmPosition(90);
-	IdentifyFruit();
-
 	char messageBuffer[128] = { 0 };
 	LuatMessage_t message = LuatCreatNewMessage(messageBuffer, 128);
 	LuatAddMessageContents(&message, UnicodeChsPing, UnicodeChsGuo);
@@ -68,48 +62,34 @@ int App(void)
 
 	TurnTo(Right);
 
-	StraightUntill(1500);
+	StraightUntill(275);
 
-	TurnTo(Left);
+	TurnTo(Right);
 
-	StraightUntill(DisktopDistanceBeforeTurn - 25);
-
-	TurnTo(Left);
-
-	StraightUntill(1600 - 300);
+	StraightUntill(3820);
 
 	//Arrival refrigerator.
-	//Current posture: ¡ü
+	//Current posture: ¡ú
 	TurnOnTheBluetoothLight();
 
-	//Catch apple.
+	//Identify fruit.
 	ReleaseClaw();
-	PrepareArmPosition(90);
-	//TODO: Identify fruit.
+	PrepareArmPosition(180);
+	IdentifyFruit();
+	PrepareArmPosition(180);
+
 	CatchApple(CatchMaximumApple);
 	PrepareArmPosition(0);
 
 	//Go to the pool.
-	StraightUntill(400);
-
-	TurnTo(Left);
-
-	StraightUntill(DisktopDistanceBeforeTurn);
-
-	TurnTo(Left);
-
-	StraightUntill(450);
+	StraightUntill(150);
 
 	//Arrival pool.
-	//Current posture: ¡ý
+	//Current posture: ¡ú
 	WashApple();
 
 	//Go to the desk.
-	StraightUntill(1600);
-
-	TurnTo(Right);
-
-	StraightUntill(1750 - 150);
+	StraightUntill(1200);
 
 	TurnTo(Right);
 
@@ -121,18 +101,28 @@ int App(void)
 
 	TurnTo(Left);
 
-	StraightUntill(1950);
+	StraightUntill(2170);
 
 	//Arrival Desktop.
 	//Current posture: ¡ý
-	PlaceApple();
+	//Place apple.
+	PrepareArmPosition(90);
+	uint16_t angle = PlaceApple();
 
-
-	StraightUntill(2300);
-
+	//Catch another apple.
+	PrepareArmPosition(90);
 	ReleaseClaw();
-	CatchApple(CatchRightApple);
+	if(angle > 90)
+	{
+		CatchApple(CatchLeftApple);
+	} else {
+		CatchApple(CatchRightApple);
+	}
+
 	PrepareArmPosition(0);
+
+	while(1);
+
 
 	//Go to the trash can.
 	//Current posture: ¡ý

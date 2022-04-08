@@ -120,6 +120,8 @@ uint16_t GetZ_AxisHeight(void);
 
 uint16_t GetAL_AxisHeight(void);
 
+uint8_t IsZ_AxisBusy(void);
+
 #endif
 
 #endif /* APP_ARMCONTROL_LIFTINGPLATFORM_H_ */

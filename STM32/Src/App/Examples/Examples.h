@@ -38,4 +38,6 @@
 
 #include "SendResultViaMessage.h"
 
+#include "BroadcastIdentifyResult.h"
+
 #endif /* APP_EXAMPLES_EXAMPLES_H_ */

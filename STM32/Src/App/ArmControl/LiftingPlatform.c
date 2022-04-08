@@ -339,13 +339,13 @@ ArmControlResult_t AimAt(Target_t Target, mtime_t TimeOut)
 				{
 					currentX = coordinates.X;
 					currentY = coordinates.Y;
-					if(fabs(currentX - AppleAimCenterX) > AimToleranceErrorX)
+					if(fabs(currentX - AppleAimCenterX) > AppleToleranceErrorX)
 					{
 						calculateX_AxisPID(currentX, AppleAimCenterX);
 						startStableTime = GetCurrentTimeMillisecond();
 					}
 
-					if(fabs(currentY - AppleAimCenterY) > AimToleranceErrorY)
+					if(fabs(currentY - AppleAimCenterY) > AppleToleranceErrorY)
 					{
 						calculateY_AxisPID(currentY, AppleAimCenterY);
 						startStableTime = GetCurrentTimeMillisecond();
@@ -365,13 +365,13 @@ ArmControlResult_t AimAt(Target_t Target, mtime_t TimeOut)
 				{
 					currentX = coordinates.X;
 					currentY = coordinates.Y;
-					if(fabs(currentX - TargetAimCenterX) > AimToleranceErrorX)
+					if(fabs(currentX - TargetAimCenterX) > TargetToleranceErrorX)
 					{
 						calculateX_AxisPID(currentX, TargetAimCenterX);
 						startStableTime = GetCurrentTimeMillisecond();
 					}
 
-					if(fabs(currentY - TargetAimCenterY) > AimToleranceErrorY)
+					if(fabs(currentY - TargetAimCenterY) > TargetToleranceErrorY)
 					{
 						calculateY_AxisPID(currentY, TargetAimCenterY);
 						startStableTime = GetCurrentTimeMillisecond();
@@ -391,13 +391,13 @@ ArmControlResult_t AimAt(Target_t Target, mtime_t TimeOut)
 				{
 					currentX = coordinates.X;
 					currentY = coordinates.Y;
-					if(fabs(currentX - FruitAimCenterX) > AimToleranceErrorX)
+					if(fabs(currentX - FruitAimCenterX) > FruitIdentifyToleranceErrorX)
 					{
 						calculateX_AxisPID(currentX, FruitAimCenterX);
 						startStableTime = GetCurrentTimeMillisecond();
 					}
 
-					if(fabs(currentY - FruitAimCenterY) > AimToleranceErrorY)
+					if(fabs(currentY - FruitAimCenterY) > FruitIdentifyToleranceErrorY)
 					{
 						calculateY_AxisPID(currentY, FruitAimCenterY);
 						startStableTime = GetCurrentTimeMillisecond();
@@ -478,5 +478,9 @@ uint16_t GetAL_AxisHeight(void)
 	return 0;
 }
 
+uint8_t IsZ_AxisBusy(void)
+{
+	return zAxisStepper.CurrentSteps != zAxisStepper.TargetSteps;
+}
 
 #endif

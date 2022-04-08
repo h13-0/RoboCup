@@ -8,8 +8,8 @@
 /OpenMV/CascadeClassifier/Background
 /STM32/Debug
 /STM32/Release
-STM32/Src/PrivateConfigs.h
+/STM32/Src/PrivateConfigs.h
 /mobilenet
 /yolo/yoloV4Tiny/backup/
 *.weights
-
+/RK3328_env/

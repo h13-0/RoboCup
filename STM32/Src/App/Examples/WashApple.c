@@ -117,33 +117,13 @@ void WashApple(void)
  */
 void WashApple(void)
 {
-	//SmoothMoveTo(MoveRotationAngle, 90, 15);
-	PrepareArmPosition(90);
-	SmoothMoveTo(MoveAxialLength, 300, 5);
+	PrepareArmPosition(0);
+	SmoothMoveTo(MoveAxialLength, 400, 5);
 
-	for(uint8_t angle = 0; angle < 180; angle++)
-	{
-		SetArmNodeAngle(ClawRotation, angle);
-		SleepMillisecond(5);
-	}
-
-	for(uint8_t angle = 180; angle > 0; angle--)
-	{
-		SetArmNodeAngle(ClawRotation, angle);
-		SleepMillisecond(5);
-	}
-
-	for(uint8_t angle = 0; angle < 180; angle++)
-	{
-		SetArmNodeAngle(ClawRotation, angle);
-		SleepMillisecond(5);
-	}
-
-	for(uint8_t angle = 180; angle > 0; angle--)
-	{
-		SetArmNodeAngle(ClawRotation, angle);
-		SleepMillisecond(5);
-	}
+	SmoothRotateArmNode(ClawRotation, 170, 5);
+	SmoothRotateArmNode(ClawRotation, 10, 5);
+	SmoothRotateArmNode(ClawRotation, 170, 5);
+	SmoothRotateArmNode(ClawRotation, 10, 5);
 
 	PrepareArmPosition(0);
 }

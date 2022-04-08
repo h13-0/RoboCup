@@ -5,6 +5,8 @@
  *      Author: h13
  */
 #include "RobotConfigs.h"
+#include <stdarg.h>
+
 #include "Ports.h"
 #include "VoicePlayer.h"
 #include "DF_PlayerMini.h"
@@ -27,4 +29,18 @@ void VoicePlayerPlayByIDS(Voice_t *VoicePtr, uint8_t Length)
 	{
 		DF_PlayerJoinQueue(&player, *(VoicePtr + i));
 	}
+}
+
+int __voicePlayerSequentialPlay(uint8_t Length, ...)
+{
+	va_list args;
+	va_start(args, Length);
+
+	for(int i = 0; i < Length; i++)
+	{
+		VoicePlayerPlayByID(va_arg(args, int));
+	}
+
+	va_end(args);
+	return 0;
 }

@@ -149,7 +149,7 @@ class MainWorkingFlow():
         ]
 
 
-    def __boxesPostProcess__(self, boxes, classes, scores, MaximumOverlapRate : float = 0.5):
+    def __boxesPostProcess__(self, boxes, classes, scores, MaximumOverlapRate : float = 0.5) -> tuple:
         '''
             @brief: Delete and merge coincident boxes.
             @param:
@@ -180,7 +180,7 @@ class MainWorkingFlow():
     
             return boxes, classes, scores
         else:
-            return [], [], []
+            return np.array([]), np.array([]), np.array([])
 
 
     def __standBy__(self, Frame : np.ndarray) -> None:

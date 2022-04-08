@@ -8,10 +8,12 @@
 #ifndef APP_EXAMPLES_PLACEAPPLE_H_
 #define APP_EXAMPLES_PLACEAPPLE_H_
 
+#include <stdint.h>
+
 /**
- * @brief: Place the apple in the center of the target.
- * @TODO:  Place in the center of the target.
+ * @brief:  Place the apple in the center of the target.
+ * @return: RotationAngle of the target.
  */
-void PlaceApple(void);
+uint16_t PlaceApple(void);
 
 #endif /* APP_EXAMPLES_PLACEAPPLE_H_ */
