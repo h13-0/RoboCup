@@ -13,6 +13,7 @@
 #include "ports.h"
 
 #include "Drivers.h"
+
 //App
 //Motion Control
 #include "MotionControl.h"
@@ -28,6 +29,13 @@ int App(void)
 	AllInit();
 
 	ConnectToBluetoothDevice();
+
+	SleepMillisecond(100000);
+	while(1)
+	{
+		VoicePlayerSequentialPlay(BroadcastFruitDetectResult, BroadcastApple, BroadcastBanana, BroadcastKiwiFruit, BroadcastLemon, BroadcastOrange, BroadcastPeach);
+		SleepMillisecond(10000);
+	}
 
 	/*
 	char messageBuffer[128] = { 0 };
@@ -121,9 +129,6 @@ int App(void)
 
 	PrepareArmPosition(0);
 
-	while(1);
-
-
 	//Go to the trash can.
 	//Current posture: ¡ý
 	StraightUntill(325 + 150);
@@ -155,13 +160,7 @@ int App(void)
 
 	TurnTo(Right);
 
-	StraightUntill(2500);
-
-	TurnTo(Left);
-
-	StraightUntill(650);
-
-	TurnTo(Right);
+	StraightUntill(2600);
 
 	while(1);
 }

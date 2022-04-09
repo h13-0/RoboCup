@@ -33,9 +33,16 @@ typedef enum
 {
 	DF_PlayerOK = 0,
 	DF_PlayerBufferIsFull = 1,
+	DF_ParameterIllegal = 3,
 } DF_PlayerError_t;
 
 DF_PlayerError_t DF_PlayerInit(DF_PlayerMini_t *Player);
+
+/**
+ * @brief: Set player volume.
+ * @param: Volume in range [0, 30].
+ */
+DF_PlayerError_t DF_SetVolume(DF_PlayerMini_t *Player, uint8_t Volume);
 
 DF_PlayerError_t DF_PlayerJoinQueue(DF_PlayerMini_t *Player, VoiceID_t VoiceID);
 

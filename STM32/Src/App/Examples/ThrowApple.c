@@ -62,9 +62,10 @@ void ThrowApple(void)
 	GetOpenLoopClawPosition(&rotationAngle, &axialLength, &zAxisHeight);
 	SmoothMoveTo(MoveZ_AxisHeight, Z_AxisZeroPoint, 5);
 	SmoothMoveTo(MoveRotationAngle, 68, 15);
-	SmoothMoveTo(MoveAxialLength, 203, 5);
+	SmoothMoveTo(MoveAxialLength, 310, 5);
 	SleepMillisecond(250);
 	ReleaseClaw();
+	SmoothMoveTo(MoveAxialLength, AL_AxisZeroPoint, 5);
 }
 #endif
 

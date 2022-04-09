@@ -27,13 +27,27 @@ typedef enum
 } ArmControlMode_t;
 
 
+typedef enum
+{
+	ArmControlOK = 0,          //Control success.
+	ControlModeError,          //Control mode error.
+	CoordinatesTooFar,         //
+	CoordinatesValueIsInvalid, //
+
+	//
+	AimTargetInvalid,          //
+	AimingTimeout,             //
+
+	IllegalCurrentPosture,      //
+} ArmControlResult_t;
+
 /**
  * @brief: Switch Arm control mode.
  * @param: Target mode.
  * @note:
  * 		**Please retract servos manually before switching.**
  */
-void SwitchArmControlMode(ArmControlMode_t Mode);
+ArmControlResult_t SwitchArmControlMode(ArmControlMode_t Mode);
 
 // Commen apis.
 /**
@@ -48,17 +62,7 @@ void ClosureClaw(void);
 void ReleaseClaw(void);
 
 // OpenLoopMode apis.
-typedef enum
-{
-	ArmControlOK = 0,          //Control success.
-	ControlModeError,          //Control mode error.
-	CoordinatesTooFar,         //
-	CoordinatesValueIsInvalid, //
 
-	//
-	AimTargetInvalid,          //
-	AimingTimeout,             //
-} ArmControlResult_t;
 
 /**
  * @brief: Set claw position in **Cylindrical coordinates** in Open loop control system.
@@ -116,10 +120,27 @@ ArmControlResult_t SetZ_AxisHeight(uint16_t Heigth);
 
 ArmControlResult_t SetAL_AxisLength(uint16_t Legnth);
 
-uint16_t GetZ_AxisHeight(void);
+/**
+ * @brief: Get the height of Z Axis slider.
+ * @note:
+ * 		**Please see the specific picture for details:**
+ * 		STM32/Images/LiftingPlatformAnnotationPicture1.jpg
+ */
+float GetZ_AxisSliderHeight(void);
 
-uint16_t GetAL_AxisHeight(void);
+/**
+ * @brief: Get the length of AL Axis slider.
+ * @note: **Please see the specific picture for details:**
+ * 			STM32/Images/LiftingPlatformAnnotationPicture1.jpg
+ */
+float GetAL_AxisSliderHeight(void);
 
+/**
+ * @brief: Judge whether the Z-Axis stepper is moving.
+ * @return:
+ * 		0 : Not moving.
+ * 		1 : Moving.
+ */
 uint8_t IsZ_AxisBusy(void);
 
 #endif

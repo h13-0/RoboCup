@@ -2,46 +2,266 @@
 本程序采用LL库, 底层使用CubeMX生成, 其他层由CubeIDE编写。
 
 ## 为什么不用STP和Keil?
-Keil的编译器过于老旧, 有很多BUG, 并且stp(标准库)不再支持STM32F7 G0等新产品。
+Keil的编译器过于老旧, 在实际使用中遇到了一些BUG, 并且stp(标准库)不再支持STM32F7、STM32G0等新产品。
 而LL效率和stp相当甚至更优, 写法相似, 故迁移至LL进行编写。
 
 ## 程序移植
-你只需要重新实现 `Platform` 文件夹中全部的函数即可。即使你使用的是Hal库或者标准库, 只要STM32和C语言过关, 就不存在任何问题。
+你只需要重新实现 `Platform` 文件夹中全部的函数即可。
+即使你使用的是Hal库或者标准库, 只要STM32和C语言过关, 就不存在任何问题。
+~~即如果您无法从LL移植到Hal或者标库，不是我的问题。~~
+
 <details>
 <summary>代码结构</summary>
 程序分为应用层, 驱动层, 底层。各层之间解耦合。  
-应用层只能通过 `Platform/ports.h` 调用驱动层(包括应用层的lvgl也是如此)。  
+应用层只能通过 `Platform/ports.h` 调用驱动层。  
 驱动层只能通过 `Platform/xx.h` 调用底层。  
 为了考虑整体移植性, 降低了部分驱动层使用简洁性。  
 
-如无特殊需求, 请只关注 `App.c` 文件。  
+如无特殊需求, 只需要修改 `App.c` 文件即可实现比赛全流程。  
 
 程序结构:  
 ```
 STM32:
-├─Drivers             -> CMSIS以及HAL, LL库, 无需关心。
-├─Inc                 -> 无需关心
-├─Src                 -> 工程源代码, 如果要更换为标准库则只需要保留本文件夹并重建工程移植即可。
-│  │  main.c          -> 程序入口, 大部分由CubeMX自动生成, 负责初始化底层和接入App()函数。
-│  │  stm32f1xx_it.c  -> 中断管理文件, 负责调度对应中断接口。
-│  ├─App              -> 应用层, 主要逻辑部分。重建工程需要移植对应中断函数接口和App()函数。
-│  │  └─ThirdParty    -> 应用层, 第三方依赖库总文件夹。尽量不要修改本文件夹内文件。
-│  │      └─lvgl      -> 应用层, lvgl源文件。
-│  ├─Motor            -> 驱动层, H桥驱动, 引用MotorPorts库。
-│  ├─mpu9250          -> 驱动层, MPU9250陀螺仪驱动, 引用I2C底层。
-│  ├─Platform         -> 底层总文件夹。
-│  │  ├─AppLog        -> 底层应用层, 为了优化串口而无法高效解耦的简易Log库, 移植只需要移植JustFloat库和SerialPrintf库, 并且重写Init函数。
-│  │  ├─Clock         -> 底层, 获取系统时钟和延时函数库, 如果需要更换为标准库需要重写其中函数。
-│  │  ├─I2C           -> 底层, I2C库, 如果需要更换I2C接口ID或者更换为标准库需要重写其中函数。
-│  │  ├─JustFloat     -> 底层应用层, 为了优化串口而无法高效解耦的VOFA+上位机通信协议, 移植只需要重新实现串口发送二进制相关函数。
-│  │  ├─lvglPorts     -> 底层, lvgl的底层配置库。
-│  │  ├─MotorPorts    -> 底层, Motor的底层配置库。
-│  │  ├─SerialPrintf  -> 底层应用层, 为了优化串口而无法高效解耦的串口printf重定向实现, 移植只需要重新实现串口发送二进制相关函数。
-│  │  ├─ServoPorts    -> 底层, Servo的底层配置库。
-│  │  └─SPI           -> 底层, SPI库, 如果需要更换SPI接口ID或者更换为标准库需要重写其中函数。
-│  ├─Servo            -> 驱动层, 舵机机械臂驱动接口, 引用ServoBase库。
-│  └─SSD1283          -> 驱动层, SSD1283屏幕驱动, 引用SPI库。
-└─Startup             -> 启动文件, 无需关心。
+│  .cproject 
+│  .project                                 -> 项目文件, 使用STM32CubeIDE打开本文件即可。
+│  STM32.ioc                                -> CubeMX配置文件, 使用CubeMX打开本文件进行底层配置。
+│  STM32F103RCTX_FLASH.ld
+│
+├─Drivers                                   -> [ST库文件]
+│  ├─CMSIS                                  -> [ST库文件] CMSIS
+│  │
+│  └─STM32F1xx_HAL_Driver                   -> [ST库文件] STM32的Hal和LL库文件
+│
+├─Images
+│  ├─ChineseFonts                           -> [资源文件] 隶书汉字字模, 字模转换用
+│  │
+│  └─SchoolMotto                            -> [资源文件] 校训图, 字模转换用
+│
+├─Inc
+│
+├─Src
+│  │  main.c
+│  │  PrivateConfigs.h                      -> [配置文件] 隐私相关配置文件, 如电话号码, 已gitignore。
+│  │  RobotConfigs.h                        -> [配置文件] 机器人全局配置文件。
+│  │  stm32f1xx_hal_msp.c
+│  │  stm32f1xx_it.c                        -> [中断管理] 中断表。
+│  │  syscalls.c
+│  │  sysmem.c
+│  │  system_stm32f1xx.c
+│  │
+│  ├─App                                    -> [应用层]
+│  │  │  App.c                              -> **比赛主要逻辑流程**
+│  │  │  App.h
+│  │  │
+│  │  ├─AppLog                              -> Log库实现
+│  │  │  │  AppLog.c
+│  │  │  │  AppLog.h
+│  │  │  │
+│  │  │  └─JustFloat                        -> VOFA 上位机的 `JustFloat` 协议实现
+│  │  │          JustFloat.c
+│  │  │          JustFloat.h
+│  │  │
+│  │  ├─ArmControl                          -> 机械臂控制库
+│  │  │      ArmControl.h
+│  │  │      LiftingPlatform.c              -> 升降台机械臂控制实现
+│  │  │      LiftingPlatform.h
+│  │  │      MechanicalArm.c                -> 传统机械臂控制实现
+│  │  │
+│  │  ├─Debug
+│  │  │  │  Debug.c                         -> 将串口中断信息整理到`ParameterAdjust`中
+│  │  │  │  Debug.h
+│  │  │  │
+│  │  │  └─ParameterAdjust                  -> 参数调节器
+│  │  │          ParameterAdjust.c
+│  │  │          ParameterAdjust.h
+│  │  │
+│  │  ├─Examples                            -> [Examples] 本文件夹下为调用App、Driver、Platform层的函数Demo以及赛题要求的子步骤函数实现。
+│  │  │      AllInit.c                      -> [赛题实现] 初始化所有软硬件的Demo
+│  │  │      AllInit.h
+│  │  │      AngleSensorTest.c              -> [Demo] 测试陀螺仪偏航角的实现
+│  │  │      AngleSensorTest.h
+│  │  │      BluetoothTest.c                -> [赛题实现] 赛题所要求的蓝牙相关功能
+│  │  │      BluetoothTest.h
+│  │  │      BroadcastIdentifyResult.c      -> 使用语音播报水果识别结果的实现
+│  │  │      BroadcastIdentifyResult.h
+│  │  │      CatchApple.c                   -> [赛题实现] 抓取苹果的实现
+│  │  │      CatchApple.h
+│  │  │      CatchTrashCan.c                -> [赛题实现] 抓取垃圾桶的实现
+│  │  │      CatchTrashCan.h
+│  │  │      DisplayResult.c                -> [赛题实现] 将识别结果显示在显示屏上的实现
+│  │  │      DisplayResult.h
+│  │  │      DisplaySchoolMotto.c           -> [赛题实现] 显示校训
+│  │  │      DisplaySchoolMotto.h
+│  │  │      EmptyTrash.c                   -> [赛题实现] 清空垃圾桶的实现
+│  │  │      EmptyTrash.h
+│  │  │      Examples.h                     -> [接口文件] 所有Example的头文件
+│  │  │      IdentifyFruit.c                -> [赛题实现] 识别水果的实现
+│  │  │      IdentifyFruit.h
+│  │  │      PlaceApple.c                   -> [赛题实现] 放置水果的实现
+│  │  │      PlaceApple.h
+│  │  │      PlaceTrashCan.c                -> [赛题实现] 放置垃圾桶的实现
+│  │  │      PlaceTrashCan.h
+│  │  │      PrepareArmPosition.c           -> [赛题实现] 使机械臂进入准备状态
+│  │  │      PrepareArmPosition.h
+│  │  │      SendResultViaMessage.c         -> [赛题实现] 将识别结果通过短信发送到指定手机
+│  │  │      SendResultViaMessage.h
+│  │  │      ThrowApple.c                   -> [赛题实现] 扔苹果
+│  │  │      ThrowApple.h
+│  │  │      WashApple.c                    -> [赛题实现] 洗苹果
+│  │  │      WashApple.h
+│  │  │
+│  │  ├─FastMatch                           -> [协议解析] 一个简单协议解析器
+│  │  │      FastMatch.h
+│  │  │
+│  │  ├─MotionControl                       -> [运动控制] 运动控制实现
+│  │  │      MotionControl.c
+│  │  │      MotionControl.h
+│  │  │
+│  │  ├─PID                                 -> [PID] PID算法实现
+│  │  │      PID.c
+│  │  │      PID.h
+│  │  │
+│  │  ├─Timer                               -> [定时器] 系统框架定时器
+│  │  │      Timer.c
+│  │  │      Timer.h
+│  │  │
+│  │  ├─TOF
+│  │  ├─UI                                  -> [UI] 简单UI实现
+│  │  │      DrawPicture.c                  -> 绘制图像
+│  │  │      DrawPicture.h
+│  │  │      DrawText.c                     -> 绘制文本
+│  │  │      DrawText.h
+│  │  │      OfficialScriptChineseFont.c    -> 隶书汉语字体库
+│  │  │      OfficialScriptChineseFont.h
+│  │  │      SchoolMotto.c                  -> 校训图片库
+│  │  │      SchoolMotto.h
+│  │  │      UI.h                           -> UI接口文件
+│  │  │
+│  │  └─VoicePlayer                         -> [VoicePlayer] 语音播报框架
+│  │          VoicePlayer.c
+│  │          VoicePlayer.h
+│  │
+│  ├─Drivers                                -> [驱动层]
+│  │  │  Drivers.c                          -> 驱动层初始化API实现
+│  │  │  Drivers.h
+│  │  │
+│  │  ├─Bluetooth                           -> [Driver] HC-05蓝牙驱动
+│  │  │      Bluetooth.c
+│  │  │      Bluetooth.h
+│  │  │
+│  │  ├─DF_PlayerMini                       -> [Driver] DF Player Mini 语音播放器驱动
+│  │  │      DF_PlayerMini.c
+│  │  │      DF_PlayerMini.h
+│  │  │
+│  │  ├─Encoder                             -> [Driver] 编码器驱动
+│  │  │      Encoder.c
+│  │  │      Encoder.h
+│  │  │
+│  │  ├─ImageProcessingModule               -> [Driver] 图像处理模块驱动(即协议解析器)
+│  │  │      ImageProcessingModule.c
+│  │  │      ImageProcessingModule.h
+│  │  │
+│  │  ├─INA219                              -> [Driver] INA219电流传感器驱动
+│  │  │      INA219.c
+│  │  │      INA219.h
+│  │  │
+│  │  ├─Luat                                -> [Driver] Air724UG 4G 模块AT驱动
+│  │  │      Luat.c
+│  │  │      Luat.h
+│  │  │
+│  │  ├─Motor                               -> [Driver] H桥电机驱动板驱动
+│  │  │      Motor.c
+│  │  │      Motor.h
+│  │  │
+│  │  ├─Servo                               -> [Driver] 舵机驱动
+│  │  │      Servo.c
+│  │  │      Servo.h
+│  │  │
+│  │  ├─SimpleProtocolPraise                -> [Driver] 简单协议解析器
+│  │  │      SimpleProtocolPraise.h
+│  │  │
+│  │  ├─SKTOF                               -> [Driver] SK TOF 驱动
+│  │  │      SKTOF.c
+│  │  │      SKTOF.h
+│  │  │
+│  │  ├─SSD1283                             -> [Driver] SSD1283 屏幕驱动
+│  │  │      SSD1283.c
+│  │  │      SSD1283.h
+│  │  │
+│  │  ├─Stepper                             -> [Driver] 步进驱动
+│  │  │      Stepper.c
+│  │  │      Stepper.h
+│  │  │
+│  │  ├─VL6180X                             -> [Driver] VL6180X 短距离TOF 驱动
+│  │  │  ├─Core
+│  │  │  │      vl6180x_api.c
+│  │  │  │      vl6180x_api.h
+│  │  │  │      vl6180x_cfg.h
+│  │  │  │      vl6180x_def.h
+│  │  │  │      vl6180x_i2c.c
+│  │  │  │      vl6180x_i2c.h
+│  │  │  │
+│  │  │  └─Platform
+│  │  │          vl6180x_easy_api.c         -> [Driver] VL6180X 驱动简易接口实现
+│  │  │          vl6180x_easy_api.h
+│  │  │          vl6180x_platform.c
+│  │  │          vl6180x_platform.h
+│  │  │          vl6180x_types.h
+│  │  │
+│  │  └─WT101                               -> [Driver] WT101 陀螺仪 驱动
+│  │          WT101.c
+│  │          WT101.h
+│  │
+│  └─Platform                               -> 底层, 用于适配LL库。如果想要移植到Hal库或标准库, 请关注本文件夹。
+│      │  ports.c                           -> [Platform] 底层初始化API实现
+│      │  ports.h
+│      │
+│      ├─Clock                              -> [Platform] 系统时钟实现。
+│      │      Clock.c
+│      │      Clock.h
+│      │      Readme.md
+│      │
+│      ├─EncoderPorts                       -> [Platform] 编码器底层接口。
+│      │      Encoder.md
+│      │      EncoderPorts.c
+│      │      EncoderPorts.h
+│      │
+│      ├─GPIO                               -> [Platform] GPIO底层接口。
+│      │      GPIO.c
+│      │      GPIO.h
+│      │
+│      ├─I2C                                -> [Platform] I2C底层接口。
+│      │      I2C.c
+│      │      I2C.h
+│      │
+│      ├─Interrupts                         -> [Platform] 中断底层接口。
+│      │  │  Interrupts.h
+│      │  │
+│      │  ├─ExternalInterrupts              -> [Platform] 外部中断
+│      │  ├─TimerInterrupts                 -> [Platform] 定时器中断
+│      │  │      TimerInterrupts.c
+│      │  │      TimerInterrupts.h
+│      │  │
+│      │  └─USARTInterrupts                 -> [Platform] 串口中断
+│      │          USARTInterrupts.c
+│      │          USARTInterrupts.h
+│      │
+│      ├─PWM                                -> [Platform] PWM底层实现
+│      │      PWM.c
+│      │      PWM.h
+│      │
+│      ├─SPI                                -> [Platform] SPI底层实现
+│      │      SPI.c
+│      │      SPI.h
+│      │
+│      └─USART                              -> [Platform] 串口底层实现
+│              USART.c
+│              USART.h
+│
+├─Startup
+│      startup_stm32f103rctx.s
+│
+└─Voices                                    -> [资源文件] 语音播报原素材, 请使用本文件下的素材文件进行播报。
 ```
 
 </details>

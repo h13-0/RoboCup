@@ -16,6 +16,7 @@ static DF_PlayerMini_t player = VoicePlayer;
 void VoicePlayerInit(void)
 {
 	DF_PlayerInit(&player);
+	//DF_SetVolume(&player, 29);
 }
 
 void VoicePlayerPlayByID(Voice_t Voice)

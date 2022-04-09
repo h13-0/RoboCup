@@ -125,6 +125,7 @@ void WashApple(void)
 	SmoothRotateArmNode(ClawRotation, 170, 5);
 	SmoothRotateArmNode(ClawRotation, 10, 5);
 
+	SmoothMoveTo(MoveAxialLength, AL_AxisZeroPoint, 5);
 	PrepareArmPosition(0);
 }
 #endif

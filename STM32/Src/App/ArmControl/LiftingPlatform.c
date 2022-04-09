@@ -9,6 +9,8 @@
 #if(ArmType == LiftingPlatform)
 #include "LiftingPlatform.h"
 
+//Use mathematical constant definitions.
+#define _USE_MATH_DEFINES
 #include <math.h>
 
 #include "ArmControl.h"
@@ -18,14 +20,16 @@
 #include "Stepper.h"
 #include "Servo.h"
 
-#define PI                (3.1415926)
+#ifndef M_PI
+#define M_PI                    (3.14159265358979323846)
+#endif
 
 static Stepper_t zAxisStepper = Z_AxisStepper, alAxisLengthStepper = AL_AxisStepper;
-static GPIO_t zLimitSensorIO = Z_LimitSensorIO;
+static GPIO_t zLimitSensorIO  = Z_LimitSensorIO;
 
 #ifdef DEBUG
-PositionPID_t X_AxisPID = { 0 };
-PositionPID_t Y_AxisPID = { 0 };
+PositionPID_t X_AxisPID       = { 0 };
+PositionPID_t Y_AxisPID       = { 0 };
 #define xAxisPID X_AxisPID
 #define yAxisPID Y_AxisPID
 #else
@@ -94,12 +98,35 @@ void ArmControlInit(void)
 	SwitchArmControlMode(OpenLoopMode);
 }
 
-void SwitchArmControlMode(ArmControlMode_t Mode)
+static uint8_t fequals(float const VarA, float const VarB)
 {
-	if((mode == OpenLoopMode) && (Mode == ManualMode))
+	return fabs(VarA - VarB) < 1e-9;
+}
+
+ArmControlResult_t SwitchArmControlMode(ArmControlMode_t Mode)
+{
+	if(mode == Mode)
+	{
+		return ArmControlOK;
+	} else if((mode == OpenLoopMode) && (Mode == ManualMode))
 	{
 		mode = Mode;
+		return ArmControlOK;
+	} else if ((mode == ManualMode) && (Mode == OpenLoopMode))
+	{
+		if(fequals(GetArmNodeAngle(ArmElongation), GetArmNodeAngle(ArmParallel)) && (GetArmNodeAngle(ArmElongation) < 90))
+		{
+			//Calculate current position.
+			uint16_t zAxisHeight = GetZ_AxisSliderHeight() - ArmNode2_Length * cos(GetArmNodeAngle(ArmParallel));
+			uint16_t axisHeight = GetAL_AxisSliderHeight() + ArmNode3_Length + ArmNode2_Length * sin(GetArmNodeAngle(ArmParallel));
+			SetOpenLoopClawPosition(GetArmNodeAngle(ArmRotation), axisHeight, zAxisHeight);
+			mode = Mode;
+			return ArmControlOK;
+		} else {
+			return IllegalCurrentPosture;
+		}
 	}
+	return ArmControlOK;
 }
 
 
@@ -222,7 +249,7 @@ ArmControlResult_t SetOpenLoopClawPosition(uint16_t RotationAngle, uint16_t Axia
 				//Move AL-Axis stepper and servos.
 				alAxisTargetSteps = (AL_AxisMaximumLength - AL_AxisMinimumLength) * AL_AxisStepsPerMillimeter;
 				uint16_t residualElongation = AxialLength - ArmNode3_Length - AL_AxisMaximumLength;
-				armElongationAngle = asin((double)residualElongation / ArmNode2_Length) * 180 / PI;
+				armElongationAngle = asin((double)residualElongation / ArmNode2_Length) * 180 / M_PI;
 				armParallelAngle = armElongationAngle;
 				zAxisTargetSteps = ( (Z_AxisHeight + sqrt(pow((double)ArmNode2_Length, 2) - pow((double)residualElongation, 2))) - (Z_AxisZeroPoint + ArmNode2_Length)) * Z_AxisStepsPerMillimeter;
 			}
@@ -468,16 +495,33 @@ ArmControlResult_t SetAL_AxisLength(uint16_t Legnth)
 	}
 }
 
-uint16_t GetZ_AxisHeight(void)
+/**
+ * @brief: Get the height of Z Axis slider.
+ * @note: **Please see the specific picture for details:**
+ * 			STM32/Images/LiftingPlatformAnnotationPicture1.jpg
+ */
+float GetZ_AxisSliderHeight(void)
 {
-	return 0;
+	return Z_AxisMaximumHeight - (zAxisStepper.CurrentSteps / Z_AxisStepsPerMillimeter);
 }
 
-uint16_t GetAL_AxisHeight(void)
+/**
+ * @brief: Get the length of AL Axis slider.
+ * @note:
+ * 		**Please see the specific picture for details:**
+ * 		STM32/Images/LiftingPlatformAnnotationPicture1.jpg
+ */
+float GetAL_AxisSliderLength(void)
 {
-	return 0;
+	return (alAxisLengthStepper.CurrentSteps / AL_AxisStepsPerMillimeter) + AL_AxisMinimumLength;
 }
 
+/**
+ * @brief: Judge whether the Z-Axis stepper is moving.
+ * @return:
+ * 		0 : Not moving.
+ * 		1 : Moving.
+ */
 uint8_t IsZ_AxisBusy(void)
 {
 	return zAxisStepper.CurrentSteps != zAxisStepper.TargetSteps;

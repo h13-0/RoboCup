@@ -46,7 +46,7 @@ void CatchTrashCan(void)
 	//Catch
 	ClosureClaw();
 
-	SleepMillisecond(500);
+	SleepMillisecond(750);
 
 	//AEN100
 	SmoothRotateArmNode(ArmElongation, 100, 10);

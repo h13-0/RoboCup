@@ -264,6 +264,9 @@
 #elif(ArmType == LiftingPlatform)
 /**
  * @platform configs.
+ * @note:
+ * 		 **Please see the specific picture for details:**
+ * 		 STM32/Images/LiftingPlatformAnnotationPicture2.jpg
  */
 #define ArmRotationServo                             { .Frequency = 50, .TIMx = TIM1, .Channel = LL_TIM_CHANNEL_CH1, .ReloadValue = 2000 }
 #define ArmElongationServo                           { .Frequency = 50, .TIMx = TIM1, .Channel = LL_TIM_CHANNEL_CH2, .ReloadValue = 2000 }
@@ -336,6 +339,13 @@
 #define AL_AxisStepperDirPort                        GPIOB
 #define AL_AxisStepperDirPin                         LL_GPIO_PIN_15
 
+/**
+ * @platform configs.
+ * @note:
+ * 		 **Please see the specific picture for details:**
+ * 		 STM32/Images/LiftingPlatformAnnotationPicture2.jpg
+ * 		 STM32/Images/LiftingPlatformAnnotationPicture3.jpg
+ */
 #define Z_AxisStepper                                { .StepperIO = (GPIO_t){ .Port = Z_AxisStepperStepPort, .Pin = Z_AxisStepperStepPin }, .DirectionIO = (GPIO_t){ .Port = Z_AxisStepperDirPort, .Pin = Z_AxisStepperDirPin}, .CurrentSteps = 0, .TargetSteps = 0 }
 #define AL_AxisStepper                               { .StepperIO = (GPIO_t){ .Port = AL_AxisStepperStepPort, .Pin = AL_AxisStepperStepPin }, .DirectionIO = (GPIO_t){ .Port = AL_AxisStepperDirPort, .Pin = AL_AxisStepperDirPin}, .CurrentSteps = 0, .TargetSteps = 0 }
 
