@@ -34,8 +34,8 @@ void CatchTrashCan(void)
 	//APN154
 	SmoothRotateArmNode(ArmParallel, 154, 10);
 
-	//AS170
-	SetAL_AxisLength(170);
+	//AS220
+	SetAL_AxisLength(220);
 	SleepMillisecond(200);
 
 	//AEN60

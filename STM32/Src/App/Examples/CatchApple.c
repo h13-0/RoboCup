@@ -167,6 +167,12 @@ void CatchApple(TargetType_t Target)
 	ClosureClaw();
 	SleepMillisecond(500);
 
+	GetOpenLoopClawPosition(&rotationAngle, &axialLength, &zAxisHeight);
+	if(axialLength > AL_AxisMaximumLength + AL_AxisZeroPoint)
+	{
+		SmoothMoveTo(MoveAxialLength, AL_AxisMaximumLength + AL_AxisZeroPoint, 20);
+	}
+
 	SmoothMoveTo(MoveZ_AxisHeight, ApproachHeight, 5);
 	SmoothMoveTo(MoveAxialLength, AL_AxisZeroPoint, 5);
 }

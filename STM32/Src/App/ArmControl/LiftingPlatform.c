@@ -118,7 +118,7 @@ ArmControlResult_t SwitchArmControlMode(ArmControlMode_t Mode)
 		{
 			//Calculate current position.
 			uint16_t zAxisHeight = GetZ_AxisSliderHeight() - ArmNode2_Length * cos(GetArmNodeAngle(ArmParallel));
-			uint16_t axisHeight = GetAL_AxisSliderHeight() + ArmNode3_Length + ArmNode2_Length * sin(GetArmNodeAngle(ArmParallel));
+			uint16_t axisHeight = GetAL_AxisSliderLength() + ArmNode3_Length + ArmNode2_Length * sin(GetArmNodeAngle(ArmParallel));
 			SetOpenLoopClawPosition(GetArmNodeAngle(ArmRotation), axisHeight, zAxisHeight);
 			mode = Mode;
 			return ArmControlOK;
@@ -366,13 +366,13 @@ ArmControlResult_t AimAt(Target_t Target, mtime_t TimeOut)
 				{
 					currentX = coordinates.X;
 					currentY = coordinates.Y;
-					if(fabs(currentX - AppleAimCenterX) > AppleToleranceErrorX)
+					if(fabs(currentX - AppleAimCenterX) > AppleToleranceErrorX * 0.5)
 					{
 						calculateX_AxisPID(currentX, AppleAimCenterX);
 						startStableTime = GetCurrentTimeMillisecond();
 					}
 
-					if(fabs(currentY - AppleAimCenterY) > AppleToleranceErrorY)
+					if(fabs(currentY - AppleAimCenterY) > AppleToleranceErrorY * 0.5)
 					{
 						calculateY_AxisPID(currentY, AppleAimCenterY);
 						startStableTime = GetCurrentTimeMillisecond();
@@ -455,7 +455,7 @@ ArmControlResult_t AimAt(Target_t Target, mtime_t TimeOut)
 				return AimingTimeout;
 			}
 
-			LogJustFloat(coordinates.X, TargetAimCenterX, coordinates.Y, TargetAimCenterY, coordinates.TimeStamp, startStableTime);
+			LogJustFloat(coordinates.X, TargetAimCenterX, coordinates.Y, TargetAimCenterY, xAxisPID._error, yAxisPID._error, (float)coordinates.TimeStamp, (float)startStableTime);
 		}
 	} else {
 		return ControlModeError;
@@ -497,8 +497,9 @@ ArmControlResult_t SetAL_AxisLength(uint16_t Legnth)
 
 /**
  * @brief: Get the height of Z Axis slider.
- * @note: **Please see the specific picture for details:**
- * 			STM32/Images/LiftingPlatformAnnotationPicture1.jpg
+ * @note:
+ * 		**Please see the specific picture for details:**
+ * 		STM32/Images/LiftingPlatformAnnotationPicture1.jpg
  */
 float GetZ_AxisSliderHeight(void)
 {

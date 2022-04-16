@@ -21,3 +21,7 @@
 ## 机械设计
 参考: 
 [机械设计](./Machine/Readme.md)
+
+## 上位机调参
+上位机使用[VOFA+](https://www.vofa.plus/)
+配置文件见[VOFAConfig](/HostComputer/VOFAConfig/Readme.md)

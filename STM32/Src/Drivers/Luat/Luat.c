@@ -96,6 +96,8 @@ static void sendAT_Command(char *fmt, ...)
  */
 void LuatSendMessage(LuatMessage_t *Msg, const char* TargetPhoneNumber)
 {
+	//Clear.
+	sendAT_Command("\r\n\r\n");
 	sendAT_Command("AT+CMGF=1\r\n");
 	sendAT_Command("AT+CSMP=17,167,0,8\r\n");
 	sendAT_Command("AT+CMGS=\"%s\"\r\n", TargetPhoneNumber);

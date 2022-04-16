@@ -15,6 +15,8 @@
 
 void VoicePlayerInit(void);
 
+void VoicePlayerReset(void);
+
 typedef enum
 {
 	BroadcastFruitDetectResult = 1,

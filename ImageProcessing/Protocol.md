@@ -28,6 +28,7 @@ Type = uint8_t
 | 3     | AppleDetectRight |
 | 4     | TargetDetection  |
 | 5     | FruitIdentify    |
+| 6     | SnapShot         |
 
 
 #### 苹果坐标输出

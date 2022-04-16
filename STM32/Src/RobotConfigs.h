@@ -34,7 +34,7 @@
 #define ForwardTrimAngleErrorLimit                   (2.0)   //degree, allowable angle error when fine tuning distance.
 #define ForwardTrimTimeLimit                         (3000)  //milliseconds
 //Motion parameters.
-#define DisktopDistanceBeforeTurn                    (510)   //millimeters
+#define DisktopDistanceBeforeTurn                    (560)   //millimeters
 
 //PID
 //Speed PID
@@ -51,36 +51,36 @@
 #define ForwardPID_Differention                      (0.0)
 
 /************************Arm Control************************/
-//Motion parameters
+//Arm control parameters.
 #define GrabHeight                                   (275)                                               //millimeters
 #define ApproachHeight                               (GrabHeight + 25 > 305 ? 305 : GrabHeight + 25)     //millimeters
 //#define RetractionHeight                             (ApproachHeight + 50)                             //millimeters
 #define BaseAxialLength                              (210)                                               //millimeters
 #define CatchAppleElongationDistance                 (0)                                                 //millimeters
-#define PlaceAppleElongationDistance                 (150)                                      //millimeters
+#define PlaceAppleElongationDistance                 (180)//150                                          //millimeters
 #define WashAppleHeight                              (350)                                               //millimeters
 #define WashAppleAxialLength                         (245)                                               //millimeters
 #define ThrowAppleAxialLength                        (0)
 #define ThrowAppleHeight                             (0)
 
-//
-#define AppleAimCenterX                              (0.475)
+//Grub center configs.
+#define AppleAimCenterX                              (1 - 0.472)
 #define AppleAimCenterY                              (0.60)
-#define TargetAimCenterX                             (0.495)
+#define TargetAimCenterX                             (1 - 0.472 - 0.020)
 #define TargetAimCenterY                             (0.18)
 #define FruitAimCenterX                              (0.5)
 #define FruitAimCenterY                              (0.35)
 
-//
-#define AppleToleranceErrorX                         (0.030)
-#define AppleToleranceErrorY                         (0.030)
+//Grub tolerance error configs.
+#define AppleToleranceErrorX                         (0.025)
+#define AppleToleranceErrorY                         (0.025)
 #define TargetToleranceErrorX                        (0.0125)
 #define TargetToleranceErrorY                        (0.0125)
 #define FruitIdentifyToleranceErrorX                 (0.035)
 #define FruitIdentifyToleranceErrorY                 (0.035)
 #define ClawStableTimesLimit                         (200)                                               //microseconds
 
-//PID
+//PID configs
 #define X_AxisPID_Proportion                         (-2.0)
 #define X_AxisPID_Integration                        (0.0)
 
@@ -149,7 +149,7 @@
 #endif //ArmType
 
 /**************Image Processing Module Configs**************/
-#define AppleDetectionAverageFPS                     (30)
+#define AppleDetectionAverageFPS                     (15)
 #define TargetDetectionAverageFPS                    (30)
 #define MaximumFPS_Fluctuation                       (1.5)
 #define ImageProcessingSerialBufferLength            (32)

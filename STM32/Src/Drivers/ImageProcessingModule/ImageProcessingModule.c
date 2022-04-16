@@ -141,6 +141,7 @@ __attribute__((always_inline)) inline void SwitchImageProcessingModuleWorkingMod
 void TakeSnapShot(void)
 {
 	SwitchImageProcessingModuleWorkingMode(SnapShot);
+	SwitchImageProcessingModuleWorkingMode(Standby);
 }
 
 /**

@@ -133,7 +133,7 @@ float GetZ_AxisSliderHeight(void);
  * @note: **Please see the specific picture for details:**
  * 			STM32/Images/LiftingPlatformAnnotationPicture1.jpg
  */
-float GetAL_AxisSliderHeight(void);
+float GetAL_AxisSliderLength(void);
 
 /**
  * @brief: Judge whether the Z-Axis stepper is moving.

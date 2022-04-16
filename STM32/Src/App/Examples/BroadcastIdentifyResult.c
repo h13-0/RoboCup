@@ -29,6 +29,7 @@ static Voice_t convertNumberToVoiceID(uint8_t Number)
 
 void BroadcastIdentifyResult(FruitIdentifyResult_t *Result)
 {
+	VoicePlayerReset();
 	//Apple
 	if(Result -> AppleNumber > 0)
 	{
@@ -37,52 +38,51 @@ void BroadcastIdentifyResult(FruitIdentifyResult_t *Result)
 		VoicePlayerSequentialPlay(BroadcastFruitDetectResult, BroadcastApple, BroadcastOne);
 	}
 
-
 	//Banana
 	if(Result -> BananaNumber > 0)
 	{
-		VoicePlayerSequentialPlay(BroadcastFruitDetectResult, BroadcastBanana, convertNumberToVoiceID(Result -> BananaNumber));
+		VoicePlayerSequentialPlay(BroadcastBanana, convertNumberToVoiceID(Result -> BananaNumber));
 	}
 
 	//KiwiFruit
 	if(Result -> KiwiFruitNumber > 0)
 	{
-		VoicePlayerSequentialPlay(BroadcastFruitDetectResult, BroadcastKiwiFruit, convertNumberToVoiceID(Result -> KiwiFruitNumber));
+		VoicePlayerSequentialPlay(BroadcastKiwiFruit, convertNumberToVoiceID(Result -> KiwiFruitNumber));
 	}
 
 	//Lemon
 	if(Result -> LemonNumber > 0)
 	{
-		VoicePlayerSequentialPlay(BroadcastFruitDetectResult, BroadcastLemon, convertNumberToVoiceID(Result -> LemonNumber));
+		VoicePlayerSequentialPlay(BroadcastLemon, convertNumberToVoiceID(Result -> LemonNumber));
 	}
 
 	//Orange
 	if(Result -> OrangeNumber > 0)
 	{
-		VoicePlayerSequentialPlay(BroadcastFruitDetectResult, BroadcastOrange, convertNumberToVoiceID(Result -> OrangeNumber));
+		VoicePlayerSequentialPlay(BroadcastOrange, convertNumberToVoiceID(Result -> OrangeNumber));
 	}
 
 	//Peach
 	if(Result -> PeachNumber > 0)
 	{
-		VoicePlayerSequentialPlay(BroadcastFruitDetectResult, BroadcastPeach, convertNumberToVoiceID(Result -> PeachNumber));
+		VoicePlayerSequentialPlay(BroadcastPeach, convertNumberToVoiceID(Result -> PeachNumber));
 	}
 
 	//Pear
 	if(Result -> PearNumber > 0)
 	{
-		VoicePlayerSequentialPlay(BroadcastFruitDetectResult, BroadcastPear, convertNumberToVoiceID(Result -> PearNumber));
+		VoicePlayerSequentialPlay(BroadcastPear, convertNumberToVoiceID(Result -> PearNumber));
 	}
 
 	//Pitaya
 	if(Result -> PitayaNumber > 0)
 	{
-		VoicePlayerSequentialPlay(BroadcastFruitDetectResult, BroadcastPitaya, convertNumberToVoiceID(Result -> PitayaNumber));
+		VoicePlayerSequentialPlay(BroadcastPitaya, convertNumberToVoiceID(Result -> PitayaNumber));
 	}
 
 	//SnowPear
 	if(Result -> SnowPearNumber > 0)
 	{
-		VoicePlayerSequentialPlay(BroadcastFruitDetectResult, BroadcastSnowPear, convertNumberToVoiceID(Result -> SnowPearNumber));
+		VoicePlayerSequentialPlay(BroadcastSnowPear, convertNumberToVoiceID(Result -> SnowPearNumber));
 	}
 }

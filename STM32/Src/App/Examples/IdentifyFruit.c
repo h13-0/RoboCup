@@ -8,6 +8,7 @@
 #include <string.h>
 #include "Drivers.h"
 #include "Examples.h"
+#include "VoicePlayer.h"
 
 #include "UI.h"
 
@@ -71,9 +72,13 @@ void IdentifyFruit(void)
 	}
 	result = resultList[maxID].Result;
 
+	//Known problem: DF Player Mini cannot be used after luat.
 	SendResultViaMessage(&result);
 	DisplayResult(&result);
+	VoicePlayerReset();
+	SleepMillisecond(200);
 	BroadcastIdentifyResult(&result);
+
 
 	SmoothMoveTo(MoveZ_AxisHeight, ApproachHeight, 5);
 	SmoothMoveTo(MoveAxialLength, AL_AxisZeroPoint, 5);

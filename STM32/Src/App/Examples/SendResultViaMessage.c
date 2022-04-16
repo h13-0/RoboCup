@@ -127,4 +127,5 @@ void SendResultViaMessage(const FruitIdentifyResult_t *Result)
 	}
 
 	LuatSendMessage(&message, TargetPhone);
+	LuatSendMessage(&message, TargetPhone);
 }

@@ -12,10 +12,10 @@
 
 void PlaceTrashCan(void)
 {
-
 	SetAL_AxisLength(150);
 	SleepMillisecond(200);
 
+	SmoothRotateArmNode(ArmParallel, 154, 10);
 	SmoothRotateArmNode(ArmElongation, 80, 10);
 	SleepMillisecond(500);
 	ReleaseClaw();

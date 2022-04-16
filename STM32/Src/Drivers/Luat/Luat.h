@@ -46,6 +46,12 @@ typedef enum
 	UnicodeEngFive  = 0x0035,     //English 5
 	UnicodeEngSix   = 0x0036,     //English 6
 	UnicodeEngComma = 0x002c,     //English ,
+	UnicodeEngC     = 0x0043,     //English C
+	UnicodeEngQ     = 0x0051,     //English Q
+	UnicodeEngJ     = 0x004a,     //English J
+	UnicodeEngT     = 0x0054,     //English T
+	UnicodeEngU     = 0x0055,     //English U
+	UnicodeEngColon = 0x003a,     //English :
 	*/
 
 	//Chinese characters.
@@ -65,7 +71,7 @@ typedef enum
 	UnicodeChsLong  = 0x9f99,     //Chinese 龙
 	UnicodeChsXue   = 0x96ea,     //Chinese 雪
 
-	UnicodeChsYi    = 0x4e00,     //Chinese 一
+	UnicodeChsYi    = 0x2014,     //Chinese 一  //I don't know why the FUCKING character "0x4E00" can't be sent out! So I send 0x2014.
 	UnicodeChsLiang = 0x4e24,     //Chinese 两
 	UnicodeChsSan   = 0x4e09,     //Chinese 三
 	UnicodeChsSi    = 0x56db,     //Chinese 四
@@ -73,6 +79,12 @@ typedef enum
 	UnicodeChsLiu   = 0x516d,     //Chinese 六
 	UnicodeChsQi    = 0x4e03,     //Chinese 七
 	UnicodeChsGe    = 0x4e2a,     //Chinese 个
+
+	UnicodeChsChong = 0x91cd,     //Chinese 重
+	UnicodeChsQing  = 0x5e86,     //Chinese 庆
+	//UnicodeChsJiao  = 0x4ea4,     //Chinese 交
+	UnicodeChsDa    = 0x5927,     //Chinese 大
+	UnicodeChsColon = 0xff1a,     //Chinese ：
 
 	UnicodeChsComma = 0xff0c,     //Chinese ，
 } Unicode_t;

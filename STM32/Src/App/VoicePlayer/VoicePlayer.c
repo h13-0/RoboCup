@@ -19,6 +19,11 @@ void VoicePlayerInit(void)
 	//DF_SetVolume(&player, 29);
 }
 
+void VoicePlayerReset(void)
+{
+	DF_PlayerReset(&player);
+}
+
 void VoicePlayerPlayByID(Voice_t Voice)
 {
 	DF_PlayerJoinQueue(&player, Voice);

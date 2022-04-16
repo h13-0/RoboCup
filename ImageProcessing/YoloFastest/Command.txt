@@ -1,0 +1,5 @@
+darknet detector train E:\project\RoboCup\yolo\yoloFastestRetrainWithRealScene\train.data E:\project\RoboCup\yolo\yoloFastestRetrainWithRealScene\yolo-fastest.cfg E:\project\RoboCup\yolo\yoloFastestRetrainWithRealScene\yolo-fastest_best.weights -mjpeg_port 8090 -map
+
+darknet detector test E:\project\RoboCup\yolo\yoloV4TinyPreliminaryTrainWithHighBatch\train.data E:\project\RoboCup\yolo\yoloV4TinyPreliminaryTrainWithHighBatch\yolov4-tiny.cfg E:\project\RoboCup\yolo\yoloV4TinyPreliminaryTrainWithHighBatch\yolov4-tiny_best.weights -ext_output 
+
+darknet detector demo E:\project\RoboCup\yolo\yoloFastestRetrainWithRealScene\train.data E:\project\RoboCup\yolo\yoloFastestRetrainWithRealScene\yolo-fastest.cfg E:\project\RoboCup\yolo\yoloFastestRetrainWithRealScene\yolo-fastest_best.weights -c 0

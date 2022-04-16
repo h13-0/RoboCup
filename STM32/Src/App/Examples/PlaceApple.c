@@ -135,7 +135,12 @@ uint16_t PlaceApple(void)
 
 	SleepMillisecond(200);
 
-	SmoothMoveTo(MoveAxialLength, 221, 10);
+	GetOpenLoopClawPosition(&rotationAngle, &axialLength, &zAxisHeight);
+	if(axialLength > AL_AxisMaximumLength + AL_AxisZeroPoint)
+	{
+		SmoothMoveTo(MoveAxialLength, AL_AxisMaximumLength + AL_AxisZeroPoint, 20);
+	}
+	SmoothMoveTo(MoveAxialLength, 221, 5);
 	SmoothMoveTo(MoveRotationAngle, 90, 15);
 	return rotationAngle;
 }

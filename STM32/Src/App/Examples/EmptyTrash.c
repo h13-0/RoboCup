@@ -12,12 +12,23 @@
 
 void EmptyTrash(void)
 {
-	SmoothRotateArmNode(ArmRotation, 45, 15);
+	SetAL_AxisLength(AL_AxisMaximumLength);
+
 	SleepMillisecond(300);
 
-	SmoothRotateArmNode(ArmElongation, 170, 10);
+	SmoothRotateArmNode(ClawRotation, 90, 5);
+
+	SmoothRotateArmNode(ArmParallel, 80, 7);
 
 	SleepMillisecond(1000);
 
+	SmoothRotateArmNode(ClawRotation, 0, 5);
+
 	SmoothRotateArmNode(ArmRotation, 0, 15);
+
+	SmoothRotateArmNode(ArmElongation, 100, 10);
+
+	SmoothRotateArmNode(ArmParallel, 154, 10);
+
+	SetAL_AxisLength(AL_AxisMinimumLength);
 }

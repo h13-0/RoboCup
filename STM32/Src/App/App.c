@@ -30,36 +30,7 @@ int App(void)
 
 	ConnectToBluetoothDevice();
 
-	SleepMillisecond(100000);
-	while(1)
-	{
-		VoicePlayerSequentialPlay(BroadcastFruitDetectResult, BroadcastApple, BroadcastBanana, BroadcastKiwiFruit, BroadcastLemon, BroadcastOrange, BroadcastPeach);
-		SleepMillisecond(10000);
-	}
-
-	/*
-	char messageBuffer[128] = { 0 };
-	LuatMessage_t message = LuatCreatNewMessage(messageBuffer, 128);
-	LuatAddMessageContents(&message, UnicodeChsPing, UnicodeChsGuo);
-	LuatSendMessage(&message, TargetPhone);
-
-	//PrepareArmPosition(90);
-	//PlaceApple();
-	//CatchApple(CatchMaximumApple);
-
-	SwitchImageProcessingModuleWorkingMode(FruitIdentify);
-	while(1)
-	{
-		Coordinates_t coor;
-		GetFruitsFocusCoordinates(&coor);
-		LogJustFloat(coor.X, coor.Y, (float)(GetImageProcessingModuleWorkingMode()));
-	}
-	*/
-
-	//while(1);
-	//KeepSpeed();
-	//KeepAngle();
-	//KeepDistance(500);
+	ReleaseClaw();
 
 	//Go to the refrigerator.
 	StraightUntill(325 + 150);
@@ -122,8 +93,10 @@ int App(void)
 	ReleaseClaw();
 	if(angle > 90)
 	{
+		PrepareArmPosition(60);
 		CatchApple(CatchLeftApple);
 	} else {
+		PrepareArmPosition(120);
 		CatchApple(CatchRightApple);
 	}
 
@@ -146,13 +119,11 @@ int App(void)
 	ThrowApple();
 	CatchTrashCan();
 
-	StraightUntill(4350);
-
-	TurnTo(Left);
-
-	StraightUntill(1250);
+	StraightUntill(4400);
 
 	EmptyTrash();
+
+	TurnTo(Left);
 
 	StraightUntill(500);
 

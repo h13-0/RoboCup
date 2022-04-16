@@ -1,0 +1,5 @@
+classes= 9
+names = E:\project\RoboCup\yolo\yoloV4TinyPreliminaryTrainWithHighBatch320\Fruit.names
+train  = E:\project\RoboCup\yolo\datasets\yolomarkRealScene\train.txt
+valid  = E:\project\RoboCup\yolo\datasets\yolomarkRealScene\valid.txt
+backup = E:\project\RoboCup\yolo\yoloV4TinyRetrainWithRealScene320\backup\
