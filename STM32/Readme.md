@@ -497,11 +497,6 @@ SPI1
 | GPIO      | PA5     | RST         |
 | Power     | 5V      | LED         |
 
-#### UI框架 LVGL
-[官网: https://github.com/lvgl/lvgl](https://github.com/lvgl/lvgl)
-> 版本: 7.11.0
-
-
 # 图像处理部分  
 参考:  
 [通信协议](../ImageProcessing/Protocol.md)  

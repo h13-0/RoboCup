@@ -1,5 +1,5 @@
 /*******************************************************************************
-Copyright � 2015, STMicroelectronics International N.V.
+Copyright 2015, STMicroelectronics International N.V.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -1747,7 +1747,7 @@ done:
 
 int VL6180x_RangeIgnoreSetEnable(VL6180x_Dev_t* dev, int EnableState){
 	int CurEnable;
-	int status;
+	int status = 0;
 	LOG_FUNCTION_START("enable %d", EnableState);
 
 	if( EnableState )

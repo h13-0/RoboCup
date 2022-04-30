@@ -27,7 +27,7 @@ PositionPID_t LeftSpeedPID, RightSpeedPID;
 #else
 static PositionPID_t anglePID;
 static PositionPID_t forwardPID;
-static PositionPID_t speedPID;
+static PositionPID_t leftSpeedPID, rightSpeedPID;
 #endif
 
 /**
@@ -398,7 +398,7 @@ __attribute__((always_inline)) inline void DirectionPIDCalculateHandler(void)
 	if(getDirectionPID_Status())
 	{
 		yaw = GetYawValue();
-		speedDifference = PosPID_CalcWithCustErrAndDiff(&AnglePID, calculateYawError(yaw, anglePID.setpoint), GetYawVelocity());
+		speedDifference = PosPID_CalcWithCustErrAndDiff(&anglePID, calculateYawError(yaw, anglePID.setpoint), GetYawVelocity());
 	}
 }
 
@@ -407,6 +407,6 @@ __attribute__((always_inline)) inline void ForwardPIDCalculateHandler(void)
 	if(getForwardPID_Status())
 	{
 		distance = GetTOF_Distance();
-		speedBaseOutput = PosPID_Calc(&ForwardPID, distance);
+		speedBaseOutput = PosPID_Calc(&forwardPID, distance);
 	}
 }

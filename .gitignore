@@ -5,7 +5,6 @@
 /yolo/
 /STM32/Debug
 /STM32/Release
-/STM32/Src/PrivateConfigs.h
 /ImageProcessing/Yolo_datasets
 /ImageProcessing/YoloFastest/backup/
 /ImageProcessing/YoloV4Tiny/yoloV4TinyPreliminaryTrainWithHighBatch320/backup/

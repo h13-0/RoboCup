@@ -12,6 +12,7 @@
 #include "Debug.h"
 #include "ImageProcessingModule.h"
 
+#ifdef DEBUG
 /**
  * @brief: Serial Debug Interrupt Handler.
  * @param: data.
@@ -20,6 +21,7 @@ __attribute__((always_inline)) inline void SerialDebugInterruptHandler(uint8_t d
 {
 	DebugHandler(data);
 }
+#endif
 
 /**
  * @brief: TOF Interrupt Handler.

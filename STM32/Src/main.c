@@ -832,7 +832,7 @@ static void MX_USART1_UART_Init(void)
 {
 
   /* USER CODE BEGIN USART1_Init 0 */
-
+#ifdef DEBUG
   /* USER CODE END USART1_Init 0 */
 
   LL_USART_InitTypeDef USART_InitStruct = {0};
@@ -879,6 +879,7 @@ static void MX_USART1_UART_Init(void)
   /* USER CODE BEGIN USART1_Init 2 */
   LL_USART_ClearFlag_RXNE(USART1);
   LL_USART_EnableIT_RXNE(USART1);
+#endif
   /* USER CODE END USART1_Init 2 */
 
 }

@@ -222,9 +222,11 @@ void USART1_IRQHandler(void)
   /* USER CODE BEGIN USART1_IRQn 0 */
 	if(LL_USART_IsActiveFlag_RXNE(USART1))
 	{
-		uint8_t data = LL_USART_ReceiveData8(USART1);
 		LL_USART_ClearFlag_RXNE(USART1);
-
+#ifdef DEBUG
+		uint8_t data = LL_USART_ReceiveData8(USART1);
+#endif
+		LL_USART_ClearFlag_RXNE(USART1);
 #ifdef DEBUG
 		SerialDebugInterruptHandler(data);
 #endif
