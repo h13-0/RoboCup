@@ -1,8 +1,6 @@
 # RoboCup 2021 助老机器人赛道
 # 渲染图
 ![](./Images/Rendering.jpg)
-# 实拍图
-![](./Images/Picture.jpg)
 
 # 项目构成
 本项目主要分为三个板块:  
