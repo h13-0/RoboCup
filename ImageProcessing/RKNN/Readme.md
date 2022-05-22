@@ -64,4 +64,9 @@ TakeSnapShot();
 有以下几种方案(按推荐顺序排序):
 1. [RKNN_Lite](https://github.com/rockchip-linux/rknn-toolkit/tree/master/rknn-toolkit-lite/packages)
 2. [直接使用Archiconda部署](/ImageProcessing/RKNN/Environment/RK3328_env/Readme.md)
-3. [ROC-RK3328-CC 系统镜像]()
+3. ROC-RK3328-CC 系统镜像: 购买板子直接刷入镜像即可。
+
+本文件夹下所有文件的下载链接: 
+> 链接：https://pan.baidu.com/s/1-s8oynvUIC-BW_bOgdHDag?pwd=heop 
+> 提取码：heop
+

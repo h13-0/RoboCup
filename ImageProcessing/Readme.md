@@ -19,7 +19,9 @@
 使用[Darknet](https://github.com/AlexeyAB/darknet)进行训练。
 可识别内容仅限于上述9种水果, 不包括靶标。
 靶标建议使用HSV色块识别。
-[训练集]()
+训练集
+> 链接：https://pan.baidu.com/s/13T8VhDXatusKtdSlCLSglQ?pwd=kcy0 
+> 提取码：kcy0
 
 ## HSV色块识别
 **不建议用于水果识别, 可用于靶标识别**
