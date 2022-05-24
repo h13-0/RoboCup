@@ -16,6 +16,7 @@ namespace HSV_Range
 
 	typedef std::function<void(unsigned int)> SliderChangedCallback_t;
 	typedef std::function<void(PreviewMode_t)> PreviewModeChangedCallback_t;
+	typedef std::function<void(void)> ButtonClickedCallback_t;
 
 	class HSV_RangeWindow : public QMainWindow
 	{
@@ -66,13 +67,43 @@ namespace HSV_Range
 			addSliderChangedCallbackFunction(Callback, vMinSliderChangedCallbacks);
 		};
 
+		void AddOpenPhotoButtonClickedCallback(ButtonClickedCallback_t& Callback)
+		{
+			std::lock_guard<std::mutex> lock(openPhotoButtonClickedCallbackMutex);
+			addButtonClickedCallbackFunction(Callback, openPhotoButtonClickedCallbacks);
+		};
+
+		void AddOpenVideoButtonClickedCallback(ButtonClickedCallback_t& Callback)
+		{
+			std::lock_guard<std::mutex> lock(openVideoButtonClickedCallbackMutex);
+			addButtonClickedCallbackFunction(Callback, openVideoButtonClickedCallbacks);
+		};
+
+		void AddResetThresholdsButtonCallback(ButtonClickedCallback_t& Callback)
+		{
+			std::lock_guard<std::mutex> lock(resetThresholdsButtonClickedCallbackMutex);
+			addButtonClickedCallbackFunction(Callback, resetThresholdsButtonClickedCallbacks);
+		};
+
+		std::string GetPhotoPath(void)
+		{
+			return getLineEditTextMethod(this->ui.PhotoPath);
+		};
+
+		std::string GetVideoPath(void)
+		{
+			return getLineEditTextMethod(this->ui.VideoPath);
+		};
+
 	private:
 		void addPreviewModeChangedCallbackFunction(PreviewModeChangedCallback_t& Callback, std::vector<PreviewModeChangedCallback_t>& TargetCallbacks);
 		void addSliderChangedCallbackFunction(SliderChangedCallback_t& Callback, std::vector<SliderChangedCallback_t>& TargetCallbacks);
-		
+		void addButtonClickedCallbackFunction(ButtonClickedCallback_t& Callback, std::vector<ButtonClickedCallback_t>& TargetCallbacks);
+
 		void executePreviewModeChangedCallback(const std::vector<PreviewModeChangedCallback_t>& Callbacks, PreviewMode_t NewMode);
 		void executeSliderChangedCallback(const std::vector<SliderChangedCallback_t>& Callbacks, unsigned int CurrentValue);
-		
+		void executeButtonClickedCallback(const std::vector<ButtonClickedCallback_t>& Callbacks);
+
 		Ui::HSV_RangeClass ui;
 
 		/// <summary>
@@ -99,8 +130,18 @@ namespace HSV_Range
 		std::vector<SliderChangedCallback_t> vMinSliderChangedCallbacks;
 		std::mutex vMinSliderChangedCallbackMutex;
 
+		std::vector<ButtonClickedCallback_t> openPhotoButtonClickedCallbacks;
+		std::mutex openPhotoButtonClickedCallbackMutex;
+		
+		std::vector<ButtonClickedCallback_t> openVideoButtonClickedCallbacks;
+		std::mutex openVideoButtonClickedCallbackMutex;
+		
+		std::vector<ButtonClickedCallback_t> resetThresholdsButtonClickedCallbacks;
+		std::mutex resetThresholdsButtonClickedCallbackMutex;
+
 	private slots:
 		void refreshImageMethod(cv::Mat Image);
+		std::string getLineEditTextMethod(QLineEdit* LineEdit);
 
 		void rgbPreviewRadioButtonChanged(bool Status)
 		{
@@ -156,7 +197,27 @@ namespace HSV_Range
 			executeSliderChangedCallback(vMinSliderChangedCallbacks, Value);
 		};
 
+		void openPhotoButtonClicked()
+		{
+			std::lock_guard<std::mutex> lock(openPhotoButtonClickedCallbackMutex);
+			executeButtonClickedCallback(openPhotoButtonClickedCallbacks);
+		};
+
+		void openVideoButtonClicked()
+		{
+			std::lock_guard<std::mutex> lock(openVideoButtonClickedCallbackMutex);
+			executeButtonClickedCallback(openVideoButtonClickedCallbacks);
+		};
+		
+		void resetThresholdsButtonClicked()
+		{
+			std::lock_guard<std::mutex> lock(resetThresholdsButtonClickedCallbackMutex);
+			executeButtonClickedCallback(resetThresholdsButtonClickedCallbacks);
+		};
+		
 	signals:
 		void RefreshImage(cv::Mat Image);
+		std::string GetLineEditText(QLineEdit* LineEdit);
+		void SetOpenVideoButtonText(std::string Text);
 	};
 }

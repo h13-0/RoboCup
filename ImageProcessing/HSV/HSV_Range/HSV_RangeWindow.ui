@@ -103,6 +103,9 @@
                <height>24</height>
               </size>
              </property>
+             <property name="text">
+              <string>./demo.jpg</string>
+             </property>
             </widget>
            </item>
            <item>
@@ -159,6 +162,9 @@
              </property>
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;输入数字打开对应ID的摄像头&lt;/p&gt;&lt;p&gt;输入字符串打开视频流或视频&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>0</string>
              </property>
              <property name="placeholderText">
               <string>0</string>
@@ -269,7 +275,14 @@
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,1,1,1,1,1,1,1,1,1,1,1">
+        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,1,1,1,1,1,1,1,1,1,1,1,1">
+         <item>
+          <widget class="QPushButton" name="ResetThresholdsButton">
+           <property name="text">
+            <string>重置阈值</string>
+           </property>
+          </widget>
+         </item>
          <item>
           <layout class="QHBoxLayout" name="H_MinHorizontalLayout">
            <property name="leftMargin">
@@ -535,7 +548,7 @@
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
