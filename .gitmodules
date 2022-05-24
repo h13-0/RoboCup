@@ -1,0 +1,3 @@
+[submodule "ImageProcessing/HSV/HSV_Range_Tool/HSV-Range"]
+	path = ImageProcessing/HSV/HSV_Range_Tool/HSV-Range
+	url = https://github.com/h13-0/HSV-Range.git

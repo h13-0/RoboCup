@@ -5,6 +5,14 @@
 <img src="./Images/HonorCertificate.jpg"/>
 </details>
 
+# 使用本仓库
+如果需要更改代码, 则建议直接fork本仓库。  
+本仓库已经拆分出多个子模块, clone时需使用以下命令:  
+```
+git clone https://github.com/h13-0/RoboCup.git
+git submodule update --init
+```
+
 # 渲染图
 ![](./Images/Rendering.jpg)
 
