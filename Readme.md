@@ -29,7 +29,7 @@ git submodule update --init
 
 ## 图像处理板块
 参考:  
-[图像处理](./ImageProcessing/Readme.md)  
+[图像处理](./ImageProcessing)  
 
 ## 机械设计
 参考: 
@@ -37,4 +37,4 @@ git submodule update --init
 
 ## 上位机调参
 上位机使用[VOFA+](https://www.vofa.plus/)
-配置文件见[VOFAConfig](/HostComputer/VOFAConfig/Readme.md)
+配置文件见[VOFAConfig](/HostComputer/VOFAConfig/)
