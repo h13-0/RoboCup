@@ -10,7 +10,6 @@
 /ImageProcessing/YoloFastest/backup/
 /ImageProcessing/YoloV4Tiny/yoloV4TinyPreliminaryTrainWithHighBatch320/backup/
 /ImageProcessing/YoloV4Tiny/yoloV4TinyRetrainWithRealScene320/backup/
-/ImageProcessing/RKNN/Environment/*
 /ImageProcessing/HSV/HSV_Range/GeneratedFiles/
 /ImageProcessing/HSV/HSV_Range/x64/Debug
 /ImageProcessing/HSV/HSV_Range/.vs/
