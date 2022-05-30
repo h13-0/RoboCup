@@ -50,7 +50,7 @@ TakeSnapShot();
 
 ## TargetDetector
 本方案采用HSV进行实现。
-为方便调参, 我写了一个HSV调参工具: [HSV_Range](https://github.com/h13-0/HSV-Range)
+为方便调参, 本项目实现了一个HSV调参工具: [HSV_Range](https://github.com/h13-0/HSV-Range)
 参数较为简单, 建议直接阅读源码: [TargetDetector.py](./Code/TargetDetector/TargetDetector.py)
 值得注意的是, 本参数仅适用于固定的靶标和**固定的分辨率(640, 320)**
 
@@ -64,9 +64,8 @@ TakeSnapShot();
 有以下几种方案(按推荐顺序排序):
 1. [RKNN_Lite](https://github.com/rockchip-linux/rknn-toolkit/tree/master/rknn-toolkit-lite/packages)
 2. [直接使用Archiconda部署](./Environment/RK3328_env/Readme.md)
-3. ROC-RK3328-CC 系统镜像: 购买板子直接刷入镜像即可。
+3. [ROC-RK3328-CC镜像部署](./Environment/ROC-RK3328-CC-Images/Readme.md)
 
-本文件夹下所有文件的下载链接: 
+本文件夹下所有文件的下载链接:  
 > 链接：https://pan.baidu.com/s/1-s8oynvUIC-BW_bOgdHDag?pwd=heop 
 > 提取码：heop
-
