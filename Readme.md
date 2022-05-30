@@ -32,7 +32,7 @@ git submodule update --init
 [图像处理](./ImageProcessing)  
 
 ## 机械设计
-参考: 
+参考:  
 [机械设计](./Machine/)
 
 ## 上位机调参

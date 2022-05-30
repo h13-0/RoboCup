@@ -4,5 +4,5 @@
 
 ## 下载链接
 `ROC-RK3328-CC.7z`下载链接:  
-> 链接：https://pan.baidu.com/s/1-s8oynvUIC-BW_bOgdHDag?pwd=heop 
+> 链接：https://pan.baidu.com/s/1-s8oynvUIC-BW_bOgdHDag?pwd=heop  
 > 提取码：heop
