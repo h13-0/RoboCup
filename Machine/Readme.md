@@ -1,5 +1,5 @@
 # 渲染图
-![](./Images/Rendering.jpg)
+![](../Images/Rendering.jpg)  
 
 # 实拍图
-![](./Images/Picture.jpg)
+![](../Images/Picture.jpg)  

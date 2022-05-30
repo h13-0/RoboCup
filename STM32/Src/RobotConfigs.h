@@ -226,7 +226,7 @@
  *		ClawRotationServo:  The servo that rotates the claw.
  *		ClawGrabServo:      The servo that closes the claw.
  * @note:
- * 		**The picture of servos definition is './Images/MachineArmNodesDefinition.jpg' and './Images/LiftingPlatformNodesDefinition.jpg'.**
+ * 		**The picture of servos definition is './Images/MachineArmNodesDefinition.jpg' and './Images/LiftingPlatformAnnotationPicture*.jpg'.**
  */
 
 #if(ArmType == MechanicalArm)
