@@ -312,14 +312,16 @@ HC-05
 舵机命名参考: 
 ![](../Images/LiftingPlatformAnnotationPicture2.jpg)  
 舵机选型(以`LiftingPlatform`为准):  
-| Servo ID           | Model         |
-| ------------------ | ------------- |
-| ArmRotationServo   | TD8120MG 270° |
-| ArmElongationServo | DS3235MG 180° |
-| ArmParallelServo   | DS3230MG 180° |
-| ClawRotationServo  | TD8120MG 180° |
-| ClawGrabServo      | TBSN-K15 180° |
-MG为数字舵机, SG为模拟舵机。  
+| Servo ID           | Model         |  
+| ------------------ | ------------- |  
+| ArmRotationServo   | TD8120MG 270° |  
+| ArmElongationServo | DS3235MG 180° |  
+| ArmParallelServo   | DS3230MG 180° |  
+| ClawRotationServo  | TD8120MG 180° |  
+| ClawGrabServo      | TBSN-K15 180° |  
+
+> Note:  
+> MG为数字舵机, SG为模拟舵机。  
 
 
 ## 串口调参

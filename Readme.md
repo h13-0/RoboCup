@@ -8,8 +8,11 @@
 
 # 使用本仓库
 如果需要更改代码, 则建议直接fork本仓库。  
-本仓库已经拆分出多个子模块, clone时需使用以下命令:  
-```
+## 克隆建议:
+由于本仓库已经拆分出多个子模块, <strong><font color='red'>直接下载zip会造成缺少子模块的情况。</font></strong>  
+如需复现本项目, 则<strong><font color='red'>必须</font></strong>使用git完成。  
+git clone时需使用以下命令:  
+```Powershell
 git clone https://github.com/h13-0/RoboCup.git
 git submodule update --init
 ```
