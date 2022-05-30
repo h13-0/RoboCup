@@ -42,8 +42,8 @@ chomd 777 ./build.sh
 ## Images
 文件命名方式: `时间戳.jpg`。  
 本功能是为了方便调节靶标的HSV色域提供的方法。  
-在STM32程序中的[PlaceApple.c](../../STM32/Src/App/Examples/PlaceApple.c)中有所调用。  
-`STM32/Src/App/Examples/PlaceApple.c Line 121`
+在STM32程序中的[PlaceApple.c](../../STM32/Src/App/Examples/PlaceApple.c#L112)中有所调用。  
+`STM32/Src/App/Examples/PlaceApple.c Line 112`
 ```C
 TakeSnapShot();
 ```
