@@ -25,7 +25,7 @@ git submodule update --init
 
 ## STM32板块
 参考:  
-[STM32](./STM32/Readme.md)  
+[STM32](./STM32/)  
 
 ## 图像处理板块
 参考:  
@@ -33,7 +33,7 @@ git submodule update --init
 
 ## 机械设计
 参考: 
-[机械设计](./Machine/Readme.md)
+[机械设计](./Machine/)
 
 ## 上位机调参
 上位机使用[VOFA+](https://www.vofa.plus/)

@@ -25,10 +25,10 @@
 > 提取码：kcy0  
 
 ## HSV色块识别
-**不建议用于水果识别, 可用于靶标识别**
-[HSV水果识别实现](./HSV/RoboCupImageProcessing/Readme.md)
-HSV调参工具: [HSV-Range](https://github.com/h13-0/HSV-Range)
+**不建议用于水果识别, 可用于靶标识别**  
+[HSV水果识别实现](./HSV/RoboCupImageProcessing/)  
+HSV调参工具: [HSV-Range](https://github.com/h13-0/HSV-Range)  
 
 # 最终方案
-使用YoloV4Tiny进行水果识别, 利用`RKNN_Lite`部署于RK1808计算棒上, HSV进行靶标识别，
-最终方案见: [RKNN](\ImageProcessing\RKNN\Readme.md)
+使用YoloV4Tiny进行水果识别, 利用`RKNN_Lite`部署于RK1808计算棒上, HSV进行靶标识别。  
+最终方案见: [RKNN](\ImageProcessing\RKNN\)  
