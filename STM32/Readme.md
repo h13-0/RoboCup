@@ -310,7 +310,7 @@ HC-05
 
 ## 舵机
 舵机命名参考: 
-![](../Images/LiftingPlatformAnnotationPicture2.jpg)  
+![LiftingPlatformAnnotationPicture2.jpg](../Images/LiftingPlatformAnnotationPicture2.jpg)  
 舵机选型(以`LiftingPlatform`为准):  
 | Servo ID           | Model         |
 | ------------------ | ------------- |

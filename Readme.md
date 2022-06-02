@@ -15,7 +15,7 @@ git submodule update --init
 ```
 
 # 渲染图
-![](./Images/Rendering.jpg)
+![Rendering.jpg](./Images/Rendering.jpg)
 
 # 项目构成
 本项目主要分为三个板块:  
