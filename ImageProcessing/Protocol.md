@@ -1,13 +1,13 @@
-# 通信协议
-**物理接口采用串口, 波特率115200, 建议配合DMA使用**
+# 通信协议  
+**物理接口采用串口, 波特率115200, 建议配合DMA使用**  
 
 基础协议为二进制小端通信, 基础协议结构:  
 `${Key}:${HexValue}`  
 **`${HexValue}` 表示小端模式的二进制信息。**  
 
 ## 协议表:  
-### STM32 -> Module:
-#### 命令
+### STM32 -> Module:  
+#### 命令  
 Key = `CMD`  
 Type = string  
 | Key | Value             | 作用              |
@@ -16,8 +16,8 @@ Type = string
 | CMD | `FruitIdentify`   | 检测水果数量和种类 |
 | CMD | `TargetDetection` | 检测靶标位置       |
 
-### Module -> STM32:
-#### 工作模式
+### Module -> STM32:  
+#### 工作模式  
 Key = `WM`  
 Type = uint8_t  
 | Value | Mode             |
@@ -31,29 +31,29 @@ Type = uint8_t
 | 6     | SnapShot         |
 
 
-#### 苹果坐标输出
+#### 苹果坐标输出  
 Key = `AppCenX`  
-Type = float
-Key = `AppCenY`
-Type = float
+Type = float  
+Key = `AppCenY`  
+Type = float  
 
 | Key       | Value | 作用    |
 | --------- | ----- | ------- |
 | `AppCenX` | 0~1   | AppCenX |
 | `AppCenY` | 0~1   | AppCenY |
 
-#### 靶标坐标输出
+#### 靶标坐标输出  
 Key = `TarCenX`  
-Type = float
-Key = `TarCenY`
-Type = float
+Type = float  
+Key = `TarCenY`  
+Type = float  
 
 | Key       | Value | 作用    |
 | --------- | ----- | ------- |
 | `TarCenX` | 0~1   | TarCenX |
 | `TarCenY` | 0~1   | TarCenY |
 
-#### 水果种类输出
+#### 水果种类输出  
 Type = uint8_t  
 | Key                   | Value              | 作用          |
 | --------------------- | ------------------ | ------------- |

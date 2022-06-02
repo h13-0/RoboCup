@@ -4,13 +4,13 @@
 如需复现此项目, 请自行安装[STM32CubeMX](https://www.st.com/zh/development-tools/stm32cubemx.html)和[STM32CubeIDE](https://www.st.com/en/development-tools/stm32cubeide.html)。  
 
 ## 为什么不用STP和Keil?
-Keil的编译器过于老旧, 在实际使用中遇到了一些BUG, 并且stp(标准库)不再支持STM32F7、STM32G0等新产品。
-而LL效率和stp相当甚至更优, 写法相似, 故迁移至LL进行编写。
+Keil的编译器过于老旧, 在实际使用中遇到了一些BUG, 并且stp(标准库)不再支持STM32F7、STM32G0等新产品。  
+而LL效率和stp相当甚至更优, 写法相似, 故迁移至LL进行编写。  
 
 ## 程序移植
 你只需要重新实现 `Platform` 文件夹中全部的函数即可。  
 即使你使用的是Hal库或者标准库, 只要STM32和C语言过关, 就不存在任何问题。  
-~~即如果您无法从LL移植到Hal或者标库，不是本项目的问题。~~
+~~即如果您无法从LL移植到Hal或者标库，不是本项目的问题。~~  
 
 <details>
 <summary>代码结构</summary>
@@ -271,7 +271,7 @@ STM32:
 </details>
 
 # 电路图  
-等待队友上传。  
+[电路图](../PCB_Project/)  
 
 # 硬件选择
 如您需要复现本项目, 建议使用STM32F103RC以上的型号, 由于串口数量原因, 不建议使用本项目所使用的的STM32F103RCT6。  
@@ -312,14 +312,16 @@ HC-05
 舵机命名参考: 
 ![LiftingPlatformAnnotationPicture2.jpg](../Images/LiftingPlatformAnnotationPicture2.jpg)  
 舵机选型(以`LiftingPlatform`为准):  
-| Servo ID           | Model         |
-| ------------------ | ------------- |
-| ArmRotationServo   | TD8120MG 270° |
-| ArmElongationServo | DS3235MG 180° |
-| ArmParallelServo   | DS3230MG 180° |
-| ClawRotationServo  | TD8120MG 180° |
-| ClawGrabServo      | TBSN-K15 180° |
-MG为数字舵机, SG为模拟舵机。  
+| Servo ID           | Model         |  
+| ------------------ | ------------- |  
+| ArmRotationServo   | TD8120MG 270° |  
+| ArmElongationServo | DS3235MG 180° |  
+| ArmParallelServo   | DS3230MG 180° |  
+| ClawRotationServo  | TD8120MG 180° |  
+| ClawGrabServo      | TBSN-K15 180° |  
+
+> Note:  
+> MG为数字舵机, SG为模拟舵机。  
 
 
 ## 串口调参
